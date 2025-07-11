@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 @PropertySource({"classpath:/application.properties"})
 @MapperScan("org.funding.user.dao")
 public class RootConfig {
-  @Value(${jdbc.driver}")
+  @Value("${jdbc.driver}")
   String driver;
   @Value("${jdbc.url}")
   String url;
