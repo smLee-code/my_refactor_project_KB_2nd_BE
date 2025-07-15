@@ -11,6 +11,6 @@ public enum Role {
             }
         }
 
-        throw new IllegalArgumentException("Unknown role: " + value);
+        throw new IllegalArgumentException("알수없는 권한: " + value);
     }
 }
