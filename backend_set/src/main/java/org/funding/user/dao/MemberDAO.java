@@ -6,5 +6,5 @@ import org.funding.user.vo.MemberVO;
 @Mapper
 public interface MemberDAO {
     void insertMember(MemberVO member);
-    MemberVO findByUsername(String username);
+    MemberVO findByEmail(String username);
 }
