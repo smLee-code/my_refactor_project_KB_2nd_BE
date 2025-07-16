@@ -36,7 +36,8 @@ import org.springframework.web.servlet.view.JstlView;
         "org.funding.exception",
         "org.funding.controller",
         "org.funding.user.controller",
-        "org.funding.user.service"
+        "org.funding.user.service",
+        "org.funding.config"
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {
 
@@ -45,6 +46,19 @@ public class ServletConfig implements WebMvcConfigurer {
         registry
                 .addResourceHandler("/resources/**") // URL이 /resources/로 시작하는 모든 경로
                 .addResourceLocations("/resources/"); // webapp/resources/ 경로로 매핑
+
+        registry.addResourceHandler("/swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+
+        registry.addResourceHandler("/swagger-resources/**")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/v2/api-docs")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
     }
 
 

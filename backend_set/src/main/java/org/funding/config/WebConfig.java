@@ -24,7 +24,13 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
     @Override
     protected String[] getServletMappings() {
-        return new String[] { "/" }; // 스프링의 FrontController인 DispatcherServlet이 담당할 URL 매핑 패턴
+        return new String[] {
+                "/",
+                "/swagger-ui.html",
+                "/swagger-resources/**",
+                "/v2/api-docs",
+                "/webjars/**"
+        }; // 스프링의 FrontController인 DispatcherServlet이 담당할 URL 매핑 패턴
     }
 
 
