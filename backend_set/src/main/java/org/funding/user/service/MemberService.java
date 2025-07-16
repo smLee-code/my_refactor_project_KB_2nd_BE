@@ -3,13 +3,12 @@ package org.funding.user.service;
 import lombok.RequiredArgsConstructor;
 import org.funding.security.util.JwtProcessor;
 import org.funding.user.dao.MemberDAO;
-import org.funding.user.dto.MemberSingupDTO;
+import org.funding.user.dto.MemberSignupDTO;
 import org.funding.user.vo.MemberVO;
 import org.funding.user.vo.enumType.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -20,15 +19,15 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProcessor jwtProcessor;
 
-    public void signup(MemberSingupDTO singupDTO) {
+    public void signup(MemberSignupDTO signupDTO) {
         MemberVO memberVO = new MemberVO();
         LocalDateTime now = LocalDateTime.now();
 
-        memberVO.setPassword(passwordEncoder.encode(singupDTO.getPassword())); // 비밀번호 암호화
-        memberVO.setEmail(singupDTO.getEmail());
-        memberVO.setUsername(singupDTO.getUsername());
-        memberVO.setNickname(singupDTO.getNickname());
-        memberVO.setPhoneNumber(singupDTO.getPhoneNumber());
+        memberVO.setPassword(passwordEncoder.encode(signupDTO.getPassword())); // 비밀번호 암호화
+        memberVO.setEmail(signupDTO.getEmail());
+        memberVO.setUsername(signupDTO.getUsername());
+        memberVO.setNickname(signupDTO.getNickname());
+        memberVO.setPhoneNumber(signupDTO.getPhoneNumber());
 
         memberVO.setRole(Role.valueOf("ROLE_NORMAL")); // 초기 회원가입은 노멀
         memberVO.setCreateAt(now);
