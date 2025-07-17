@@ -121,7 +121,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 권한 설정
             http
                     .authorizeRequests()
-                    .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v2/api-docs", "/v3/api-docs", "/swagger-resources/**", "/webjars/**").permitAll()
+                    .antMatchers("/swagger-ui.html",
+                            "/swagger-ui/**",
+                            "/v2/api-docs",
+                            "/v3/api-docs",
+                            "/swagger-resources/**",
+                            "/webjars/**",
+                            "/mail/send",
+                            "mail/verify").permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
@@ -153,7 +160,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v2/api-docs",
-            "/v3/api-docs"
+            "/v3/api-docs",
+            "/mail/send",
+            "/mail/verify"
     );
   }
 }

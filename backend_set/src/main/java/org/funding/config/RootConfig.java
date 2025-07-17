@@ -17,7 +17,10 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({"classpath:/application.properties"})
-@MapperScan("org.funding.user.dao")
+@MapperScan({
+        "org.funding.user.dao",
+        "org.funding.emailAuth.dao"
+})
 public class RootConfig {
   @Value("${jdbc.driver}")
   String driver;
