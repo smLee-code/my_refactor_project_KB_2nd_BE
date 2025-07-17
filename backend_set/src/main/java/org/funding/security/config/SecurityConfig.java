@@ -128,7 +128,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/swagger-resources/**",
                             "/webjars/**",
                             "/mail/send",
-                            "mail/verify").permitAll()
+                            "mail/verify",
+                            "/ai/ask").permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
@@ -162,7 +163,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v2/api-docs",
             "/v3/api-docs",
             "/mail/send",
-            "/mail/verify"
+            "/mail/verify",
+            "/ai/ask"
     );
   }
 }

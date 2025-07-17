@@ -19,7 +19,8 @@ import javax.sql.DataSource;
 @PropertySource({"classpath:/application.properties"})
 @MapperScan({
         "org.funding.user.dao",
-        "org.funding.emailAuth.dao"
+        "org.funding.emailAuth.dao",
+        "org.funding.openAi.dao",
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
