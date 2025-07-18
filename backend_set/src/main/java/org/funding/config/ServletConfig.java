@@ -39,7 +39,10 @@ import org.springframework.web.servlet.view.JstlView;
         "org.funding.user.service",
         "org.funding.config",
         "org.funding.emailAuth.controller",
-        "org.funding.emailAuth.service"
+        "org.funding.emailAuth.service",
+        "org.funding.openAi.controller",
+        "org.funding.openAi.service",
+        "org.funding.openAi.client",
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {
 
