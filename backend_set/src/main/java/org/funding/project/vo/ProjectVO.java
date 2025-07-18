@@ -12,7 +12,6 @@ public class ProjectVO {
     private String promotion; // 프로젝트 홍보글
     private Feed projectType; // 프로젝트 타입
     private LocalDateTime deadline; // 마감일
-    private String rejectionReason; // 반려 사유
     private LocalDateTime createAt; // 생성일 (프로젝트는 수정 못함)
 
     // 연관 관계

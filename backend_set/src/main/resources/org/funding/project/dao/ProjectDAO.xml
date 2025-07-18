@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.project.dao.ProjectDAO">
+
+<!--    <insert id="insertMember" parameterType="org.funding.user.vo.MemberVO">-->
+<!--        INSERT INTO tbl_member (-->
+<!--            username, password, email, nickname, role, create_at, update_at-->
+<!--        ) VALUES (-->
+<!--                     #{username}, #{password}, #{email}, #{nickname}, #{role}, NOW(), NOW()-->
+<!--                 )-->
+<!--    </insert>-->
+
+    <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
+        SELECT
+            project_id,
+            title,
+            promotion,
+--             progress,
+            create_at,
+            deadline
+        FROM project
+        WHERE project_id = #{projectId}
+    </select>
+
+
+</mapper>
