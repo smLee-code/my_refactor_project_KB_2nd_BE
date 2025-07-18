@@ -5,7 +5,7 @@ import org.funding.badge.dao.BadgeDAO;
 import org.funding.badge.dto.BadgeResponseDTO;
 import org.funding.badge.dto.CreateBadgeDTO;
 import org.funding.badge.dto.UpdateBadgeDTO;
-import org.springframework.security.core.parameters.P;
+import org.funding.badge.vo.BadgeVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +18,21 @@ public class BadgeService {
 
     // 뱃지 생성
     public void createBadge(CreateBadgeDTO createBadgeDTO) {
-        badgeDAO.insertBadge(createBadgeDTO);
+        BadgeVO badgeVO = new BadgeVO();
+        badgeVO.setName(createBadgeDTO.getName());
+        badgeVO.setDescription(createBadgeDTO.getDescription());
+        badgeVO.setAutoGrantCondition(createBadgeDTO.getAutoGrantCondition());
+        badgeDAO.insertBadge(badgeVO);
     }
 
     // 뱃지 수정
-    public void updateBadge(UpdateBadgeDTO updateBadgeDTO) {
-        badgeDAO.updateBadge(updateBadgeDTO);
+    public void updateBadge(UpdateBadgeDTO updateBadgeDTO, Long id) {
+        BadgeVO badgeVO = new BadgeVO();
+        badgeVO.setBadgeId(id);
+        badgeVO.setName(updateBadgeDTO.getName());
+        badgeVO.setDescription(updateBadgeDTO.getDescription());
+        badgeVO.setAutoGrantCondition(updateBadgeDTO.getAutoGrantCondition());
+        badgeDAO.updateBadge(badgeVO);
     }
 
     // 뱃지 삭제

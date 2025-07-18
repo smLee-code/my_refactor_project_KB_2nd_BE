@@ -5,13 +5,13 @@
 <mapper namespace="org.funding.badge.dao.BadgeDAO">
 
     <!--뱃지 생성 -->
-    <insert id="insertBadge" parameterType="org.funding.badge.dto.CreateBadgeDTO">
+    <insert id="insertBadge" parameterType="org.funding.badge.vo.BadgeVO">
         INSERT INTO badge (name, description, autoGrantCondition)
         VALUES (#{name}, #{description}, #{autoGrantCondition})
     </insert>
 
     <!--뱃지 수정 -->
-    <update id="updateBadge" parameterType="org.funding.badge.dto.UpdateBadgeDTO">
+    <update id="updateBadge" parameterType="org.funding.badge.vo.BadgeVO">
         UPDATE badge
         SET name = #{name},
             description = #{description},

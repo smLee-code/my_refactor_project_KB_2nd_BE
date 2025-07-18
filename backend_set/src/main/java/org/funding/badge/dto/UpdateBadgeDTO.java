@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateBadgeDTO {
-    private Long badgeId;
     private String name; // 이름
     private String description; // 설명
     private String autoGrantCondition; // 자동 부여 조건

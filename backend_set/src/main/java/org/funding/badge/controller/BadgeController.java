@@ -27,8 +27,7 @@ public class BadgeController {
     // 뱃지 수정 (관리자용)
     @PutMapping("/{id}")
     public ResponseEntity<String> updateBadge(@PathVariable Long id, @RequestBody UpdateBadgeDTO updateBadgeDTO) {
-        updateBadgeDTO.setBadgeId(id);
-        badgeService.updateBadge(updateBadgeDTO);
+        badgeService.updateBadge(updateBadgeDTO, id);
         return ResponseEntity.ok("뱃지가 정상적으로 업데이트 되었습니다");
     }
 

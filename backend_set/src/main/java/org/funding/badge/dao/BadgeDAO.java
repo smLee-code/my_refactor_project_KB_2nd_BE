@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.funding.badge.dto.BadgeResponseDTO;
 import org.funding.badge.dto.CreateBadgeDTO;
 import org.funding.badge.dto.UpdateBadgeDTO;
+import org.funding.badge.vo.BadgeVO;
 
 import java.util.List;
 
@@ -11,10 +12,10 @@ import java.util.List;
 public interface BadgeDAO {
 
     // 뱃지 생성
-    void insertBadge(CreateBadgeDTO createBadgeDTO);
+    void insertBadge(BadgeVO badgeVO);
 
     // 뱃지 업데이트
-    void updateBadge(UpdateBadgeDTO updateBadgeDTO);
+    void updateBadge(BadgeVO badgeVO);
 
     // 뱃지 삭제
     void deleteBadge(Long id);
