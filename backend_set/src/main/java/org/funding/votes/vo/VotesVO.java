@@ -1,4 +1,4 @@
-package org.funding.mapping;
+package org.funding.votes.vo;
 
 import lombok.Data;
 
