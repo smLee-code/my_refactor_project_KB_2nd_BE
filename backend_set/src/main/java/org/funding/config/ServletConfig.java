@@ -43,6 +43,8 @@ import org.springframework.web.servlet.view.JstlView;
         "org.funding.openAi.controller",
         "org.funding.openAi.service",
         "org.funding.openAi.client",
+        "org.funding.fund.controller",
+        "org.funding.fund.service"
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {
 
