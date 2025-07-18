@@ -1,10 +1,11 @@
 package org.funding.project.vo.enumType;
 
-public enum Feed {
-    Finance, Donation, Challenge;
+public enum ProjectProgress {
 
-    public static Feed fromString(String value) {
-        for (Feed f : values()) {
+    Active, Closed;
+
+    public static ProjectProgress fromString(String value) {
+        for (ProjectProgress f : ProjectProgress.values()) {
             if (f.name().equals(value)) {
                 return f;
             }

@@ -17,9 +17,10 @@
             project_id,
             title,
             promotion,
---             progress,
+            progress,
             create_at,
-            deadline
+            deadline,
+            project_type
         FROM project
         WHERE project_id = #{projectId}
     </select>

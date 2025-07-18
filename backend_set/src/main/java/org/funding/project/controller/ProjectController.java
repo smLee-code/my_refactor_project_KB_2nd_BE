@@ -1,6 +1,7 @@
 package org.funding.project.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.project.dto.ProjectDTO;
 import org.funding.project.service.ProjectService;
 import org.funding.project.vo.ProjectVO;
 import org.funding.user.service.MemberService;
