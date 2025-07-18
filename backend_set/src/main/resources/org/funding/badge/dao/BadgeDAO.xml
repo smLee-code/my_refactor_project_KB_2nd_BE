@@ -38,4 +38,26 @@
         FROM badge
     </select>
 
+<!--    뱃지 자동부여 기능-->
+
+    <!-- 자동 부여 가능한 모든 뱃지를 조회 -->
+    <select id="selectAutoGrantBadges" resultType="org.funding.badge.vo.BadgeVO">
+        SELECT * FROM badge WHERE autoGrantCondition IS NOT NULL
+    </select>
+
+    <!-- 유저가 이미 보유한 뱃지인지 확인 -->
+    <select id="hasUserBadge" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1 FROM user_badge
+            WHERE user_id = #{userId} AND badge_id = #{badgeId}
+        )
+    </select>
+
+    <!-- 유저에게 뱃지 부여 -->
+    <insert id="insertUserBadge" parameterType="org.funding.mapping.UserBadgeVO">
+        INSERT INTO user_badge (user_id, badge_id, granted_at)
+        VALUES (#{userId}, #{badgeId}, NOW())
+    </insert>
+
+
 </mapper>

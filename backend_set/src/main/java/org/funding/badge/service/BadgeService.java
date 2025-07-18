@@ -6,8 +6,11 @@ import org.funding.badge.dto.BadgeResponseDTO;
 import org.funding.badge.dto.CreateBadgeDTO;
 import org.funding.badge.dto.UpdateBadgeDTO;
 import org.funding.badge.vo.BadgeVO;
+import org.funding.mapping.UserBadgeVO;
+import org.funding.votes.dao.VotesDAO;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,6 +18,7 @@ import java.util.List;
 public class BadgeService {
 
     private final BadgeDAO badgeDAO;
+    private final VotesDAO votesDAO;
 
     // 뱃지 생성
     public void createBadge(CreateBadgeDTO createBadgeDTO) {
@@ -48,5 +52,33 @@ public class BadgeService {
     // 뱃지 전체 조회
     public List<BadgeResponseDTO> getAllBadges() {
         return badgeDAO.selectAllBadges();
+    }
+
+    // 뱃지 자동 부여 기능
+    public void checkAndGrantBadges(Long userId) {
+        List<BadgeVO> badgeList = badgeDAO.selectAutoGrantBadges();
+
+        for (BadgeVO badge : badgeList) {
+            if (badgeDAO.hasUserBadge(userId, badge.getBadgeId())) {
+                continue;
+            }
+
+            boolean isEligible = switch (badge.getAutoGrantCondition()) {
+                case "VOTE_3_AND_POST_2" -> {
+                    int voteCount = votesDAO.countVotesByUserId(userId);
+                    yield voteCount >= 3;
+                }
+                default -> false;
+            };
+
+            if (isEligible) {
+                UserBadgeVO userBadge = new UserBadgeVO();
+                userBadge.setUserId(userId);
+                userBadge.setBadgeId(badge.getBadgeId());
+                userBadge.setGrantedAt(LocalDateTime.now());
+
+                badgeDAO.insertUserBadge(userBadge);
+            }
+        }
     }
 }

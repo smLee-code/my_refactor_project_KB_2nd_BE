@@ -49,4 +49,5 @@ public class BadgeController {
     ResponseEntity<List<BadgeResponseDTO>> getAllBadges() {
         return ResponseEntity.ok(badgeService.getAllBadges());
     }
+
 }
