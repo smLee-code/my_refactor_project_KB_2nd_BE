@@ -2,6 +2,8 @@ package org.funding.project.dto;
 
 import lombok.Data;
 import org.funding.fund.vo.enumType.FundType;
+import org.funding.project.vo.enumType.ProjectProgress;
+import org.funding.project.vo.enumType.ProjectType;
 //import org.funding.project.vo.enumType.ProjProgress;
 
 import java.time.LocalDateTime;
@@ -10,8 +12,8 @@ import java.time.LocalDateTime;
 public class ProjectDTO {
     private Long projectId;
     private Long userId;
-    private FundType projectType;
-//    private ProjProgress progress;
+    private ProjectType projectType;
+    private ProjectProgress progress;
     private String title;
     private String promotion;
     private LocalDateTime deadline;

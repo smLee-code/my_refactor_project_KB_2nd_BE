@@ -3,8 +3,13 @@ package org.funding.project.vo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class LoanProjectVO extends ProjectVO {
-    // 대출 프로젝트 관련 필드를 추가하세요.
+    private Long loanLimit;
+    private BigDecimal desiredInterestRate;
+    private String reward;
+    private String rewardCondition;
 }
