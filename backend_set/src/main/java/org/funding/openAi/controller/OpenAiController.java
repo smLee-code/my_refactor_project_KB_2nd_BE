@@ -22,5 +22,4 @@ public class OpenAiController {
     public ChatResponseDTO ask(@RequestBody ChatRequestDTO chatRequestDTO) {
         return chatService.ask(chatRequestDTO);
     }
-
 }

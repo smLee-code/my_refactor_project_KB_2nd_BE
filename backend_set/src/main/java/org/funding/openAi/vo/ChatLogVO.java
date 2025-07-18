@@ -9,5 +9,5 @@ public class ChatLogVO {
     private Long id;
     private String prompt;
     private String response;
-    private Date createAt;
+    private Date createdAt;
 }

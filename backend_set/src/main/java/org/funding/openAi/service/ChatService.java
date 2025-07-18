@@ -26,7 +26,7 @@ public class ChatService {
         ChatLogVO chatLog = new ChatLogVO();
         chatLog.setPrompt(prompt);
         chatLog.setResponse(answer);
-        chatLog.setCreateAt(new Date());
+        chatLog.setCreatedAt(new Date());
 
         chatDAO.insertChatLog(chatLog);
 
