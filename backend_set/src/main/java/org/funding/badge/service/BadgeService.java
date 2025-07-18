@@ -64,6 +64,7 @@ public class BadgeService {
             }
 
             boolean isEligible = switch (badge.getAutoGrantCondition()) {
+                // 예시: 투표를 3회 이상할시 뱃지 부여 (아직 기획 구체화 더 필요)
                 case "VOTE_3_AND_POST_2" -> {
                     int voteCount = votesDAO.countVotesByUserId(userId);
                     yield voteCount >= 3;

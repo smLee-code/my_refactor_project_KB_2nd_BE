@@ -13,10 +13,10 @@ public class VotesService {
     private final BadgeService badgeService;
 
     // 투표시 뱃지 조건 검사하는 기능
-    public void voteOnPost(VotesVO vo) {
-        // 투표시 투표 저장 기능
-        votesDAO.insertVote(vo);
-
-        badgeService.checkAndGrantBadges(vo.getUserId());
-    }
+//    public void voteOnPost(VotesVO vo) {
+//        // 투표시 투표 저장 기능
+//        votesDAO.insertVote(vo);
+//
+//        badgeService.checkAndGrantBadges(vo.getUserId());
+//    }
 }
