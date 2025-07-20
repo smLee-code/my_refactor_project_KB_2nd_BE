@@ -10,7 +10,7 @@ import java.util.List;
 public interface FinancialProductDAO {
     
     // 금융상품 생성
-    FinancialProductVO insert(FinancialProductVO productVO);
+    void insert(FinancialProductVO productVO);
     
     // 아이디로 금융상품 찾기
     FinancialProductVO selectById(Long productId);

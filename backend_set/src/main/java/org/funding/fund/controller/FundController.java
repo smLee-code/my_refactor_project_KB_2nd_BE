@@ -1,11 +1,14 @@
 package org.funding.fund.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.financialProduct.dto.FinancialProductDTO;
+import org.funding.fund.dto.FundProductRequestDTO;
 import org.funding.fund.service.FundService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,11 +20,28 @@ public class FundController {
 
     //summary = "펀딩 상품 개설",
     //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다. 성공 시 생성된 펀딩의 ID와 메시지를 반환합니다."
-    @PostMapping("/create")
-    public ResponseEntity<?> createFund(@RequestBody Map<String, Object> requestMap) {
-        String fundType = (String) requestMap.get("fundType");
-        fundService.createFund(requestMap);  // 내부에서 분기
-        return ResponseEntity.ok("Fund successfully created.");
+    @PostMapping("/create/savings")
+    public ResponseEntity<?> createSavingsFund(@RequestBody FundProductRequestDTO.SavingsRequest request) {
+        fundService.createSavingsFund(request);
+        return ResponseEntity.ok("Savings fund successfully created.");
+    }
+
+    @PostMapping("/create/loan")
+    public ResponseEntity<?> createLoanFund(@RequestBody FundProductRequestDTO.LoanRequest request) {
+        fundService.createLoanFund(request);
+        return ResponseEntity.ok("Loan fund successfully created.");
+    }
+
+    @PostMapping("/create/challenge")
+    public ResponseEntity<?> createChallengeFund(@RequestBody FundProductRequestDTO.ChallengeRequest request) {
+        fundService.createChallengeFund(request);
+        return ResponseEntity.ok("Challenge fund successfully created.");
+    }
+
+    @PostMapping("/create/donation")
+    public ResponseEntity<?> createDonationFund(@RequestBody FundProductRequestDTO.DonationRequest request) {
+        fundService.createDonationFund(request);
+        return ResponseEntity.ok("Donation fund successfully created.");
     }
 
     //summary = "백엔드 개발용 펀딩 상품 입력 템플릿(프론트 연결X, 프로젝트 연결 후 삭제 예정API)",
