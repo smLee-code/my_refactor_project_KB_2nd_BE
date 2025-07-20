@@ -19,7 +19,7 @@ public class FundController {
     private final FundService fundService;
 
     //summary = "펀딩 상품 개설",
-    //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다. 성공 시 생성된 펀딩의 ID와 메시지를 반환합니다."
+    //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다."
     @PostMapping("/create/savings")
     public ResponseEntity<?> createSavingsFund(@RequestBody FundProductRequestDTO.SavingsRequest request) {
         fundService.createSavingsFund(request);
@@ -46,6 +46,7 @@ public class FundController {
 
     //summary = "백엔드 개발용 펀딩 상품 입력 템플릿(프론트 연결X, 프로젝트 연결 후 삭제 예정API)",
     //description = "입력한 상품 타입에 따라 해당하는 펀딩 상품 입력 폼 데이터를 반환합니다."
+    // 예시) http://localhost:8080/api/fund/template?fundType=saving
     @GetMapping("/template")
     public ResponseEntity<?> getFundInputTemplate(@RequestParam String fundType) {
         String lowerType = fundType.toLowerCase();

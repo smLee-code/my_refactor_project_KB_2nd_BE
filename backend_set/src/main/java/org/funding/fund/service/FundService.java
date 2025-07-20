@@ -73,6 +73,8 @@ public class FundService {
             LoanVO loan = LoanVO.builder()
                 .productId(product.getProductId())
                 .loanLimit(request.getLoanLimit())
+                .repaymentStartDate(java.time.LocalDateTime.now())
+                .repaymentEndDate(java.time.LocalDateTime.now().plusYears(1))
                 .minInterestRate(request.getMinInterestRate())
                 .maxInterestRate(request.getMaxInterestRate())
                 .reward(request.getReward())
