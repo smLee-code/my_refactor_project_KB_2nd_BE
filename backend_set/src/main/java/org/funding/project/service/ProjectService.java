@@ -136,4 +136,31 @@ public class ProjectService {
 
         return responseDTO;
     }
+
+    public void deleteProject(Long projectId) {
+        ProjectVO projectVO = projectDAO.selectProjectById(projectId);
+
+        switch (projectVO.getProjectType()) {
+            case Savings:
+                projectDAO.deleteSavingsProjectById(projectId);
+                break;
+
+            case Loan:
+                projectDAO.deleteLoanProjectById(projectId);
+                break;
+
+            case Challenge:
+                projectDAO.deleteChallengeProjectById(projectId);
+                break;
+
+            case Donation:
+                projectDAO.deleteDonationProjectById(projectId);
+                break;
+
+            default:
+                throw new IllegalArgumentException("지원하지 않는 프로젝트 타입입니다: " + projectVO.getProjectType());
+        }
+
+        projectDAO.deleteProjectById(projectId);
+    }
 }
