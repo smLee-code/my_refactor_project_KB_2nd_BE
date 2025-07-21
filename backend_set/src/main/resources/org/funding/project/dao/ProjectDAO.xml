@@ -4,13 +4,30 @@
 
 <mapper namespace="org.funding.project.dao.ProjectDAO">
 
-<!--    <insert id="insertMember" parameterType="org.funding.user.vo.MemberVO">-->
-<!--        INSERT INTO tbl_member (-->
-<!--            username, password, email, nickname, role, create_at, update_at-->
-<!--        ) VALUES (-->
-<!--                     #{username}, #{password}, #{email}, #{nickname}, #{role}, NOW(), NOW()-->
-<!--                 )-->
-<!--    </insert>-->
+    <insert id="insertProject" parameterType="org.funding.project.vo.ProjectVO" useGeneratedKeys="true" keyProperty="projectId">
+        INSERT INTO project (title, promotion, project_type, progress, deadline, create_at, user_id)
+        VALUES (#{title}, #{promotion}, #{projectType}, 'UPCOMING', #{deadline}, NOW(), #{userId})
+    </insert>
+
+    <insert id="insertSavingsProject" parameterType="org.funding.project.vo.SavingProjectVO">
+        INSERT INTO savings_project (project_id, savings_goal, interest_rate, reward, reward_condition)
+        VALUES (#{projectId}, #{savingsGoal}, #{interestRate}, #{reward}, #{rewardCondition})
+    </insert>
+
+    <insert id="insertLoanProject" parameterType="org.funding.project.vo.LoanProjectVO">
+        INSERT INTO loan_project (project_id, loan_limit, desired_interest_rate, reward, reward_condition)
+        VALUES (#{projectId}, #{loanLimit}, #{desiredInterestRate}, #{reward}, #{rewardCondition})
+    </insert>
+
+    <insert id="insertDonationProject" parameterType="org.funding.project.vo.DonationProjectVO">
+        INSERT INTO donation_project (project_id, recipient, usage_plan, target_amount)
+        VALUES (#{projectId}, #{recipient}, #{usagePlan}, #{targetAmount})
+    </insert>
+
+    <insert id="insertChallengeProject" parameterType="org.funding.project.vo.ChallengeProjectVO">
+        INSERT INTO challenge_project (project_id, challenge_period_days, reward, reward_condition)
+        VALUES (#{projectId}, #{challengePeriodDays}, #{reward}, #{rewardCondition})
+    </insert>
 
     <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
         SELECT

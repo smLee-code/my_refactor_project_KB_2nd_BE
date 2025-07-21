@@ -1,20 +1,19 @@
 package org.funding.project.dao;
 
-import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.session.SqlSession;
-import org.funding.project.vo.ProjectVO;
+import org.funding.project.vo.*;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectDAO {
     ProjectVO selectProjectById(Long projectId);
-//    private final SqlSession sqlSession;
-//    private static final String NAMESPACE = "org.funding.project.mapper.ProjectMapper.";
 
-//    public java.util.List<org.funding.project.vo.ProjectVO> findAll() {
-//        return sqlSession.selectList(NAMESPACE + "findAll");
-//    }
+    void insertProject(ProjectVO projectVO);
 
+    void insertSavingsProject(SavingsProjectVO savingProjectVO);
 
+    void insertLoanProject(LoanProjectVO loanProjectVO);
 
+    void insertDonationProject(DonationProjectVO donationProjectVO);
+
+    void insertChallengeProject(ChallengeProjectVO challengeProjectVO);
 }

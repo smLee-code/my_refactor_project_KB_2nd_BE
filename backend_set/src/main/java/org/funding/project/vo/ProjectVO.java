@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 public class ProjectVO {
+
+    // Project 공통 칼럼
     private Long projectId; // 프로젝트 id
     private String title; // 프로젝트 제목
     private String promotion; // 프로젝트 홍보글

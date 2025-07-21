@@ -12,6 +12,7 @@ public class ProjectService {
 
     private final ProjectDAO projectDAO;
 
+
     /**
      * 프로젝트 ID로 프로젝트를 조회합니다.
      *
@@ -26,5 +27,7 @@ public class ProjectService {
         }
         return project;
     }
+
+
 
 }

@@ -1,13 +1,8 @@
-package org.funding.project.dto;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+package org.funding.project.dto.response;
 
 import java.math.BigDecimal;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class LoanProjectDTO extends ProjectDTO {
+public class LoanProjectResponseDTO extends ProjectResponseDTO {
 
     // Loan 고유 칼럼
     private Long loanLimit; // 대출 한도

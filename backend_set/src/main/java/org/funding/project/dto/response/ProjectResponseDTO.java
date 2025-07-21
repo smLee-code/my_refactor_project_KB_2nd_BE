@@ -1,15 +1,13 @@
-package org.funding.project.dto;
+package org.funding.project.dto.response;
 
 import lombok.Data;
-import org.funding.fund.vo.enumType.FundType;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
-//import org.funding.project.vo.enumType.ProjProgress;
 
 import java.time.LocalDateTime;
 
 @Data
-public class ProjectDTO {
+public class ProjectResponseDTO {
 
     // Project 공통 칼럼
     private Long projectId; // 프로젝트 id
