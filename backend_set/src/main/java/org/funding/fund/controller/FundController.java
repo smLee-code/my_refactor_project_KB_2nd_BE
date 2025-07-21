@@ -53,7 +53,6 @@ public class FundController {
 
         switch (lowerType) {
             case "savings" -> {
-                example.put("fundType", "Savings");
                 example.put("name", "청년 희망 적금");
                 example.put("detail", "청년을 위한 특별 금리 적금 상품");
                 example.put("thumbnail", "https://example.com/savings_thumbnail.jpg");
@@ -61,9 +60,13 @@ public class FundController {
                 example.put("interestRate", 3.5);
                 example.put("periodDays", 365);
                 example.put("successCondition", "매월 10만원 이상 납입");
+                example.put("projectId", 1);
+                example.put("progress", "Launch");
+                example.put("launchDate", "2024-01-01");
+                example.put("endDate", "2024-12-31");
+                example.put("financialInstitution", "국민은행");
             }
             case "loan" -> {
-                example.put("fundType", "Loan");
                 example.put("name", "청년 창업 대출");
                 example.put("detail", "청년 창업자를 위한 저금리 대출");
                 example.put("thumbnail", "https://example.com/loan_thumbnail.jpg");
@@ -73,9 +76,13 @@ public class FundController {
                 example.put("maxInterestRate", 4.5);
                 example.put("reward", "창업 성공시 금리 우대");
                 example.put("rewardCondition", "매출 목표 달성시");
+                example.put("projectId", 1);
+                example.put("progress", "Launch");
+                example.put("launchDate", "2024-01-01");
+                example.put("endDate", "2024-12-31");
+                example.put("financialInstitution", "신한은행");
             }
             case "challenge" -> {
-                example.put("fundType", "Challenge");
                 example.put("name", "30일 절약 챌린지");
                 example.put("detail", "30일간 절약 목표 달성 챌린지");
                 example.put("thumbnail", "https://example.com/challenge_thumbnail.jpg");
@@ -83,9 +90,13 @@ public class FundController {
                 example.put("challengePeriodDays", 30);
                 example.put("reward", "스타벅스 기프티콘");
                 example.put("rewardCondition", "목표 금액 절약 달성시");
+                example.put("projectId", 1);
+                example.put("progress", "Launch");
+                example.put("launchDate", "2024-01-01");
+                example.put("endDate", "2024-01-31");
+                example.put("financialInstitution", "우리은행");
             }
             case "donation" -> {
-                example.put("fundType", "Donation");
                 example.put("name", "아동 교육 지원 기부");
                 example.put("detail", "소외계층 아동들의 교육을 지원하는 기부");
                 example.put("thumbnail", "https://example.com/donation_thumbnail.jpg");
@@ -95,6 +106,11 @@ public class FundController {
                 example.put("minDonationAmount", 1000);
                 example.put("maxDonationAmount", 1000000);
                 example.put("targetAmount", 10000000);
+                example.put("projectId", 1);
+                example.put("progress", "Launch");
+                example.put("launchDate", "2024-01-01");
+                example.put("endDate", "2024-12-31");
+                example.put("financialInstitution", "하나은행");
             }
             default -> {
                 return ResponseEntity.badRequest()
