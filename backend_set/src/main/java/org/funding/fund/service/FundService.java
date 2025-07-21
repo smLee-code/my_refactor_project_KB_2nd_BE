@@ -14,6 +14,11 @@ import org.funding.fund.vo.enumType.ProgressType;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 
+/**
+ * 펀딩 생성 서비스
+ * 각 펀딩 타입별로 FinancialProduct를 먼저 생성하고,
+ * 해당 product_id를 외래키로 사용하여 타입별 엔티티에 데이터를 저장한다.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -26,10 +31,19 @@ public class FundService {
     private final ChallengeDAO challengeDAO;
     private final DonationDAO donationDAO;
 
+    /**
+     * 적금 펀딩 생성
+     * 1. FinancialProduct 생성 (fund_type=Savings)
+     * 2. 생성된 product_id를 사용하여 Savings 엔티티 생성
+     * 
+     * @param request 적금 생성 요청 데이터
+     * @return 성공 메시지
+     */
     public String createSavingsFund(FundProductRequestDTO.SavingsRequest request) {
         try {
             log.info("Creating savings fund with name: {}", request.getName());
             
+            // 1. 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -38,8 +52,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
+            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
+            // 3. 생성된 product_id를 외래키로 사용하여 적금 정보 생성
             SavingsVO savings = SavingsVO.builder()
                 .productId(product.getProductId())
                 .interestRate(request.getInterestRate())
@@ -56,10 +72,19 @@ public class FundService {
         }
     }
     
+    /**
+     * 대출 펀딩 생성
+     * 1. FinancialProduct 생성 (fund_type=Loan)
+     * 2. 생성된 product_id를 사용하여 Loan 엔티티 생성
+     * 
+     * @param request 대출 생성 요청 데이터
+     * @return 성공 메시지
+     */
     public String createLoanFund(FundProductRequestDTO.LoanRequest request) {
         try {
             log.info("Creating loan fund with name: {}", request.getName());
             
+            // 1. 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -68,8 +93,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
+            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
+            // 3. 생성된 product_id를 외래키로 사용하여 대출 정보 생성 (상환 기간 기본 1년)
             LoanVO loan = LoanVO.builder()
                 .productId(product.getProductId())
                 .loanLimit(request.getLoanLimit())
@@ -90,10 +117,19 @@ public class FundService {
         }
     }
     
+    /**
+     * 챌린지 펀딩 생성
+     * 1. FinancialProduct 생성 (fund_type=Challenge)
+     * 2. 생성된 product_id를 사용하여 Challenge 엔티티 생성
+     * 
+     * @param request 챌린지 생성 요청 데이터
+     * @return 성공 메시지
+     */
     public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request) {
         try {
             log.info("Creating challenge fund with name: {}", request.getName());
             
+            // 1. 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -102,8 +138,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
+            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
+            // 3. 생성된 product_id를 외래키로 사용하여 챌린지 정보 생성
             ChallengeVO challenge = ChallengeVO.builder()
                 .productId(product.getProductId())
                 .challengePeriodDays(request.getChallengePeriodDays())
@@ -120,10 +158,19 @@ public class FundService {
         }
     }
     
+    /**
+     * 기부 펀딩 생성
+     * 1. FinancialProduct 생성 (fund_type=Donation)
+     * 2. 생성된 product_id를 사용하여 Donation 엔티티 생성
+     * 
+     * @param request 기부 생성 요청 데이터
+     * @return 성공 메시지
+     */
     public String createDonationFund(FundProductRequestDTO.DonationRequest request) {
         try {
             log.info("Creating donation fund with name: {}", request.getName());
             
+            // 1. 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -132,8 +179,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
+            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
+            // 3. 생성된 product_id를 외래키로 사용하여 기부 정보 생성
             DonationVO donation = DonationVO.builder()
                 .productId(product.getProductId())
                 .recipient(request.getRecipient())
