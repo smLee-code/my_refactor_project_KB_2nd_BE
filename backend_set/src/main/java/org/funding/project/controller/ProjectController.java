@@ -1,14 +1,14 @@
 package org.funding.project.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
 import org.funding.project.service.ProjectService;
 import org.funding.project.vo.ProjectVO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/project")
@@ -32,6 +32,22 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDTO> getProjectFullDetail(@PathVariable("id") Long id) {
         ProjectResponseDTO projectDetails = projectService.getProjectDetails(id);
         return ResponseEntity.ok(projectDetails);
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public List<ProjectListDTO> getProjects(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String type) {
+
+
+        if (keyword != null && !keyword.isEmpty()) {
+            return projectService.searchByKeyword(keyword);
+        } else if (type != null && !type.isEmpty()) {
+            return projectService.searchByType(type);
+        } else {
+            return projectService.getAllProjects();
+        }
     }
 
 }
