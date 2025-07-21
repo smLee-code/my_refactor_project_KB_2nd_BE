@@ -151,6 +151,15 @@ dependencies {
     // JSON 파싱을 위한 org.json
     implementation 'org.json:json:20240303'
 
+    // 테스트 코드 의존성
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'  // JUnit5용
+    testImplementation 'org.springframework:spring-test:5.3.30'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+
+
+
 }
 // 테스트 실행 설정
 test {
