@@ -3,9 +3,12 @@ package org.funding.project.vo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class SavingsProjectVO extends ProjectVO {
-    // 예금 프로젝트 관련 필드를 추가하세요.
-
+    private Long periodDays;
+    private BigDecimal interestRate;
+    private String successCondition;
 }

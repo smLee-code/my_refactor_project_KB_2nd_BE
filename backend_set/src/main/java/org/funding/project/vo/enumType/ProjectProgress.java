@@ -1,13 +1,12 @@
 package org.funding.project.vo.enumType;
 
 public enum ProjectProgress {
-
     Active, Closed;
 
     public static ProjectProgress fromString(String value) {
-        for (ProjectProgress f : ProjectProgress.values()) {
-            if (f.name().equals(value)) {
-                return f;
+        for (ProjectProgress p : values()) {
+            if (p.name().equals(value)) {
+                return p;
             }
         }
 
