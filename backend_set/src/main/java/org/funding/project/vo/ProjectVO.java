@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 public class ProjectVO {
+
+    // Project 공통 칼럼
     private Long projectId; // 프로젝트 id
     private String title; // 프로젝트 제목
     private String promotion; // 프로젝트 홍보글
@@ -18,4 +20,10 @@ public class ProjectVO {
 
     // 연관 관계
     private Long userId; // 제안자 id
+
+//    // 타입별 상세 정보
+//    private SavingsProjectVO savingsProject;
+//    private LoanProjectVO loanProject;
+//    private ChallengeProjectVO challengeProject;
+//    private DonationProjectVO donationProject;
 }

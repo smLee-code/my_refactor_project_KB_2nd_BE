@@ -1,11 +1,6 @@
-package org.funding.project.dto;
+package org.funding.project.dto.response;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-@Data
-//@EqualsAndHashCode(callSuper = true)
-public class DonationProjectDTO {
+public class DonationProjectResponseDTO extends ProjectResponseDTO {
 
     // Donation 고유 칼럼
     private String recipient; // 기부처
