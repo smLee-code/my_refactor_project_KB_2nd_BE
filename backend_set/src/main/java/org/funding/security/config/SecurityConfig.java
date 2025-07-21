@@ -136,6 +136,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
+            .antMatchers("/api/fund/**").permitAll()  // 펀딩 API 테스트용 - 추후 인증 필요시 제거 ROLE_FINANCE
+           //.antMatchers("/api/fund/**").hasRole("FINANCE")
             .anyRequest().authenticated();
   }
 

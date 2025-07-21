@@ -1,0 +1,108 @@
+package org.funding.fund.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.funding.financialProduct.dto.FinancialProductDTO;
+import org.funding.fund.dto.FundProductRequestDTO;
+import org.funding.fund.service.FundService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/fund")
+@RequiredArgsConstructor
+public class FundController {
+
+    private final FundService fundService;
+
+    //summary = "펀딩 상품 개설",
+    //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다."
+    @PostMapping("/create/savings")
+    public ResponseEntity<?> createSavingsFund(@RequestBody FundProductRequestDTO.SavingsRequest request) {
+        fundService.createSavingsFund(request);
+        return ResponseEntity.ok("Savings fund successfully created.");
+    }
+
+    @PostMapping("/create/loan")
+    public ResponseEntity<?> createLoanFund(@RequestBody FundProductRequestDTO.LoanRequest request) {
+        fundService.createLoanFund(request);
+        return ResponseEntity.ok("Loan fund successfully created.");
+    }
+
+    @PostMapping("/create/challenge")
+    public ResponseEntity<?> createChallengeFund(@RequestBody FundProductRequestDTO.ChallengeRequest request) {
+        fundService.createChallengeFund(request);
+        return ResponseEntity.ok("Challenge fund successfully created.");
+    }
+
+    @PostMapping("/create/donation")
+    public ResponseEntity<?> createDonationFund(@RequestBody FundProductRequestDTO.DonationRequest request) {
+        fundService.createDonationFund(request);
+        return ResponseEntity.ok("Donation fund successfully created.");
+    }
+
+    //summary = "백엔드 개발용 펀딩 상품 입력 템플릿(프론트 연결X, 프로젝트 연결 후 삭제 예정API)",
+    //description = "입력한 상품 타입에 따라 해당하는 펀딩 상품 입력 폼 데이터를 반환합니다."
+    // 예시) http://localhost:8080/api/fund/template?fundType=saving
+    @GetMapping("/template")
+    public ResponseEntity<?> getFundInputTemplate(@RequestParam String fundType) {
+        String lowerType = fundType.toLowerCase();
+        Map<String, Object> example = new LinkedHashMap<>();
+
+        switch (lowerType) {
+            case "savings" -> {
+                example.put("fundType", "Savings");
+                example.put("name", "청년 희망 적금");
+                example.put("detail", "청년을 위한 특별 금리 적금 상품");
+                example.put("thumbnail", "https://example.com/savings_thumbnail.jpg");
+                example.put("joinCondition", "만 19-34세, 소득 증빙 필요");
+                example.put("interestRate", 3.5);
+                example.put("periodDays", 365);
+                example.put("successCondition", "매월 10만원 이상 납입");
+            }
+            case "loan" -> {
+                example.put("fundType", "Loan");
+                example.put("name", "청년 창업 대출");
+                example.put("detail", "청년 창업자를 위한 저금리 대출");
+                example.put("thumbnail", "https://example.com/loan_thumbnail.jpg");
+                example.put("joinCondition", "만 20-39세, 사업자등록증 필요");
+                example.put("loanLimit", 50000000);
+                example.put("minInterestRate", 2.5);
+                example.put("maxInterestRate", 4.5);
+                example.put("reward", "창업 성공시 금리 우대");
+                example.put("rewardCondition", "매출 목표 달성시");
+            }
+            case "challenge" -> {
+                example.put("fundType", "Challenge");
+                example.put("name", "30일 절약 챌린지");
+                example.put("detail", "30일간 절약 목표 달성 챌린지");
+                example.put("thumbnail", "https://example.com/challenge_thumbnail.jpg");
+                example.put("joinCondition", "누구나 참여 가능");
+                example.put("challengePeriodDays", 30);
+                example.put("reward", "스타벅스 기프티콘");
+                example.put("rewardCondition", "목표 금액 절약 달성시");
+            }
+            case "donation" -> {
+                example.put("fundType", "Donation");
+                example.put("name", "아동 교육 지원 기부");
+                example.put("detail", "소외계층 아동들의 교육을 지원하는 기부");
+                example.put("thumbnail", "https://example.com/donation_thumbnail.jpg");
+                example.put("joinCondition", "누구나 참여 가능");
+                example.put("recipient", "사회복지법인 아이들의꿈");
+                example.put("usagePlan", "교육용품 구입 및 장학금 지원");
+                example.put("minDonationAmount", 1000);
+                example.put("maxDonationAmount", 1000000);
+                example.put("targetAmount", 10000000);
+            }
+            default -> {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Unsupported fundType: " + fundType));
+            }
+        }
+
+        return ResponseEntity.ok(example);
+    }
+}
