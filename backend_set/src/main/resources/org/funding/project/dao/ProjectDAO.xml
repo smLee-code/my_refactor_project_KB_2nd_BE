@@ -67,4 +67,23 @@
         SELECT * FROM donation_project WHERE project_id = #{projectId}
     </select>
 
+    <delete id="deleteProjectById" parameterType="Long">
+        DELETE FROM project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteSavingsProjectById" parameterType="Long">
+        DELETE FROM savings_project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteLoanProjectById" parameterType="Long">
+        DELETE FROM loan_project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteChallengeProjectById" parameterType="Long">
+        DELETE FROM challenge_project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteDonationProjectById" parameterType="Long">
+        DELETE FROM donation_project WHERE project_id = #{projectId}
+    </delete>
 </mapper>

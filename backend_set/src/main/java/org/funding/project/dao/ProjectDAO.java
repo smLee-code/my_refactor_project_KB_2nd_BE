@@ -27,4 +27,15 @@ public interface ProjectDAO {
 
     void insertChallengeProject(ChallengeProjectVO challengeProjectVO);
 
+    void deleteProjectById(Long projectId);
+
+    void deleteSavingsProjectById(Long projectId);
+
+    void deleteLoanProjectById(Long projectId);
+
+    void deleteChallengeProjectById(Long projectId);
+
+    void deleteDonationProjectById(Long projectId);
+
+
 }
