@@ -2,11 +2,7 @@ package org.funding.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.project.dao.ProjectDAO;
-import org.funding.project.dto.LoanProjectDTO;
-import org.funding.project.dto.ProjectDTO;
-import org.funding.project.dto.response.LoanProjectResponseDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
-import org.funding.project.vo.LoanProjectVO;
 import org.funding.project.vo.ProjectVO;
 import org.springframework.stereotype.Service;
 
@@ -45,15 +41,18 @@ public class ProjectService {
                 detailInfo = projectDAO.selectLoanByProjectId(projectId);
                 break;
 
-//            case Savings:
-//                detailInfo = projectDAO.selectSavingByProjectId(projectId);
-//                break;
-//            case Challenge:
-//                detailInfo = projectDAO.selectChallengeByProjectId(projectId);
-//                break;
-//            case Donation:
-//                detailInfo = projectDAO.selectDonationByProjectId(projectId);
-//                break;
+            case Savings:
+                detailInfo = projectDAO.selectSavingByProjectId(projectId);
+                break;
+
+            case Challenge:
+                detailInfo = projectDAO.selectChallengeByProjectId(projectId);
+                break;
+
+            case Donation:
+                detailInfo = projectDAO.selectDonationByProjectId(projectId);
+                break;
+
             default:
                 throw new RuntimeException("알 수 없는 프로젝트 타입입니다: " + project.getProjectType());
         }

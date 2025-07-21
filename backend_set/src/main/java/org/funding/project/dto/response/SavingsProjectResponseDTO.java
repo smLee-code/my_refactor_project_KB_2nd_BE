@@ -6,7 +6,7 @@ import org.funding.project.vo.enumType.ProjectType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class SavingsProjectResponseDTO extends ProjectResponseDTO {
+public class SavingsProjectResponseDTO{
 
     // Savings 고유 칼럼
     private Long periodDays; // 상품기간

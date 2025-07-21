@@ -6,8 +6,7 @@ import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SavingsProjectVO extends ProjectVO {
+public class SavingsProjectVO{
     
     // Savings 고유 칼럼
     private Long periodDays; // 상품기간

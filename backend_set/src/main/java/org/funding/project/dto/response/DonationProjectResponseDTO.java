@@ -1,6 +1,6 @@
 package org.funding.project.dto.response;
 
-public class DonationProjectResponseDTO extends ProjectResponseDTO {
+public class DonationProjectResponseDTO{
 
     // Donation 고유 칼럼
     private String recipient; // 기부처

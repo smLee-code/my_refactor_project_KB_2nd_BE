@@ -4,8 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ChallengeProjectVO extends ProjectVO {
+public class ChallengeProjectVO{
     
     // Challenge 고유 칼럼
     private Long challengePeriodDays; // 챌린지 기간

@@ -4,8 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class DonationProjectVO extends ProjectVO {
+public class DonationProjectVO{
 
     // Donation 고유 칼럼
     private String recipient; // 기부처
