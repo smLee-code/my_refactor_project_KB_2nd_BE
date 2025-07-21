@@ -10,8 +10,10 @@ import org.funding.fund.dto.FundProductRequestDTO;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.fund.dto.FundListResponseDTO;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 펀딩 생성 서비스
@@ -248,6 +250,16 @@ public class FundService {
         }
     }
     
+    /**
+     * 진행상태 + 펀드타입별 펀딩 목록 조회 (펀드타입은 선택사항)
+     * 
+     * @param progress 진행상태 (Launch, End)
+     * @param fundType 펀드타입 (Savings, Loan, Challenge, Donation) - null이면 모든 타입
+     * @return 조건에 맞는 펀딩 목록 (상품명과 썸네일 포함)
+     */
+    public List<FundListResponseDTO> getFundsByProgressAndType(ProgressType progress, FundType fundType) {
+        return fundDAO.selectByProgressAndFundType(progress, fundType);
+    }
 
 }
 
