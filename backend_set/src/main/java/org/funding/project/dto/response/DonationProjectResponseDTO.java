@@ -1,14 +1,13 @@
 package org.funding.project.dto.response;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class DonationProjectResponseDTO extends ProjectResponseDTO {
     // Donation 고유 칼럼
     private String recipient; // 기부처

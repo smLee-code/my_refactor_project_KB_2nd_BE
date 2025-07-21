@@ -11,7 +11,7 @@
 
     <insert id="insertSavingsProject" parameterType="org.funding.project.vo.SavingsProjectVO">
         INSERT INTO savings_project (project_id, period_days, interest_rate, success_condition)
-        VALUES (#{projectId}, #{savingsGoal}, #{interestRate}, #{reward}, #{rewardCondition})
+        VALUES (#{projectId}, #{periodDays}, #{interestRate}, #{successCondition})
     </insert>
 
     <insert id="insertLoanProject" parameterType="org.funding.project.vo.LoanProjectVO">
@@ -29,7 +29,7 @@
         VALUES (#{projectId}, #{challengePeriodDays}, #{reward}, #{rewardCondition})
     </insert>
 
-<!--    프로젝트 공통 항목 조회 쿼리-->
+    <!--    프로젝트 공통 항목 조회 쿼리-->
     <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
         SELECT
             project_id,
@@ -44,23 +44,18 @@
         WHERE project_id = #{projectId}
     </select>
 
-<!--    프로젝트 타입별 상세 조회 쿼리-->
-<!--    저축형 프로젝트-->
+    <!--    프로젝트 타입별 상세 조회 쿼리-->
+
+    <!--    저축형 프로젝트-->
     <select id="selectSavingByProjectId" parameterType="Long" resultType="org.funding.project.vo.SavingsProjectVO">
         SELECT * FROM savings_project WHERE project_id = #{projectId}
     </select>
-<!--    대출형 프로젝트-->
+
+    <!--    대출형 프로젝트-->
     <select id="selectLoanByProjectId" parameterType="Long" resultType="org.funding.project.vo.LoanProjectVO">
-        SELECT
-            loan_limit,
-            desired_interest_rate,
-            reward,
-            reward_condition
-        FROM loan_project
-        WHERE project_id = #{projectId}
+        SELECT * FROM loan_project WHERE project_id = #{projectId}
 
     </select>
-
 
     <!--    챌린지형 프로젝트-->
     <select id="selectChallengeByProjectId" parameterType="Long" resultType="org.funding.project.vo.ChallengeProjectVO">

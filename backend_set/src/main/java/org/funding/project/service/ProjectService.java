@@ -49,16 +49,15 @@ public class ProjectService {
             case Loan:
                 detailInfo = projectDAO.selectLoanByProjectId(projectId);
                 break;
-
-//            case Savings:
-//                detailInfo = projectDAO.selectSavingByProjectId(projectId);
-//                break;
-//            case Challenge:
-//                detailInfo = projectDAO.selectChallengeByProjectId(projectId);
-//                break;
-//            case Donation:
-//                detailInfo = projectDAO.selectDonationByProjectId(projectId);
-//                break;
+            case Savings:
+                detailInfo = projectDAO.selectSavingByProjectId(projectId);
+                break;
+            case Challenge:
+                detailInfo = projectDAO.selectChallengeByProjectId(projectId);
+                break;
+            case Donation:
+                detailInfo = projectDAO.selectDonationByProjectId(projectId);
+                break;
             default:
                 throw new RuntimeException("알 수 없는 프로젝트 타입입니다: " + project.getProjectType());
         }
