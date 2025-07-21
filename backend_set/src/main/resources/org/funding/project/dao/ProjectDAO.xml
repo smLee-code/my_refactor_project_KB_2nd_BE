@@ -67,6 +67,18 @@
         SELECT * FROM donation_project WHERE project_id = #{projectId}
     </select>
 
+    <select id="getAllProjects" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id,title, project_type, create_at, user_id, deadline FROM project
+    </select>
+
+    <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id,title, project_type, create_at, user_id, deadline FROM project WHERE title LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="searchProjectsByType" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id, title, project_type, create_at, user_id, deadline FROM project WHERE project_type = #{type}
+    </select>
+
     <delete id="deleteProjectById" parameterType="Long">
         DELETE FROM project WHERE project_id = #{projectId}
     </delete>

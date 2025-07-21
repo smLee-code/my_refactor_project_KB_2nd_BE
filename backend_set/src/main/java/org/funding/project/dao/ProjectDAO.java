@@ -1,8 +1,10 @@
 package org.funding.project.dao;
 
-import org.funding.project.dto.response.ProjectResponseDTO;
+import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.vo.*;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface ProjectDAO {
@@ -26,6 +28,13 @@ public interface ProjectDAO {
     void insertDonationProject(DonationProjectVO donationProjectVO);
 
     void insertChallengeProject(ChallengeProjectVO challengeProjectVO);
+
+
+    List<ProjectListDTO> getAllProjects();
+
+    List<ProjectListDTO> searchProjectsByType(String type);
+
+    List<ProjectListDTO> searchProjectsByKeyword(String keyword);
 
     void deleteProjectById(Long projectId);
 

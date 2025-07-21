@@ -2,6 +2,7 @@ package org.funding.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.project.dao.ProjectDAO;
+import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
 import org.funding.project.vo.ProjectVO;
 import org.funding.project.dto.request.*;
@@ -10,6 +11,8 @@ import org.funding.project.vo.*;
 import org.funding.project.vo.enumType.ProjectType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +73,17 @@ public class ProjectService {
         return dto;
     }
 
+    public List<ProjectListDTO> searchByType(String type) {
+        return projectDAO.searchProjectsByType(type);
+    }
+
+    public List<ProjectListDTO> searchByKeyword(String keyword) {
+        return projectDAO.searchProjectsByKeyword(keyword);
+    }
+
+    public List<ProjectListDTO> getAllProjects() {
+        return projectDAO.getAllProjects();
+    }
 
     @Transactional
     public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO) {
