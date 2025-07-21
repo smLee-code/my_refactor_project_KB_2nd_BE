@@ -1,10 +1,13 @@
 package org.funding.fund.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.funding.fund.vo.enumType.FundType;
+import org.funding.fund.vo.enumType.ProgressType;
+
+import java.time.LocalDate;
 
 public class FundProductRequestDTO {
 
@@ -14,6 +17,7 @@ public class FundProductRequestDTO {
     @AllArgsConstructor
     @Builder
     public static class SavingsRequest {
+
         // 공통 필드
         private String name;
         private String detail;
@@ -24,6 +28,18 @@ public class FundProductRequestDTO {
         private Double interestRate;
         private Integer periodDays;
         private String successCondition;
+        
+        // Fund 생성 필드
+        private Long projectId;
+        private ProgressType progress;
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate launchDate; // 시작일 (시간은 00:00:00으로 고정)
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
+        
+        private String financialInstitution;
     }
 
     // 대출 요청 DTO
@@ -44,6 +60,18 @@ public class FundProductRequestDTO {
         private Double maxInterestRate;
         private String reward;
         private String rewardCondition;
+        
+        // Fund 생성 필드
+        private Long projectId;
+        private ProgressType progress;
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate launchDate; // 시작일 (시간은 00:00:00으로 고정)
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
+        
+        private String financialInstitution;
     }
 
     // 챌린지 요청 DTO
@@ -62,6 +90,18 @@ public class FundProductRequestDTO {
         private Integer challengePeriodDays;
         private String reward;
         private String rewardCondition;
+        
+        // Fund 생성 필드
+        private Long projectId;
+        private ProgressType progress;
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate launchDate; // 시작일 (시간은 00:00:00으로 고정)
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
+        
+        private String financialInstitution;
     }
 
     // 기부 요청 DTO
@@ -82,5 +122,17 @@ public class FundProductRequestDTO {
         private Integer minDonationAmount;
         private Integer maxDonationAmount;
         private Long targetAmount;
+        
+        // Fund 생성 필드
+        private Long projectId;
+        private ProgressType progress;
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate launchDate; // 시작일 (시간은 00:00:00으로 고정)
+        
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
+        
+        private String financialInstitution;
     }
 }

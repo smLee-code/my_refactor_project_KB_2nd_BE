@@ -9,7 +9,7 @@ import java.util.List;
 public interface FundDAO {
 
     // 펀딩 생성
-    FundVO insert(FundVO fundVO);
+    void insert(FundVO fundVO);
 
     // 펀딩 조회 by ID
     FundVO selectById(Long fundId);

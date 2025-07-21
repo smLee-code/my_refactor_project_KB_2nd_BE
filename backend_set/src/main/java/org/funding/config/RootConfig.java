@@ -23,7 +23,8 @@ import javax.sql.DataSource;
         "org.funding.openAi.dao",
         "org.funding.badge.dao",
         "org.funding.financialProduct.dao",
-        "org.funding.fund.dao"
+        "org.funding.fund.dao",
+        "org.funding.votes.dao"
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
