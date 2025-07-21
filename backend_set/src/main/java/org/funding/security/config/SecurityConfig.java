@@ -129,7 +129,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/webjars/**",
                             "/mail/send",
                             "mail/verify",
-                            "/ai/ask").permitAll()
+                            "/ai/ask",
+                            "/badge/create",
+                            "/badge/{id}",
+                            "/badge/all/badge").permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
@@ -166,7 +169,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs",
             "/mail/send",
             "/mail/verify",
-            "/ai/ask"
+            "/ai/ask",
+            "/badge/create",
+            "/badge/{id}",
+            "/badge/all/badge"
     );
   }
 }

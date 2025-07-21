@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.badge.dao.BadgeDAO">
+
+    <!--뱃지 생성 -->
+    <insert id="insertBadge" parameterType="org.funding.badge.vo.BadgeVO">
+        INSERT INTO badge (name, description, autoGrantCondition)
+        VALUES (#{name}, #{description}, #{autoGrantCondition})
+    </insert>
+
+    <!--뱃지 수정 -->
+    <update id="updateBadge" parameterType="org.funding.badge.vo.BadgeVO">
+        UPDATE badge
+        SET name = #{name},
+            description = #{description},
+            autoGrantCondition = #{autoGrantCondition}
+        WHERE badgeId = #{badgeId}
+    </update>
+
+    <!--뱃지 삭제 -->
+    <delete id="deleteBadge" parameterType="long">
+        DELETE FROM badge
+        WHERE badgeId = #{badgeId}
+    </delete>
+
+    <!--단일 뱃지 조회 -->
+    <select id="selectBadgeById" resultType="org.funding.badge.dto.BadgeResponseDTO" parameterType="long">
+        SELECT badgeId, name, description, autoGrantCondition
+        FROM badge
+        WHERE badgeId = #{badgeId}
+    </select>
+
+    <!--모든 뱃지 조회 -->
+    <select id="selectAllBadges" resultType="org.funding.badge.dto.BadgeResponseDTO">
+        SELECT badgeId, name, description, autoGrantCondition
+        FROM badge
+    </select>
+
+<!--    뱃지 자동부여 기능-->
+
+    <!-- 자동 부여 가능한 모든 뱃지를 조회 -->
+    <select id="selectAutoGrantBadges" resultType="org.funding.badge.vo.BadgeVO">
+        SELECT * FROM badge WHERE autoGrantCondition IS NOT NULL
+    </select>
+
+    <!-- 유저가 이미 보유한 뱃지인지 확인 -->
+    <select id="hasUserBadge" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1 FROM user_badge
+            WHERE user_id = #{userId} AND badge_id = #{badgeId}
+        )
+    </select>
+
+    <!-- 유저에게 뱃지 부여 -->
+    <insert id="insertUserBadge" parameterType="org.funding.mapping.UserBadgeVO">
+        INSERT INTO user_badge (user_id, badge_id, granted_at)
+        VALUES (#{userId}, #{badgeId}, NOW())
+    </insert>
+
+
+</mapper>

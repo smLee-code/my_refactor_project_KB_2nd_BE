@@ -1,4 +1,4 @@
-package org.funding.mapping;
+package org.funding.retryVotes.vo;
 
 import lombok.Data;
 
