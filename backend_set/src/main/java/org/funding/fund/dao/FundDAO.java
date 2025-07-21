@@ -22,4 +22,6 @@ public interface FundDAO {
 
     // 모든 펀딩 조회
     List<FundVO> selectAll();
+
+
 }

@@ -12,6 +12,8 @@ import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 펀딩 생성 서비스
@@ -245,6 +247,19 @@ public class FundService {
         } catch (Exception e) {
             log.error("Error creating donation fund: ", e);
             throw new RuntimeException("Failed to create donation fund", e);
+        }
+    }
+
+    // 펀딩 종료 서비스 로직
+    public void closeExpiredFunds() {
+        List<FundVO> fundList = fundDAO.selectAll();
+
+        LocalDateTime now = LocalDateTime.now();
+        for (FundVO fund : fundList) {
+            if (fund.getEndAt().isBefore(now) && fund.getProgress() != ProgressType.End) {
+                fund.setProgress(ProgressType.End);
+                fundDAO.update(fund);
+            }
         }
     }
     
