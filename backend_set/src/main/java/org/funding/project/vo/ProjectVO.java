@@ -24,4 +24,10 @@ public class ProjectVO {
 
     // 연관 관계
     private Long userId; // 제안자 id
+
+//    // 타입별 상세 정보
+//    private SavingsProjectVO savingsProject;
+//    private LoanProjectVO loanProject;
+//    private ChallengeProjectVO challengeProject;
+//    private DonationProjectVO donationProject;
 }
