@@ -17,13 +17,13 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", produces = "application/json; charset=UTF-8")
     public ResponseEntity<String> signup(@RequestBody MemberSignupDTO signupDTO) {
         memberService.signup(signupDTO);
         return ResponseEntity.ok("회원 가입 성공");
     }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = "application/json; charset=UTF-8")
     public ResponseEntity<String> login(@RequestBody MemberLoginDTO loginDTO) {
         String jwt = memberService.login(loginDTO.getEmail(), loginDTO.getPassword());
         return ResponseEntity.ok(jwt);
