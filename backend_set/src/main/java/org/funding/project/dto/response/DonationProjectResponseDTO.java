@@ -1,7 +1,15 @@
 package org.funding.project.dto.response;
 
-public class DonationProjectResponseDTO extends ProjectResponseDTO {
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class DonationProjectResponseDTO extends ProjectResponseDTO {
     // Donation 고유 칼럼
     private String recipient; // 기부처
     private String usagePlan; // 기부금 사용 계획

@@ -1,7 +1,15 @@
 package org.funding.project.dto.response;
 
-public class ChallengeProjectResponseDTO extends ProjectResponseDTO {
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChallengeProjectResponseDTO extends ProjectResponseDTO {
     // Challenge 고유 칼럼
     private Long challengePeriodDays; // 챌린지 기간
     private String reward; // 리워드

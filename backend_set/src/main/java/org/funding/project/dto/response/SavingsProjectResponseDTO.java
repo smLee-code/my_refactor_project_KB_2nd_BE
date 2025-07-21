@@ -1,13 +1,17 @@
 package org.funding.project.dto.response;
 
-import org.funding.project.vo.enumType.ProjectProgress;
-import org.funding.project.vo.enumType.ProjectType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SavingsProjectResponseDTO extends ProjectResponseDTO {
-
     // Savings 고유 칼럼
     private Long periodDays; // 상품기간
     private BigDecimal interestRate; // 연이율 (%)

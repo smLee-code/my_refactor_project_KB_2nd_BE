@@ -22,4 +22,16 @@ public class ProjectController {
         return ResponseEntity.ok(project);
     }
 
+//    @GetMapping("/list/detail/{id}")
+//    public ResponseEntity<ProjectResponseDTO> getProjectDetail(@PathVariable("id") Long id) {
+//        ProjectVO project = projectService.selectProjectById(id);
+//        return ResponseEntity.ok(project);
+//    }
+
+    @PostMapping("")
+    public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody CreateProjectRequestDTO createRequestDTO) {
+        ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
+
 }

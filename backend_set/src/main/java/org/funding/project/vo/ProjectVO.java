@@ -6,7 +6,11 @@ import org.funding.project.vo.enumType.ProjectType;
 
 import java.time.LocalDateTime;
 
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
 @Data
+@SuperBuilder
 public class ProjectVO {
 
     // Project 공통 칼럼

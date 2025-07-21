@@ -1,12 +1,16 @@
 package org.funding.project.vo;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ChallengeProjectVO extends ProjectVO {
-    
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ChallengeProjectVO {
+
+    private Long projectId;
+
     // Challenge 고유 칼럼
     private Long challengePeriodDays; // 챌린지 기간
     private String reward; // 리워드

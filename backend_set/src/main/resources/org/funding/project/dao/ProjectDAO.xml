@@ -6,11 +6,11 @@
 
     <insert id="insertProject" parameterType="org.funding.project.vo.ProjectVO" useGeneratedKeys="true" keyProperty="projectId">
         INSERT INTO project (title, promotion, project_type, progress, deadline, create_at, user_id)
-        VALUES (#{title}, #{promotion}, #{projectType}, 'UPCOMING', #{deadline}, NOW(), #{userId})
+        VALUES (#{title}, #{promotion}, #{projectType}, #{progress}, #{deadline}, NOW(), #{userId})
     </insert>
 
-    <insert id="insertSavingsProject" parameterType="org.funding.project.vo.SavingProjectVO">
-        INSERT INTO savings_project (project_id, savings_goal, interest_rate, reward, reward_condition)
+    <insert id="insertSavingsProject" parameterType="org.funding.project.vo.SavingsProjectVO">
+        INSERT INTO savings_project (project_id, period_days, interest_rate, success_condition)
         VALUES (#{projectId}, #{savingsGoal}, #{interestRate}, #{reward}, #{rewardCondition})
     </insert>
 
