@@ -1,12 +1,18 @@
 package org.funding.project.vo;
 
-import lombok.Data;
+import lombok.*;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
 
 import java.time.LocalDateTime;
 
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProjectVO {
 
     // Project 공통 칼럼

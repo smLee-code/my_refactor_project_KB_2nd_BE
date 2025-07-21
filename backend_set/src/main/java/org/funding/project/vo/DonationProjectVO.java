@@ -1,10 +1,15 @@
 package org.funding.project.vo;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+
 
 @Data
-public class DonationProjectVO{
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class DonationProjectVO {
+
+    private Long projectId;
 
     // Donation 고유 칼럼
     private String recipient; // 기부처

@@ -1,14 +1,19 @@
 package org.funding.project.vo;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 
+import lombok.experimental.SuperBuilder;
+
 @Data
-//@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class LoanProjectVO {
+
+    private Long projectId;
 
     // Loan 고유 칼럼
     private Long loanLimit; // 대출 한도

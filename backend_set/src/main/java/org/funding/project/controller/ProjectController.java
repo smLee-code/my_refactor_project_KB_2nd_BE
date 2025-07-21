@@ -2,6 +2,7 @@ package org.funding.project.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.project.dto.response.ProjectListDTO;
+import org.funding.project.dto.request.CreateProjectRequestDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
 import org.funding.project.service.ProjectService;
 import org.funding.project.vo.ProjectVO;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/project")
@@ -48,6 +50,12 @@ public class ProjectController {
         } else {
             return projectService.getAllProjects();
         }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody CreateProjectRequestDTO createRequestDTO) {
+        ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
 }

@@ -3,6 +3,7 @@ package org.funding.project.dto.request;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import org.funding.project.vo.ProjectVO;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
 
@@ -35,4 +36,14 @@ public abstract class CreateProjectRequestDTO {
     private ProjectProgress progress; // 프로젝트 진행도
     private LocalDateTime deadline; // 마감일
 
+    public ProjectVO toCommonVO() {
+        return ProjectVO.builder()
+                .userId(this.getUserId())
+                .projectType(this.getProjectType())
+                .title(this.getTitle())
+                .promotion(this.getPromotion())
+                .progress(this.getProgress())
+                .deadline(this.getDeadline())
+                .build();
+    }
 }

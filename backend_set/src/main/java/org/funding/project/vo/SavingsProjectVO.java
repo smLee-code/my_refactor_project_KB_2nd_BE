@@ -1,13 +1,17 @@
 package org.funding.project.vo;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Data
-public class SavingsProjectVO{
-    
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class SavingsProjectVO  {
+
+    private Long projectId;
+
     // Savings 고유 칼럼
     private Long periodDays; // 상품기간
     private BigDecimal interestRate; // 연이율 (%)
