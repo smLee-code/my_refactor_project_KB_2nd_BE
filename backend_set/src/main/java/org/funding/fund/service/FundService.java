@@ -6,13 +6,12 @@ import org.funding.financialProduct.dao.*;
 import org.funding.financialProduct.dto.*;
 import org.funding.financialProduct.vo.*;
 import org.funding.fund.dao.FundDAO;
-import org.funding.fund.dto.FundCreateDTO;
 import org.funding.fund.dto.FundProductRequestDTO;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.springframework.stereotype.Service;
-import java.util.Map;
+import java.time.LocalDate;
 
 /**
  * 펀딩 생성 서비스
@@ -64,8 +63,20 @@ public class FundService {
                 .build();
             
             savingsDAO.insertSavings(savings);
-            log.info("Savings fund created successfully with product ID: {}", product.getProductId());
-            return "Savings fund created successfully";
+            
+            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            FundVO fund = FundVO.builder()
+                .productId(product.getProductId())
+                .projectId(request.getProjectId())
+                .progress(request.getProgress())
+                .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
+                .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
+                .financialInstitution(request.getFinancialInstitution())
+                .build();
+            
+            fundDAO.insert(fund);
+            log.info("Savings fund and Fund created successfully with product ID: {}", product.getProductId());
+            return "Savings fund and Fund created successfully";
         } catch (Exception e) {
             log.error("Error creating savings fund: ", e);
             throw new RuntimeException("Failed to create savings fund", e);
@@ -109,8 +120,20 @@ public class FundService {
                 .build();
             
             loanDAO.insertLoan(loan);
-            log.info("Loan fund created successfully with product ID: {}", product.getProductId());
-            return "Loan fund created successfully";
+            
+            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            FundVO fund = FundVO.builder()
+                .productId(product.getProductId())
+                .projectId(request.getProjectId())
+                .progress(request.getProgress())
+                .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
+                .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
+                .financialInstitution(request.getFinancialInstitution())
+                .build();
+            
+            fundDAO.insert(fund);
+            log.info("Loan fund and Fund created successfully with product ID: {}", product.getProductId());
+            return "Loan fund and Fund created successfully";
         } catch (Exception e) {
             log.error("Error creating loan fund: ", e);
             throw new RuntimeException("Failed to create loan fund", e);
@@ -150,8 +173,20 @@ public class FundService {
                 .build();
             
             challengeDAO.insertChallenge(challenge);
-            log.info("Challenge fund created successfully with product ID: {}", product.getProductId());
-            return "Challenge fund created successfully";
+            
+            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            FundVO fund = FundVO.builder()
+                .productId(product.getProductId())
+                .projectId(request.getProjectId())
+                .progress(request.getProgress())
+                .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
+                .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
+                .financialInstitution(request.getFinancialInstitution())
+                .build();
+            
+            fundDAO.insert(fund);
+            log.info("Challenge fund and Fund created successfully with product ID: {}", product.getProductId());
+            return "Challenge fund and Fund created successfully";
         } catch (Exception e) {
             log.error("Error creating challenge fund: ", e);
             throw new RuntimeException("Failed to create challenge fund", e);
@@ -193,8 +228,20 @@ public class FundService {
                 .build();
             
             donationDAO.insertDonation(donation);
-            log.info("Donation fund created successfully with product ID: {}", product.getProductId());
-            return "Donation fund created successfully";
+            
+            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            FundVO fund = FundVO.builder()
+                .productId(product.getProductId())
+                .projectId(request.getProjectId())
+                .progress(request.getProgress())
+                .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
+                .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
+                .financialInstitution(request.getFinancialInstitution())
+                .build();
+            
+            fundDAO.insert(fund);
+            log.info("Donation fund and Fund created successfully with product ID: {}", product.getProductId());
+            return "Donation fund and Fund created successfully";
         } catch (Exception e) {
             log.error("Error creating donation fund: ", e);
             throw new RuntimeException("Failed to create donation fund", e);

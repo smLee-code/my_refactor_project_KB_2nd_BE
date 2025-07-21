@@ -1,7 +1,6 @@
 package org.funding.fund.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.funding.financialProduct.dto.FinancialProductDTO;
 import org.funding.fund.dto.FundProductRequestDTO;
 import org.funding.fund.service.FundService;
 import org.springframework.http.ResponseEntity;
