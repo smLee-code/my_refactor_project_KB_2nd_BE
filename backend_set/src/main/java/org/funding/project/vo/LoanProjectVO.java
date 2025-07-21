@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 import lombok.experimental.SuperBuilder;
 
 @Data
-//@EqualsAndHashCode(callSuper = true)
-public class LoanProjectVO {
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

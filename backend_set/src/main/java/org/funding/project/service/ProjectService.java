@@ -81,7 +81,7 @@ public class ProjectService {
 
         // 2. 리턴할 응답 객체 생성, 공통 정보 매핑 및 삽입
         ProjectResponseDTO responseDTO = new ProjectResponseDTO();
-        responseDTO.setBasicVO(projectVO);
+        responseDTO.setBasicInfo(projectVO);
 
         // 3. 프로젝트 타입에 따른 추가 정보 매핑 및 삽입
         switch (createRequestDTO.getProjectType()) {
@@ -90,7 +90,7 @@ public class ProjectService {
                 ChallengeProjectVO challengeVO = challengeRequestDTO.toChallengeVO();
                 challengeVO.setProjectId(projectId);
                 projectDAO.insertChallengeProject(challengeVO);
-                responseDTO.setDetailVO(challengeVO);
+                responseDTO.setDetailInfo(challengeVO);
                 break;
 
             case Donation:
@@ -98,7 +98,7 @@ public class ProjectService {
                 DonationProjectVO donationVO = donationRequestDTO.toDonationVO();
                 donationVO.setProjectId(projectId);
                 projectDAO.insertDonationProject(donationVO);
-                responseDTO.setDetailVO(donationVO);
+                responseDTO.setDetailInfo(donationVO);
                 break;
 
             case Loan:
@@ -106,7 +106,7 @@ public class ProjectService {
                 LoanProjectVO loanVO = loanRequestDTO.toLoanVO();
                 loanVO.setProjectId(projectId);
                 projectDAO.insertLoanProject(loanVO);
-                responseDTO.setDetailVO(loanVO);
+                responseDTO.setDetailInfo(loanVO);
                 break;
 
             case Savings:
@@ -114,7 +114,7 @@ public class ProjectService {
                 SavingsProjectVO savingsVO = savingsRequestDTO.toSavingsVO();
                 savingsVO.setProjectId(projectId);
                 projectDAO.insertSavingsProject(savingsVO);
-                responseDTO.setDetailVO(savingsVO);
+                responseDTO.setDetailInfo(savingsVO);
                 break;
 
             default:
