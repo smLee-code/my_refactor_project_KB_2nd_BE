@@ -6,8 +6,7 @@ import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class LoanProjectResponseDTO extends ProjectResponseDTO {
+public class LoanProjectResponseDTO {
 
     // Loan 고유 칼럼
     private Long loanLimit; // 대출 한도
