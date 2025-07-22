@@ -9,6 +9,8 @@ import org.funding.votes.vo.VotesVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class VotesService {
@@ -35,5 +37,18 @@ public class VotesService {
 
         Long voteId = votesVO.getVoteId();
         votesDAO.deleteVotes(voteId);
+    }
+
+    public List<Long> findVotedProjects(Long userId) {
+        List<Long> votedProjects = votesDAO.selectVotedProjectsByUserId(userId);
+
+        return votedProjects;
+    }
+
+    public Long countVotes(Long projectId) {
+
+        Long voteCount = votesDAO.countVotes(projectId);
+
+        return voteCount;
     }
 }

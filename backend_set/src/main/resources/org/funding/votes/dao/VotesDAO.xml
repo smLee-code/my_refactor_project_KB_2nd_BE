@@ -18,9 +18,18 @@
         VALUES (#{userId}, #{projectId}, NOW())
     </insert>
 
-
     <delete id="deleteVotes" parameterType="Long">
         DELETE FROM votes WHERE vote_id = #{voteId}
     </delete>
+
+    <select id="selectVotedProjectsByUserId" parameterType="Long" resultType="Long">
+        SELECT project_id FROM votes WHERE user_id = #{userId}
+    </select>
+
+    <select id="countVotes" parameterType="Long" resultType="Long">
+        SELECT count(*) FROM votes GROUP BY project_id HAVING  project_id = #{projectId}
+    </select>
+
+
 
 </mapper>
