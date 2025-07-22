@@ -90,8 +90,22 @@
         WHERE progress = #{progress}
     </select>
 
+    <!-- 펀딩 목록 resultMap -->
+    <resultMap id="fundListResultMap" type="org.funding.fund.dto.FundListResponseDTO">
+        <result property="fundId" column="fundId"/>
+        <result property="productId" column="productId"/>
+        <result property="projectId" column="projectId"/>
+        <result property="progress" column="progress" javaType="org.funding.fund.vo.enumType.ProgressType"/>
+        <result property="launchAt" column="launchAt"/>
+        <result property="endAt" column="endAt"/>
+        <result property="financialInstitution" column="financialInstitution"/>
+        <result property="name" column="name"/>
+        <result property="thumbnail" column="thumbnail"/>
+        <result property="fundType" column="fundType" javaType="org.funding.fund.vo.enumType.FundType"/>
+    </resultMap>
+
     <!-- 진행상태 + 펀드타입별 펀딩 목록 조회 -->
-    <select id="selectByProgressAndFundType" resultType="org.funding.fund.dto.FundListResponseDTO">
+    <select id="selectByProgressAndFundType" resultMap="fundListResultMap">
         SELECT 
             f.fund_id as fundId, 
             f.product_id as productId, 
@@ -112,8 +126,45 @@
         ORDER BY f.fund_id DESC
     </select>
 
+    <!-- 펀딩 상세 resultMap -->
+    <resultMap id="fundDetailResultMap" type="org.funding.fund.dto.FundDetailResponseDTO">
+        <result property="fundId" column="fundId"/>
+        <result property="productId" column="productId"/>
+        <result property="projectId" column="projectId"/>
+        <result property="progress" column="progress" javaType="org.funding.fund.vo.enumType.ProgressType"/>
+        <result property="launchAt" column="launchAt"/>
+        <result property="endAt" column="endAt"/>
+        <result property="financialInstitution" column="financialInstitution"/>
+        <result property="name" column="name"/>
+        <result property="detail" column="detail"/>
+        <result property="fundType" column="fundType" javaType="org.funding.fund.vo.enumType.FundType"/>
+        <result property="iconUrl" column="iconUrl"/>
+        <result property="finalUrl" column="finalUrl"/>
+        <result property="startDate" column="startDate"/>
+        <result property="endDate" column="endDate"/>
+        <result property="productCondition" column="productCondition"/>
+        <result property="periodDays" column="periodDays"/>
+        <result property="interestRate" column="interestRate"/>
+        <result property="successCondition" column="successCondition"/>
+        <result property="recipient" column="recipient"/>
+        <result property="usagePlan" column="usagePlan"/>
+        <result property="minDonationAmount" column="minDonationAmount"/>
+        <result property="maxDonationAmount" column="maxDonationAmount"/>
+        <result property="targetAmount" column="targetAmount"/>
+        <result property="loanLimit" column="loanLimit"/>
+        <result property="repaymentStartDate" column="repaymentStartDate"/>
+        <result property="repaymentEndDate" column="repaymentEndDate"/>
+        <result property="minInterestRate" column="minInterestRate"/>
+        <result property="maxInterestRate" column="maxInterestRate"/>
+        <result property="loanReward" column="loanReward"/>
+        <result property="loanRewardCondition" column="loanRewardCondition"/>
+        <result property="challengePeriodDays" column="challengePeriodDays"/>
+        <result property="challengeReward" column="challengeReward"/>
+        <result property="challengeRewardCondition" column="challengeRewardCondition"/>
+    </resultMap>
+
     <!-- 펀딩 상세 조회 (fund_id로 조회) -->
-    <select id="selectDetailById" parameterType="long" resultType="org.funding.fund.dto.FundDetailResponseDTO">
+    <select id="selectDetailById" parameterType="long" resultMap="fundDetailResultMap">
         SELECT 
             f.fund_id as fundId,
             f.product_id as productId,

@@ -19,6 +19,8 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.math.BigDecimal;
 
 /**
  * 펀딩 생성 서비스
@@ -324,64 +326,8 @@ public class FundService {
             financialProductDAO.update(productVO);
             
             // 4. 타입별 상세 테이블 업데이트
-            switch (existingFund.getFundType()) {
-                case Savings:
-                    if (request.getSavingsInfo() != null) {
-                        SavingsVO savingsVO = savingsDAO.selectByProductId(existingFund.getProductId());
-                        if (savingsVO != null) {
-                            FundUpdateRequestDTO.SavingsUpdate savingsUpdate = request.getSavingsInfo();
-                            if (savingsUpdate.getPeriodDays() != null) savingsVO.setPeriodDays(savingsUpdate.getPeriodDays());
-                            if (savingsUpdate.getInterestRate() != null) savingsVO.setInterestRate(savingsUpdate.getInterestRate().doubleValue());
-                            if (savingsUpdate.getSuccessCondition() != null) savingsVO.setSuccessCondition(savingsUpdate.getSuccessCondition());
-                            savingsDAO.update(savingsVO);
-                        }
-                    }
-                    break;
-                    
-                case Donation:
-                    if (request.getDonationInfo() != null) {
-                        DonationVO donationVO = donationDAO.selectByProductId(existingFund.getProductId());
-                        if (donationVO != null) {
-                            FundUpdateRequestDTO.DonationUpdate donationUpdate = request.getDonationInfo();
-                            if (donationUpdate.getRecipient() != null) donationVO.setRecipient(donationUpdate.getRecipient());
-                            if (donationUpdate.getUsagePlan() != null) donationVO.setUsagePlan(donationUpdate.getUsagePlan());
-                            if (donationUpdate.getMinDonationAmount() != null) donationVO.setMinDonationAmount(donationUpdate.getMinDonationAmount().intValue());
-                            if (donationUpdate.getMaxDonationAmount() != null) donationVO.setMaxDonationAmount(donationUpdate.getMaxDonationAmount().intValue());
-                            if (donationUpdate.getTargetAmount() != null) donationVO.setTargetAmount(donationUpdate.getTargetAmount());
-                            donationDAO.update(donationVO);
-                        }
-                    }
-                    break;
-                    
-                case Loan:
-                    if (request.getLoanInfo() != null) {
-                        LoanVO loanVO = loanDAO.selectByProductId(existingFund.getProductId());
-                        if (loanVO != null) {
-                            FundUpdateRequestDTO.LoanUpdate loanUpdate = request.getLoanInfo();
-                            if (loanUpdate.getLoanLimit() != null) loanVO.setLoanLimit(loanUpdate.getLoanLimit());
-                            if (loanUpdate.getRepaymentStartDate() != null) loanVO.setRepaymentStartDate(loanUpdate.getRepaymentStartDate().atStartOfDay());
-                            if (loanUpdate.getRepaymentEndDate() != null) loanVO.setRepaymentEndDate(loanUpdate.getRepaymentEndDate().atStartOfDay());
-                            if (loanUpdate.getMinInterestRate() != null) loanVO.setMinInterestRate(loanUpdate.getMinInterestRate().doubleValue());
-                            if (loanUpdate.getMaxInterestRate() != null) loanVO.setMaxInterestRate(loanUpdate.getMaxInterestRate().doubleValue());
-                            if (loanUpdate.getReward() != null) loanVO.setReward(loanUpdate.getReward());
-                            if (loanUpdate.getRewardCondition() != null) loanVO.setRewardCondition(loanUpdate.getRewardCondition());
-                            loanDAO.update(loanVO);
-                        }
-                    }
-                    break;
-                    
-                case Challenge:
-                    if (request.getChallengeInfo() != null) {
-                        ChallengeVO challengeVO = challengeDAO.selectByProductId(existingFund.getProductId());
-                        if (challengeVO != null) {
-                            FundUpdateRequestDTO.ChallengeUpdate challengeUpdate = request.getChallengeInfo();
-                            if (challengeUpdate.getChallengePeriodDays() != null) challengeVO.setChallengePeriodDays(challengeUpdate.getChallengePeriodDays());
-                            if (challengeUpdate.getReward() != null) challengeVO.setReward(challengeUpdate.getReward());
-                            if (challengeUpdate.getRewardCondition() != null) challengeVO.setRewardCondition(challengeUpdate.getRewardCondition());
-                            challengeDAO.update(challengeVO);
-                        }
-                    }
-                    break;
+            if (request.getProductDetails() != null) {
+                updateProductDetails(existingFund.getFundType(), existingFund.getProductId(), request.getProductDetails());
             }
             
             log.info("Fund updated successfully with id: {}", fundId);
@@ -392,6 +338,100 @@ public class FundService {
         } catch (Exception e) {
             log.error("Error updating fund: ", e);
             throw new RuntimeException("펀딩 수정 중 오류가 발생했습니다.", e);
+        }
+    }
+    
+    /**
+     * 타입별 상세 정보 업데이트 헬퍼 메서드
+     */
+    @SuppressWarnings("unchecked")
+    private void updateProductDetails(FundType fundType, Long productId, Object details) {
+        // Object를 Map으로 캐스팅 (Jackson이 JSON을 LinkedHashMap으로 변환)
+        Map<String, Object> detailsMap = (Map<String, Object>) details;
+        switch (fundType) {
+            case Savings:
+                SavingsVO savingsVO = savingsDAO.selectByProductId(productId);
+                if (savingsVO != null) {
+                    if (detailsMap.containsKey("periodDays")) {
+                        savingsVO.setPeriodDays(((Number) detailsMap.get("periodDays")).intValue());
+                    }
+                    if (detailsMap.containsKey("interestRate")) {
+                        savingsVO.setInterestRate(((Number) detailsMap.get("interestRate")).doubleValue());
+                    }
+                    if (detailsMap.containsKey("successCondition")) {
+                        savingsVO.setSuccessCondition((String) detailsMap.get("successCondition"));
+                    }
+                    savingsDAO.update(savingsVO);
+                }
+                break;
+                
+            case Donation:
+                DonationVO donationVO = donationDAO.selectByProductId(productId);
+                if (donationVO != null) {
+                    if (detailsMap.containsKey("recipient")) {
+                        donationVO.setRecipient((String) detailsMap.get("recipient"));
+                    }
+                    if (detailsMap.containsKey("usagePlan")) {
+                        donationVO.setUsagePlan((String) detailsMap.get("usagePlan"));
+                    }
+                    if (detailsMap.containsKey("minDonationAmount")) {
+                        donationVO.setMinDonationAmount(((Number) detailsMap.get("minDonationAmount")).intValue());
+                    }
+                    if (detailsMap.containsKey("maxDonationAmount")) {
+                        donationVO.setMaxDonationAmount(((Number) detailsMap.get("maxDonationAmount")).intValue());
+                    }
+                    if (detailsMap.containsKey("targetAmount")) {
+                        donationVO.setTargetAmount(((Number) detailsMap.get("targetAmount")).longValue());
+                    }
+                    donationDAO.update(donationVO);
+                }
+                break;
+                
+            case Loan:
+                LoanVO loanVO = loanDAO.selectByProductId(productId);
+                if (loanVO != null) {
+                    if (detailsMap.containsKey("loanLimit")) {
+                        loanVO.setLoanLimit(((Number) detailsMap.get("loanLimit")).longValue());
+                    }
+                    if (detailsMap.containsKey("repaymentStartDate")) {
+                        String dateStr = (String) detailsMap.get("repaymentStartDate");
+                        loanVO.setRepaymentStartDate(LocalDate.parse(dateStr).atStartOfDay());
+                    }
+                    if (detailsMap.containsKey("repaymentEndDate")) {
+                        String dateStr = (String) detailsMap.get("repaymentEndDate");
+                        loanVO.setRepaymentEndDate(LocalDate.parse(dateStr).atStartOfDay());
+                    }
+                    if (detailsMap.containsKey("minInterestRate")) {
+                        loanVO.setMinInterestRate(((Number) detailsMap.get("minInterestRate")).doubleValue());
+                    }
+                    if (detailsMap.containsKey("maxInterestRate")) {
+                        loanVO.setMaxInterestRate(((Number) detailsMap.get("maxInterestRate")).doubleValue());
+                    }
+                    if (detailsMap.containsKey("reward")) {
+                        loanVO.setReward((String) detailsMap.get("reward"));
+                    }
+                    if (detailsMap.containsKey("rewardCondition")) {
+                        loanVO.setRewardCondition((String) detailsMap.get("rewardCondition"));
+                    }
+                    loanDAO.update(loanVO);
+                }
+                break;
+                
+            case Challenge:
+                ChallengeVO challengeVO = challengeDAO.selectByProductId(productId);
+                if (challengeVO != null) {
+                    if (detailsMap.containsKey("challengePeriodDays")) {
+                        challengeVO.setChallengePeriodDays(((Number) detailsMap.get("challengePeriodDays")).intValue());
+                    }
+                    if (detailsMap.containsKey("reward")) {
+                        challengeVO.setReward((String) detailsMap.get("reward"));
+                    }
+                    if (detailsMap.containsKey("rewardCondition")) {
+                        challengeVO.setRewardCondition((String) detailsMap.get("rewardCondition"));
+                    }
+                    challengeDAO.update(challengeVO);
+                }
+                break;
         }
     }
 

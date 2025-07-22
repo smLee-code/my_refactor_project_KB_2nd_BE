@@ -19,7 +19,7 @@ public interface FinancialProductDAO {
     List<FinancialProductVO> selectByFundType(FundType fundType);
     
     // 금융상품 수정
-    FinancialProductVO update(FinancialProductVO productVO);
+    void update(FinancialProductVO productVO);
     
     // 금융상품 삭제
     boolean delete(Long productId);

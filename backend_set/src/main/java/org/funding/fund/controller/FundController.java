@@ -163,7 +163,7 @@ public class FundController {
      * 요청 바디에 수정하고자 하는 필드만 포함시키면 해당 필드만 업데이트됨
      */
     @PutMapping("/{fundId}")
-    public ResponseEntity<Map<String, String>> updateFund(
+    public ResponseEntity<?> updateFund(
             @PathVariable Long fundId, 
             @RequestBody FundUpdateRequestDTO request) {
         String result = fundService.updateFund(fundId, request);
