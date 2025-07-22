@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({"classpath:/application.properties"})
-@MapperScan(basePackages = {"org.funding.user.dao", "org.funding.project.dao"})
+@MapperScan(basePackages = {"org.funding.user.dao", "org.funding.project.dao", "org.funding.votes.dao"})
 public class RootConfig {
   @Value("${jdbc.driver}")
   String driver;
