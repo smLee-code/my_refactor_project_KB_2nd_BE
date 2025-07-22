@@ -13,7 +13,7 @@ import java.io.IOException;
 @Component
 public class OpenAIClient {
 
-    private static final String API_URL = "https://api.openai.com/v1/completions";
+    private static final String API_URL = "https://api.openai.com/v1/chat/completions";
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
     @Value("${openai.api.key}")

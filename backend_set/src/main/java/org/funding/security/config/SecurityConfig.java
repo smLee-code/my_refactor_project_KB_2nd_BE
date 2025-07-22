@@ -130,6 +130,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/mail/send",
                             "mail/verify",
                             "/ai/ask",
+                            "/ai/fund",
                             "/badge/create",
                             "/badge/{id}",
                             "/badge/all/badge").permitAll()
@@ -170,6 +171,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/mail/send",
             "/mail/verify",
             "/ai/ask",
+            "/ai/fund",
             "/badge/create",
             "/badge/{id}",
             "/badge/all/badge"

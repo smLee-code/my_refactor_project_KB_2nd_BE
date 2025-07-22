@@ -154,4 +154,5 @@ public class FundController {
         FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId);
         return ResponseEntity.ok(fundDetail);
     }
+
 }

@@ -33,4 +33,5 @@ public interface FundDAO {
     
     // 펀딩 상세 조회 by ID
     FundDetailResponseDTO selectDetailById(Long fundId);
+  
 }
