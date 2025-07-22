@@ -53,6 +53,12 @@
         DELETE FROM fund_db.challenge
         WHERE challenge_id = #{challengeId}
     </delete>
+    
+    <!-- 금융상품 ID로 챌린지 상품 삭제 -->
+    <delete id="deleteByProductId" parameterType="long">
+        DELETE FROM fund_db.challenge
+        WHERE product_id = #{productId}
+    </delete>
 
     <!-- 모든 챌린지 상품 조회 -->
     <select id="selectAll" resultMap="challengeMap">
