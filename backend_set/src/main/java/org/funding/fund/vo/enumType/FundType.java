@@ -1,5 +1,8 @@
 package org.funding.fund.vo.enumType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum FundType {
     // ENUM: "저축", "대출", "챌린지", "기부"
     Savings, Loan, Challenge, Donation;
