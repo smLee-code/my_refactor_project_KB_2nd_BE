@@ -1,9 +1,11 @@
 package org.funding.votes.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.exception.DuplicateVoteException;
 import org.funding.votes.dto.VotesRequestDTO;
 import org.funding.votes.dto.VotesResponseDTO;
 import org.funding.votes.service.VotesService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +20,14 @@ public class VotesController {
 
     @PostMapping("")
     public ResponseEntity<VotesResponseDTO> castVote(@RequestBody VotesRequestDTO requestDTO) {
-        VotesResponseDTO responseDTO = votesService.createVotes(requestDTO);
 
-        return ResponseEntity.ok(responseDTO);
+        try {
+            VotesResponseDTO responseDTO = votesService.createVotes(requestDTO);
+            return ResponseEntity.ok(responseDTO);
+        } catch (DuplicateVoteException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+
     }
 
     @DeleteMapping("")

@@ -1,6 +1,7 @@
 package org.funding.votes.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.exception.DuplicateVoteException;
 import org.funding.project.dto.response.ProjectResponseDTO;
 import org.funding.votes.dao.VotesDAO;
 import org.funding.votes.dto.VotesRequestDTO;
@@ -18,6 +19,11 @@ public class VotesService {
     private final VotesDAO votesDAO;
 
     public VotesResponseDTO createVotes(VotesRequestDTO requestDTO) {
+
+        if(votesDAO.selectVotes(requestDTO) != null) {
+            throw new DuplicateVoteException("이미 투표한 프로젝트입니다. (중복 투표 불가)");
+        }
+
         VotesVO votesVO = requestDTO.toVO();
         votesDAO.insertVotes(votesVO);
         Long voteId = votesVO.getVoteId();

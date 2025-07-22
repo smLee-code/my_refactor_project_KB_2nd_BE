@@ -27,7 +27,7 @@
     </select>
 
     <select id="countVotes" parameterType="Long" resultType="Long">
-        SELECT count(*) FROM votes GROUP BY project_id HAVING  project_id = #{projectId}
+        SELECT count(*) FROM votes WHERE project_id = #{projectId}
     </select>
 
 
