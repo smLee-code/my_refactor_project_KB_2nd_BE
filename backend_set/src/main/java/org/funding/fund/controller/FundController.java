@@ -3,6 +3,7 @@ package org.funding.fund.controller;
 import lombok.RequiredArgsConstructor;
 import org.funding.fund.dto.FundProductRequestDTO;
 import org.funding.fund.dto.FundListResponseDTO;
+import org.funding.fund.dto.FundDetailResponseDTO;
 import org.funding.fund.service.FundService;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
@@ -140,5 +141,17 @@ public class FundController {
             @RequestParam(required = false) FundType fundType) {
         List<FundListResponseDTO> funds = fundService.getFundsByProgressAndType(progress, fundType);
         return ResponseEntity.ok(funds);
+    }
+    
+    /**
+     * 펀딩 상세 조회
+     * GET /api/fund/{fundId}
+     * fund_id로 펀딩 정보와 연관된 모든 상세 정보를 조회
+     * (fund + financial_product + 타입별 상세 테이블)
+     */
+    @GetMapping("/{fundId}")
+    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId) {
+        FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId);
+        return ResponseEntity.ok(fundDetail);
     }
 }

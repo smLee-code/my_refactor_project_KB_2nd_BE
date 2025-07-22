@@ -112,5 +112,50 @@
         ORDER BY f.fund_id DESC
     </select>
 
+    <!-- 펀딩 상세 조회 (fund_id로 조회) -->
+    <select id="selectDetailById" parameterType="long" resultType="org.funding.fund.dto.FundDetailResponseDTO">
+        SELECT 
+            f.fund_id as fundId,
+            f.product_id as productId,
+            f.project_id as projectId,
+            f.progress as progress,
+            f.launch_at as launchAt,
+            f.end_at as endAt,
+            f.financial_institution as financialInstitution,
+            fp.name as name,
+            fp.detail as detail,
+            fp.fund_type as fundType,
+            fp.icon_url as iconUrl,
+            fp.final_url as finalUrl,
+            fp.start_date as startDate,
+            fp.end_date as endDate,
+            fp.product_condition as productCondition,
+            s.period_days as periodDays,
+            s.interest_rate as interestRate,
+            s.success_condition as successCondition,
+            d.recipient as recipient,
+            d.usage_plan as usagePlan,
+            d.min_donation_amount as minDonationAmount,
+            d.max_donation_amount as maxDonationAmount,
+            d.target_amount as targetAmount,
+            l.loan_limit as loanLimit,
+            l.repayment_start_date as repaymentStartDate,
+            l.repayment_end_date as repaymentEndDate,
+            l.min_interest_rate as minInterestRate,
+            l.max_interest_rate as maxInterestRate,
+            l.reward as loanReward,
+            l.reward_condition as loanRewardCondition,
+            c.challenge_period_days as challengePeriodDays,
+            c.reward as challengeReward,
+            c.reward_condition as challengeRewardCondition
+        FROM fund_db.fund f
+        INNER JOIN fund_db.financial_product fp ON f.product_id = fp.product_id
+        LEFT JOIN fund_db.savings s ON fp.product_id = s.product_id AND fp.fund_type = 'SAVINGS'
+        LEFT JOIN fund_db.donation d ON fp.product_id = d.product_id AND fp.fund_type = 'DONATION'
+        LEFT JOIN fund_db.loan l ON fp.product_id = l.product_id AND fp.fund_type = 'LOAN'
+        LEFT JOIN fund_db.challenge c ON fp.product_id = c.product_id AND fp.fund_type = 'CHALLENGE'
+        WHERE f.fund_id = #{fundId}
+    </select>
+
 
 </mapper>
