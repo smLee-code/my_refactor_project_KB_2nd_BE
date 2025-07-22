@@ -104,7 +104,7 @@
             fp.icon_url as thumbnail,
             fp.fund_type as fundType
         FROM fund_db.fund f
-        INNER JOIN fund_db.financialproduct fp ON f.product_id = fp.product_id
+        INNER JOIN fund_db.financial_product fp ON f.product_id = fp.product_id
         WHERE f.progress = #{progress}
         <if test="fundType != null">
             AND fp.fund_type = #{fundType}
