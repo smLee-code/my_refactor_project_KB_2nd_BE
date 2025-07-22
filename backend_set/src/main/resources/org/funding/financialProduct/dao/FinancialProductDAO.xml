@@ -16,7 +16,7 @@
 
     <!-- 금융상품 생성 -->
     <insert id="insert" parameterType="org.funding.financialProduct.vo.FinancialProductVO" useGeneratedKeys="true" keyProperty="productId">
-        INSERT INTO fund_db.financialproduct (
+        INSERT INTO fund_db.financial_product (
             name, detail, fund_type, icon_url, final_url, start_date, end_date, product_condition
         ) VALUES (
             #{name}, #{detail}, #{fundType}, #{thumbnail}, null, NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR), #{joinCondition}
@@ -27,7 +27,7 @@
     <select id="selectById" parameterType="long" resultMap="financialProductMap">
         SELECT 
             product_id, name, detail, fund_type, icon_url, product_condition
-        FROM fund_db.financialproduct
+        FROM fund_db.financial_product
         WHERE product_id = #{productId}
     </select>
 
@@ -35,13 +35,13 @@
     <select id="selectByFundType" parameterType="string" resultMap="financialProductMap">
         SELECT 
             product_id, name, detail, fund_type, icon_url, product_condition
-        FROM fund_db.financialproduct
+        FROM fund_db.financial_product
         WHERE fund_type = #{fundType}
     </select>
 
     <!-- 금융상품 업데이트 -->
     <update id="update" parameterType="org.funding.financialProduct.vo.FinancialProductVO">
-        UPDATE fund_db.financialproduct
+        UPDATE fund_db.financial_product
         SET 
             name = #{name},
             detail = #{detail},
@@ -53,7 +53,7 @@
 
     <!-- 금융상품 삭제 -->
     <delete id="delete" parameterType="long">
-        DELETE FROM fund_db.financialproduct
+        DELETE FROM fund_db.financial_product
         WHERE product_id = #{productId}
     </delete>
 
@@ -61,7 +61,7 @@
     <select id="selectAll" resultMap="financialProductMap">
         SELECT 
             product_id, name, detail, fund_type, icon_url, product_condition
-        FROM fund_db.financialproduct
+        FROM fund_db.financial_product
         ORDER BY product_id DESC
     </select>
 

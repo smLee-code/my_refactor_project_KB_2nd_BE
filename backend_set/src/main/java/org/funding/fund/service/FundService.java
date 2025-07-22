@@ -10,7 +10,11 @@ import org.funding.fund.dto.FundProductRequestDTO;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.fund.dto.FundListResponseDTO;
+import org.funding.fund.dto.FundDetailResponseDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -263,6 +267,31 @@ public class FundService {
         }
     }
     
+    /**
+     * 진행상태 + 펀드타입별 펀딩 목록 조회 (펀드타입은 선택사항)
+     * 
+     * @param progress 진행상태 (Launch, End)
+     * @param fundType 펀드타입 (Savings, Loan, Challenge, Donation) - null이면 모든 타입
+     * @return 조건에 맞는 펀딩 목록 (상품명과 썸네일 포함)
+     */
+    public List<FundListResponseDTO> getFundsByProgressAndType(ProgressType progress, FundType fundType) {
+        return fundDAO.selectByProgressAndFundType(progress, fundType);
+    }
+    
+    /**
+     * 펀딩 상세 조회
+     * fund_id로 펀딩 정보와 연관된 금융상품, 그리고 상품 타입별 상세 정보를 조회
+     * 
+     * @param fundId 펀딩 ID
+     * @return 펀딩 상세 정보 (fund + financial_product + 타입별 상세)
+     */
+    public FundDetailResponseDTO getFundDetail(Long fundId) {
+        FundDetailResponseDTO fundDetail = fundDAO.selectDetailById(fundId);
+        if (fundDetail == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 펀딩입니다. fundId: " + fundId);
+        }
+        return fundDetail;
+    }
 
 }
 
