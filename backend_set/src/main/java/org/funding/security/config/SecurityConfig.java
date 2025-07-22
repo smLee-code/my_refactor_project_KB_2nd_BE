@@ -164,6 +164,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/assets/**",
             "/*",
             "/api/member/**",
+            "/api/comment/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v2/api-docs",
@@ -175,6 +176,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/badge/create",
             "/badge/{id}",
             "/badge/all/badge"
+
     );
   }
 }
