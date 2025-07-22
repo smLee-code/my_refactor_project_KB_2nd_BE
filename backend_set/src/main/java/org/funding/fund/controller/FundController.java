@@ -169,5 +169,17 @@ public class FundController {
         String result = fundService.updateFund(fundId, request);
         return ResponseEntity.ok(Map.of("message", result));
     }
+    
+    /**
+     * 펀딩 삭제
+     * DELETE /api/fund/{fundId}
+     * fund_id로 펀딩과 관련된 모든 데이터를 삭제
+     * (fund -> 타입별 테이블 -> financial_product 순서로 삭제)
+     */
+    @DeleteMapping("/{fundId}")
+    public ResponseEntity<?> deleteFund(@PathVariable Long fundId) {
+        String result = fundService.deleteFund(fundId);
+        return ResponseEntity.ok(Map.of("message", result));
+    }
 
 }

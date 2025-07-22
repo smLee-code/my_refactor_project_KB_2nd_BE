@@ -8,4 +8,5 @@ public interface LoanDAO {
     void insertLoan(LoanVO vo);
     LoanVO selectByProductId(Long productId);
     void update(LoanVO vo);
+    void deleteByProductId(Long productId);
 }

@@ -8,4 +8,5 @@ public interface ChallengeDAO {
     void insertChallenge(ChallengeVO vo);
     ChallengeVO selectByProductId(Long productId);
     void update(ChallengeVO vo);
+    void deleteByProductId(Long productId);
 }

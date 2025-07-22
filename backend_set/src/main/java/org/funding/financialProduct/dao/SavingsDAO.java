@@ -8,4 +8,5 @@ public interface SavingsDAO {
     void insertSavings(SavingsVO vo);
     SavingsVO selectByProductId(Long productId);
     void update(SavingsVO vo);
+    void deleteByProductId(Long productId);
 }

@@ -434,6 +434,62 @@ public class FundService {
                 break;
         }
     }
+    
+    /**
+     * 펀딩 삭제
+     * fund_id로 펀딩과 관련된 모든 데이터를 삭제
+     * 외래키 제약 조건 때문에 삭제 순서 중요:
+     * 1. fund 테이블 삭제
+     * 2. 타입별 상세 테이블 삭제 (savings/donation/loan/challenge)
+     * 3. financial_product 테이블 삭제
+     * 
+     * @param fundId 삭제할 펀딩 ID
+     * @return 성공 메시지
+     */
+    public String deleteFund(Long fundId) {
+        try {
+            // 1. 펀딩 존재 여부 확인
+            FundDetailResponseDTO existingFund = getFundDetail(fundId);
+            Long productId = existingFund.getProductId();
+            FundType fundType = existingFund.getFundType();
+            
+            // 2. fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
+            fundDAO.delete(fundId);
+            log.info("Fund deleted with id: {}", fundId);
+            
+            // 3. 타입별 상세 테이블에서 삭제
+            switch (fundType) {
+                case Savings:
+                    savingsDAO.deleteByProductId(productId);
+                    log.info("Savings details deleted for productId: {}", productId);
+                    break;
+                case Donation:
+                    donationDAO.deleteByProductId(productId);
+                    log.info("Donation details deleted for productId: {}", productId);
+                    break;
+                case Loan:
+                    loanDAO.deleteByProductId(productId);
+                    log.info("Loan details deleted for productId: {}", productId);
+                    break;
+                case Challenge:
+                    challengeDAO.deleteByProductId(productId);
+                    log.info("Challenge details deleted for productId: {}", productId);
+                    break;
+            }
+            
+            // 4. financial_product 테이블에서 삭제 (외래키 참조가 없어진 후)
+            financialProductDAO.delete(productId);
+            log.info("Financial product deleted with id: {}", productId);
+            
+            return "펀딩이 성공적으로 삭제되었습니다.";
+            
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error deleting fund: ", e);
+            throw new RuntimeException("펀딩 삭제 중 오류가 발생했습니다.", e);
+        }
+    }
 
 }
 
