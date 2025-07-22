@@ -133,6 +133,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/ai/fund",
                             "/badge/create",
                             "/badge/{id}",
+                            "/ai/{fundId}/ai-recommend",
                             "/badge/all/badge").permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
@@ -174,7 +175,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/ai/fund",
             "/badge/create",
             "/badge/{id}",
-            "/badge/all/badge"
+            "/badge/all/badge",
+            "/ai/{fundId}/ai-recommend"
     );
   }
 }
