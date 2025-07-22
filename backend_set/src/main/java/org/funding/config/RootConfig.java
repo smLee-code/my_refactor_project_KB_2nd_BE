@@ -24,7 +24,8 @@ import javax.sql.DataSource;
         "org.funding.badge.dao",
         "org.funding.financialProduct.dao",
         "org.funding.fund.dao",
-        "org.funding.votes.dao"
+        "org.funding.votes.dao",
+        "org.funding.comment.dao"
 })
 public class RootConfig {
   @Value("${jdbc.driver}")

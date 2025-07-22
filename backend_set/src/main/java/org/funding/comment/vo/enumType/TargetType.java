@@ -1,10 +1,10 @@
 package org.funding.comment.vo.enumType;
 
-public enum CommentType {
+public enum TargetType {
     Funding, Project;
 
-    public static CommentType fromString(String value) {
-        for (CommentType commentType : CommentType.values()) {
+    public static TargetType fromString(String value) {
+        for (TargetType commentType : TargetType.values()) {
             if (commentType.name().equals(value)) {
                 return commentType;
             }
