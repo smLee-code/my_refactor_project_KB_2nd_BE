@@ -22,14 +22,6 @@ public class ProjectService {
     private final ProjectDAO projectDAO;
 
 
-    /**
-     * 프로젝트 ID로 프로젝트를 조회합니다.
-     *
-     * @param projectId 조회할 프로젝트 ID
-     * @return ProjectVO (조회된 프로젝트 정보)
-     * @throws RuntimeException 프로젝트가 존재하지 않을 경우
-     */
-
     public ProjectVO selectProjectById(Long projectId) {
         ProjectVO project = projectDAO.selectProjectById(projectId);
         if (project == null) {
