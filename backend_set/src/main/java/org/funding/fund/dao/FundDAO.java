@@ -20,7 +20,7 @@ public interface FundDAO {
     FundVO selectById(Long fundId);
 
     // 펀딩 업데이트
-    FundVO update(FundVO fundVO);
+    void update(FundVO fundVO);
 
     // 펀딩 삭제
     boolean delete(Long fundId);

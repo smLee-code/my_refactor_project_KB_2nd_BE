@@ -12,6 +12,7 @@ import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.fund.dto.FundListResponseDTO;
 import org.funding.fund.dto.FundDetailResponseDTO;
+import org.funding.fund.dto.FundUpdateRequestDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -291,6 +292,107 @@ public class FundService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 펀딩입니다. fundId: " + fundId);
         }
         return fundDetail;
+    }
+    
+    /**
+     * 펀딩 수정
+     * fund_id로 펀딩과 연관된 모든 정보를 수정
+     * 
+     * @param fundId 펀딩 ID
+     * @param request 수정할 펀딩 정보
+     * @return 성공 메시지
+     */
+    public String updateFund(Long fundId, FundUpdateRequestDTO request) {
+        try {
+            // 1. 펀딩 존재 여부 확인
+            FundDetailResponseDTO existingFund = getFundDetail(fundId);
+            
+            // 2. Fund 테이블 업데이트
+            FundVO fundVO = fundDAO.selectById(fundId);
+            if (request.getProgress() != null) fundVO.setProgress(request.getProgress());
+            if (request.getLaunchAt() != null) fundVO.setLaunchAt(request.getLaunchAt());
+            if (request.getEndAt() != null) fundVO.setEndAt(request.getEndAt());
+            if (request.getFinancialInstitution() != null) fundVO.setFinancialInstitution(request.getFinancialInstitution());
+            fundDAO.update(fundVO);
+            
+            // 3. Financial Product 테이블 업데이트
+            FinancialProductVO productVO = financialProductDAO.selectById(existingFund.getProductId());
+            if (request.getName() != null) productVO.setName(request.getName());
+            if (request.getDetail() != null) productVO.setDetail(request.getDetail());
+            if (request.getIconUrl() != null) productVO.setThumbnail(request.getIconUrl());
+            if (request.getProductCondition() != null) productVO.setJoinCondition(request.getProductCondition());
+            financialProductDAO.update(productVO);
+            
+            // 4. 타입별 상세 테이블 업데이트
+            switch (existingFund.getFundType()) {
+                case Savings:
+                    if (request.getSavingsInfo() != null) {
+                        SavingsVO savingsVO = savingsDAO.selectByProductId(existingFund.getProductId());
+                        if (savingsVO != null) {
+                            FundUpdateRequestDTO.SavingsUpdate savingsUpdate = request.getSavingsInfo();
+                            if (savingsUpdate.getPeriodDays() != null) savingsVO.setPeriodDays(savingsUpdate.getPeriodDays());
+                            if (savingsUpdate.getInterestRate() != null) savingsVO.setInterestRate(savingsUpdate.getInterestRate().doubleValue());
+                            if (savingsUpdate.getSuccessCondition() != null) savingsVO.setSuccessCondition(savingsUpdate.getSuccessCondition());
+                            savingsDAO.update(savingsVO);
+                        }
+                    }
+                    break;
+                    
+                case Donation:
+                    if (request.getDonationInfo() != null) {
+                        DonationVO donationVO = donationDAO.selectByProductId(existingFund.getProductId());
+                        if (donationVO != null) {
+                            FundUpdateRequestDTO.DonationUpdate donationUpdate = request.getDonationInfo();
+                            if (donationUpdate.getRecipient() != null) donationVO.setRecipient(donationUpdate.getRecipient());
+                            if (donationUpdate.getUsagePlan() != null) donationVO.setUsagePlan(donationUpdate.getUsagePlan());
+                            if (donationUpdate.getMinDonationAmount() != null) donationVO.setMinDonationAmount(donationUpdate.getMinDonationAmount().intValue());
+                            if (donationUpdate.getMaxDonationAmount() != null) donationVO.setMaxDonationAmount(donationUpdate.getMaxDonationAmount().intValue());
+                            if (donationUpdate.getTargetAmount() != null) donationVO.setTargetAmount(donationUpdate.getTargetAmount());
+                            donationDAO.update(donationVO);
+                        }
+                    }
+                    break;
+                    
+                case Loan:
+                    if (request.getLoanInfo() != null) {
+                        LoanVO loanVO = loanDAO.selectByProductId(existingFund.getProductId());
+                        if (loanVO != null) {
+                            FundUpdateRequestDTO.LoanUpdate loanUpdate = request.getLoanInfo();
+                            if (loanUpdate.getLoanLimit() != null) loanVO.setLoanLimit(loanUpdate.getLoanLimit());
+                            if (loanUpdate.getRepaymentStartDate() != null) loanVO.setRepaymentStartDate(loanUpdate.getRepaymentStartDate().atStartOfDay());
+                            if (loanUpdate.getRepaymentEndDate() != null) loanVO.setRepaymentEndDate(loanUpdate.getRepaymentEndDate().atStartOfDay());
+                            if (loanUpdate.getMinInterestRate() != null) loanVO.setMinInterestRate(loanUpdate.getMinInterestRate().doubleValue());
+                            if (loanUpdate.getMaxInterestRate() != null) loanVO.setMaxInterestRate(loanUpdate.getMaxInterestRate().doubleValue());
+                            if (loanUpdate.getReward() != null) loanVO.setReward(loanUpdate.getReward());
+                            if (loanUpdate.getRewardCondition() != null) loanVO.setRewardCondition(loanUpdate.getRewardCondition());
+                            loanDAO.update(loanVO);
+                        }
+                    }
+                    break;
+                    
+                case Challenge:
+                    if (request.getChallengeInfo() != null) {
+                        ChallengeVO challengeVO = challengeDAO.selectByProductId(existingFund.getProductId());
+                        if (challengeVO != null) {
+                            FundUpdateRequestDTO.ChallengeUpdate challengeUpdate = request.getChallengeInfo();
+                            if (challengeUpdate.getChallengePeriodDays() != null) challengeVO.setChallengePeriodDays(challengeUpdate.getChallengePeriodDays());
+                            if (challengeUpdate.getReward() != null) challengeVO.setReward(challengeUpdate.getReward());
+                            if (challengeUpdate.getRewardCondition() != null) challengeVO.setRewardCondition(challengeUpdate.getRewardCondition());
+                            challengeDAO.update(challengeVO);
+                        }
+                    }
+                    break;
+            }
+            
+            log.info("Fund updated successfully with id: {}", fundId);
+            return "펀딩이 성공적으로 수정되었습니다.";
+            
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error updating fund: ", e);
+            throw new RuntimeException("펀딩 수정 중 오류가 발생했습니다.", e);
+        }
     }
 
 }

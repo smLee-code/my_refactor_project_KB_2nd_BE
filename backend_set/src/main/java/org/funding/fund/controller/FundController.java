@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.fund.dto.FundProductRequestDTO;
 import org.funding.fund.dto.FundListResponseDTO;
 import org.funding.fund.dto.FundDetailResponseDTO;
+import org.funding.fund.dto.FundUpdateRequestDTO;
 import org.funding.fund.service.FundService;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
@@ -153,6 +154,20 @@ public class FundController {
     public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId) {
         FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId);
         return ResponseEntity.ok(fundDetail);
+    }
+    
+    /**
+     * 펀딩 수정
+     * PUT /api/fund/{fundId}
+     * fund_id로 펀딩과 연관된 모든 정보를 수정
+     * 요청 바디에 수정하고자 하는 필드만 포함시키면 해당 필드만 업데이트됨
+     */
+    @PutMapping("/{fundId}")
+    public ResponseEntity<Map<String, String>> updateFund(
+            @PathVariable Long fundId, 
+            @RequestBody FundUpdateRequestDTO request) {
+        String result = fundService.updateFund(fundId, request);
+        return ResponseEntity.ok(Map.of("message", result));
     }
 
 }
