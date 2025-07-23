@@ -3,6 +3,7 @@ package org.funding.retryVotes.service;
 import lombok.RequiredArgsConstructor;
 import org.funding.fund.dao.FundDAO;
 import org.funding.fund.vo.FundVO;
+import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.retryVotes.dao.RetryVotesDAO;
 import org.funding.retryVotes.dto.DoVoteRequestDTO;
 import org.funding.retryVotes.vo.RetryVotesVO;
@@ -23,13 +24,19 @@ public class RetryVotesService {
             throw new IllegalStateException("이미 투표하신 펀딩입니다.");
         }
 
+        FundVO fund = fundDAO.selectById(voteRequestDTO.getFundId());
+
+        // 펀딩이 종료됐는지 검사
+        if (fund.getProgress() != ProgressType.End) {
+            throw new IllegalStateException("아직 펀딩이 종료되지 않았습니다.");
+        }
+
         RetryVotesVO retryVotesVO = new RetryVotesVO();
         retryVotesVO.setUserId(voteRequestDTO.getUserId());
         retryVotesVO.setFundingId(voteRequestDTO.getFundId());
         retryVotesDAO.addRetryVotes(retryVotesVO);
 
         // 펀딩에 투표 수 추가
-        FundVO fund = fundDAO.selectById(voteRequestDTO.getFundId());
         int count = fund.getRetryVotesCount();
         if (count > 0) {
             fund.setRetryVotesCount(fund.getRetryVotesCount() + 1);
@@ -46,10 +53,15 @@ public class RetryVotesService {
             throw new IllegalStateException("투표를 안하셨기에 투표를 취소 할 수 없습니다.");
         }
 
+        FundVO fund = fundDAO.selectById(voteRequestDTO.getFundId());
+
+        // 펀딩이 종료됐는지 검사
+        if (fund.getProgress() != ProgressType.End) {
+            throw new IllegalStateException("아직 펀딩이 종료되지 않았습니다.");
+        }
         retryVotesDAO.deleteRetryVotes(voteRequestDTO);
 
         // 펀딩에 투표 수 취소 반영
-        FundVO fund = fundDAO.selectById(voteRequestDTO.getFundId());
         int count = fund.getRetryVotesCount();
         if (count > 0) {
             fund.setRetryVotesCount(fund.getRetryVotesCount() - 1);
