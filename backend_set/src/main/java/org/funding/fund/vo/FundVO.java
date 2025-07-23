@@ -20,4 +20,5 @@ public class FundVO {
     private LocalDateTime launchAt; // 출시 날짜
     private LocalDateTime endAt; // 종료 날짜
     private String financialInstitution; // 금융사
+    private Integer retryVotesCount; // 재출시 투표 갯수
 }

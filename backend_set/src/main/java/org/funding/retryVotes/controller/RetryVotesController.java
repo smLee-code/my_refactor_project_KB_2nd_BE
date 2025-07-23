@@ -26,4 +26,5 @@ public class RetryVotesController {
         return ResponseEntity.ok(retryVotesService.deleteVote(voteRequestDTO));
     }
 
+
 }

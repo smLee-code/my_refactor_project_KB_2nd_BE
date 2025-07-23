@@ -100,6 +100,7 @@
             f.launch_at as launchAt, 
             f.end_at as endAt, 
             f.financial_institution as financialInstitution,
+            f.retry_votes_count as retryVotesCount,
             fp.name as name,
             fp.icon_url as thumbnail,
             fp.fund_type as fundType
@@ -122,6 +123,7 @@
             f.launch_at as launchAt,
             f.end_at as endAt,
             f.financial_institution as financialInstitution,
+            f.retry_votes_count as retryVotesCount,
             fp.name as name,
             fp.detail as detail,
             fp.fund_type as fundType,
