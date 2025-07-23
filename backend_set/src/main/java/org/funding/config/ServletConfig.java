@@ -55,6 +55,8 @@ import java.util.List;
         "org.funding.fund.service",
         "org.funding.retryVotes.service",
         "org.funding.retryVotes.controller",
+        "org.funding.comment.controller",
+        "org.funding.comment.service"
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {
 
