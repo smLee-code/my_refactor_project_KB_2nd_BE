@@ -88,6 +88,8 @@ dependencies {
     // Jackson - JSON 직렬화/역직렬화 라이브러리 (Spring 5.3.x와 호환되는 최신 버전)
     // 2.12.7은 Spring Framework 5.3.x와 호환성이 보장되는 안정적인 최신 버전
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    // Jackson JSR310 - Java 8 Time API 지원
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
     // ===== 테스트 관련 의존성 - 최신 버전으로 업데이트 =====
     // Spring Test - Spring 애플리케이션 테스트 지원
@@ -140,6 +142,30 @@ dependencies {
     // swagger 의존성
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+
+    // 이메일 인증 관련 의존성
+    // 메일 전송을 위한 Spring mail
+    implementation 'org.springframework:spring-context-support:5.3.30'
+
+    // Java Mail API
+    implementation 'com.sun.mail:javax.mail:1.6.2' // 최신 JDK는 jakarta.mail 사용
+
+    //open ai 용
+    implementation 'org.springframework:spring-web:5.3.32' // RestTemplate 포함
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2' // JSON 파싱용
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13' // HTTP 통신
+    // OkHttp 라이브러리 추가
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    // JSON 파싱을 위한 org.json
+    implementation 'org.json:json:20240303'
+
+    // 테스트 코드 의존성
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'  // JUnit5용
+    testImplementation 'org.springframework:spring-test:5.3.30'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+
 
 
 }

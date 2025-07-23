@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.openAi.dao.ChatDAO">
+
+    <!-- 채팅 로그 삽입 -->
+    <insert id="insertChatLog" parameterType="org.funding.openAi.vo.ChatLogVO">
+        INSERT INTO chat_log (prompt, response, created_at)
+        VALUES (#{prompt}, #{response}, #{createdAt})
+    </insert>
+
+<!--    &lt;!&ndash; 채팅 로그 전체 조회 &ndash;&gt;-->
+<!--    <select id="getAllChatLogs" resultType="org.funding.openAi.vo.ChatLogVO">-->
+<!--        SELECT id, prompt, response, created_at-->
+<!--        FROM chat_log-->
+<!--        ORDER BY created_at DESC-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 채팅 로그 단건 조회 &ndash;&gt;-->
+<!--    <select id="getChatLogById" parameterType="long" resultType="org.funding.openAi.vo.ChatLogVO">-->
+<!--        SELECT id, prompt, response, created_at-->
+<!--        FROM chat_log-->
+<!--        WHERE id = #{id}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 채팅 로그 삭제 &ndash;&gt;-->
+<!--    <delete id="deleteChatLogById" parameterType="long">-->
+<!--        DELETE FROM chat_log-->
+<!--        WHERE id = #{id}-->
+<!--    </delete>-->
+
+</mapper>

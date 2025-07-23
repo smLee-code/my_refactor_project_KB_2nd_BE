@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.emailAuth.dao.EmailDAO">
+
+    <insert id="insertAuthCode">
+        INSERT INTO email_auth (email, code)
+        VALUES (#{email}, #{code})
+    </insert>
+
+    <select id="findAuthCode" resultType="org.funding.emailAuth.vo.EmailAuthVO">
+        SELECT * FROM email_auth
+        WHERE email = #{email}
+          AND code = #{code}
+          AND expired = false
+    </select>
+
+    <update id="expiredCode">
+        UPDATE email_auth
+        SET expired = true
+        WHERE email = #{email} AND code = #{code}
+    </update>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.openAi.dao.FundAIDAO">
+
+    <!-- fundId로 FundVO 조회 -->
+    <select id="findFundById" parameterType="long" resultType="org.funding.fund.vo.FundVO">
+        SELECT * FROM fund WHERE fund_id = #{fundId}
+    </select>
+
+    <!-- productId로 FundType 조회 -->
+    <select id="findFundTypeByProductId" parameterType="long" resultType="org.funding.fund.vo.enumType.FundType">
+        SELECT fund_type FROM financial_product WHERE product_id = #{productId}
+    </select>
+
+    <!-- 동일 FundType의 펀딩 조회 (자기 자신 제외) -->
+    <select id="findFundsByFundTypeExcludeSelf" resultType="org.funding.fund.vo.FundVO">
+        SELECT f.*
+        FROM fund f
+                 JOIN financial_product p ON f.product_id = p.product_id
+        WHERE p.fund_type = #{fundType}
+          AND f.fund_id != #{fundId}
+        ORDER BY f.launch_at DESC
+    </select>
+
+</mapper>

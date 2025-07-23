@@ -18,6 +18,7 @@ public class MemberVO {
     private Role role; // 접근 권한
     private String email; // 유저 이메일
     private String nickname; // 유저 닉네임
+    private String phoneNumber; // 유저 폰번호
     private LocalDateTime createAt; // 유저 생성일
     private LocalDateTime updateAt;
 

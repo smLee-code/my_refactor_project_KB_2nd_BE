@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.comment.dao.CommentDAO">
+
+   <insert id="insertComment" parameterType="org.funding.comment.vo.CommentVO"
+           useGeneratedKeys="true" keyProperty="commentId">
+       INSERT INTO comment(user_id, target_type, target_id, content, create_at)
+       VALUES (#{userId}, #{targetType}, #{targetId}, #{content}, NOW())
+   </insert>
+
+    <delete id="deleteComment" parameterType="Long">
+        DELETE FROM comment WHERE comment_id = #{commentId}
+    </delete>
+
+    <select id="getCommentById" parameterType="Long" resultType="org.funding.comment.vo.CommentVO">
+        SELECT * FROM comment WHERE comment_id = #{commentId}
+    </select>
+
+    <select id="getAllCommentsByProjectId" parameterType="Long" resultType="org.funding.comment.vo.CommentVO">
+        SELECT * FROM comment WHERE target_id = #{projectId}
+    </select>
+
+    <select id="getAllCommentsByFundingId" parameterType="Long" resultType="org.funding.comment.vo.CommentVO">
+        SELECT * FROM comment WHERE target_id = #{fundingId}
+    </select>
+
+</mapper>
