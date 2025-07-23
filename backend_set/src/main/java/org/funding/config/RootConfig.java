@@ -25,6 +25,7 @@ import javax.sql.DataSource;
         "org.funding.financialProduct.dao",
         "org.funding.fund.dao",
         "org.funding.votes.dao",
+        "org.funding.retryVotes.dao"
         "org.funding.comment.dao"
 })
 public class RootConfig {

@@ -22,6 +22,7 @@ public class FundListResponseDTO {
     private LocalDateTime launchAt;
     private LocalDateTime endAt;
     private String financialInstitution;
+    private int retryVotesCount;
     
     // FinancialProduct 정보
     private String name;

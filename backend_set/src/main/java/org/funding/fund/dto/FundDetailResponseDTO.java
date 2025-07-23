@@ -27,6 +27,7 @@ public class FundDetailResponseDTO {
     private LocalDateTime launchAt;
     private LocalDateTime endAt;
     private String financialInstitution;
+    private int retryVotesCount;
     
     // Financial Product 테이블 정보
     private String name;

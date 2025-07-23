@@ -181,5 +181,4 @@ public class FundController {
         String result = fundService.deleteFund(fundId);
         return ResponseEntity.ok(Map.of("message", result));
     }
-
 }

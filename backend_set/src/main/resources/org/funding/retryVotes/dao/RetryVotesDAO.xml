@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.retryVotes.dao.RetryVotesDAO">
+
+    <!-- 투표 삽입 -->
+    <insert id="addRetryVotes" parameterType="org.funding.retryVotes.dto.DoVoteRequestDTO">
+        INSERT INTO retry_votes (user_id, funding_id)
+        VALUES (#{userId}, #{fundingId})
+    </insert>
+
+    <!-- 펀딩별 투표 수 -->
+    <select id="countRetryVotesByFundingId" resultType="int" parameterType="long">
+        SELECT COUNT(*) FROM retry_votes WHERE funding_id = #{fundingId}
+    </select>
+
+    <!-- 유저가 이미 투표했는지 확인 -->
+    <select id="existsVoteByUserIdAndFundingId" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1 FROM retry_votes WHERE user_id = #{userId} AND funding_id = #{fundingId}
+        )
+    </select>
+
+<!--    투표 취소-->
+    <delete id="deleteRetryVotes" parameterType="org.funding.retryVotes.dto.DoVoteRequestDTO">
+        DELETE FROM funding_vote
+        WHERE user_id = #{userId}
+          AND funding_id = #{fundingId}
+    </delete>
+
+</mapper>
