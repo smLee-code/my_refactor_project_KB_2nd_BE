@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.votes.dao.VotesDAO">
+
+    <select id="selectVotes" parameterType="org.funding.votes.dto.VotesRequestDTO" resultType="org.funding.votes.vo.VotesVO">
+        SELECT * FROM votes
+        WHERE user_id = #{userId} AND project_id = #{projectId}
+    </select>
+
+    <select id="selectVotesById" parameterType="Long" resultType="org.funding.votes.vo.VotesVO">
+        SELECT * FROM votes WHERE vote_id = #{voteId}
+    </select>
+
+    <insert id="insertVotes" parameterType="org.funding.votes.dto.VotesRequestDTO" useGeneratedKeys="true" keyProperty="voteId">
+        INSERT INTO votes (user_id, project_id, vote_time)
+        VALUES (#{userId}, #{projectId}, NOW())
+    </insert>
+
+    <delete id="deleteVotes" parameterType="Long">
+        DELETE FROM votes WHERE vote_id = #{voteId}
+    </delete>
+
+    <select id="selectVotedProjectsByUserId" parameterType="Long" resultType="Long">
+        SELECT project_id FROM votes WHERE user_id = #{userId}
+    </select>
+
+    <select id="countVotes" parameterType="Long" resultType="Long">
+        SELECT count(*) FROM votes WHERE project_id = #{projectId}
+    </select>
+
+
+
+</mapper>
