@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.project.dao.ProjectDAO">
+
+    <insert id="insertProject" parameterType="org.funding.project.vo.ProjectVO" useGeneratedKeys="true" keyProperty="projectId">
+        INSERT INTO project (title, promotion, project_type, progress, deadline, create_at, user_id)
+        VALUES (#{title}, #{promotion}, #{projectType}, #{progress}, #{deadline}, NOW(), #{userId})
+    </insert>
+
+    <insert id="insertSavingsProject" parameterType="org.funding.project.vo.SavingsProjectVO">
+        INSERT INTO savings_project (project_id, period_days, interest_rate, success_condition)
+        VALUES (#{projectId}, #{periodDays}, #{interestRate}, #{successCondition})
+    </insert>
+
+    <insert id="insertLoanProject" parameterType="org.funding.project.vo.LoanProjectVO">
+        INSERT INTO loan_project (project_id, loan_limit, desired_interest_rate, reward, reward_condition)
+        VALUES (#{projectId}, #{loanLimit}, #{desiredInterestRate}, #{reward}, #{rewardCondition})
+    </insert>
+
+    <insert id="insertDonationProject" parameterType="org.funding.project.vo.DonationProjectVO">
+        INSERT INTO donation_project (project_id, recipient, usage_plan, target_amount)
+        VALUES (#{projectId}, #{recipient}, #{usagePlan}, #{targetAmount})
+    </insert>
+
+    <insert id="insertChallengeProject" parameterType="org.funding.project.vo.ChallengeProjectVO">
+        INSERT INTO challenge_project (project_id, challenge_period_days, reward, reward_condition)
+        VALUES (#{projectId}, #{challengePeriodDays}, #{reward}, #{rewardCondition})
+    </insert>
+
+    <!--    프로젝트 공통 항목 조회 쿼리-->
+    <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
+        SELECT
+            project_id,
+            title,
+            promotion,
+            project_type,
+            progress,
+            create_at,
+            deadline,
+            user_id
+        FROM project
+        WHERE project_id = #{projectId}
+    </select>
+
+    <!--    프로젝트 타입별 상세 조회 쿼리-->
+
+    <!--    저축형 프로젝트-->
+    <select id="selectSavingByProjectId" parameterType="Long" resultType="org.funding.project.vo.SavingsProjectVO">
+        SELECT * FROM savings_project WHERE project_id = #{projectId}
+    </select>
+
+    <!--    대출형 프로젝트-->
+    <select id="selectLoanByProjectId" parameterType="Long" resultType="org.funding.project.vo.LoanProjectVO">
+        SELECT * FROM loan_project WHERE project_id = #{projectId}
+
+    </select>
+
+    <!--    챌린지형 프로젝트-->
+    <select id="selectChallengeByProjectId" parameterType="Long" resultType="org.funding.project.vo.ChallengeProjectVO">
+        SELECT * FROM challenge_project WHERE project_id = #{projectId}
+    </select>
+
+<!--    기부형 프로젝트-->
+    <select id="selectDonationByProjectId" parameterType="Long" resultType="org.funding.project.vo.DonationProjectVO">
+        SELECT * FROM donation_project WHERE project_id = #{projectId}
+    </select>
+
+    <select id="getAllProjects" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id,title, project_type, create_at, user_id, deadline FROM project
+    </select>
+
+    <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id,title, project_type, create_at, user_id, deadline FROM project WHERE title LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="searchProjectsByType" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id, title, project_type, create_at, user_id, deadline FROM project WHERE project_type = #{type}
+    </select>
+
+    <delete id="deleteProjectById" parameterType="Long">
+        DELETE FROM project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteSavingsProjectById" parameterType="Long">
+        DELETE FROM savings_project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteLoanProjectById" parameterType="Long">
+        DELETE FROM loan_project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteChallengeProjectById" parameterType="Long">
+        DELETE FROM challenge_project WHERE project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteDonationProjectById" parameterType="Long">
+        DELETE FROM donation_project WHERE project_id = #{projectId}
+    </delete>
+</mapper>

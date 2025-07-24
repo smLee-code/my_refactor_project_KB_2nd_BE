@@ -2,19 +2,18 @@ package org.funding.security.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.funding.security.handler.LoginFailureHandler;
-import org.funding.security.handler.LoginSuccessHandler;
-import org.mybatis.spring.annotation.MapperScan;
 import org.funding.security.filter.AuthenticationErrorFilter;
 import org.funding.security.filter.JwtAuthenticationFilter;
 import org.funding.security.filter.JwtUsernamePasswordAuthenticationFilter;
 import org.funding.security.handler.CustomAccessDeniedHandler;
 import org.funding.security.handler.CustomAuthenticationEntryPoint;
+import org.funding.security.handler.LoginFailureHandler;
+import org.funding.security.handler.LoginSuccessHandler;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,12 +25,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.filter.CharacterEncodingFilter;
-
-// 필수 import 구문들
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -145,6 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
            //.antMatchers("/api/fund/create/**").hasRole("FINANCE")
            //.antMatchers("/api/fund/list").permitAll()
            //..antMatchers("/api/fund/admin").hasRole("ADMIN")
+            .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
             .anyRequest().authenticated();
   }
 
@@ -170,6 +167,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/assets/**",
             "/*",
             "/api/member/**",
+            "/api/project/**",
             "/api/comment/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
