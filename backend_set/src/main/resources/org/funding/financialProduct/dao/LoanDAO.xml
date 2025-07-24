@@ -19,7 +19,7 @@
 
     <!-- 대출 상품 생성 -->
     <insert id="insertLoan" parameterType="org.funding.financialProduct.vo.LoanVO" useGeneratedKeys="true" keyProperty="installmentId">
-        INSERT INTO fund_db.loan (
+        INSERT INTO loan (
             product_id, loan_limit, repayment_start_date, repayment_end_date, 
             min_interest_rate, max_interest_rate, reward, reward_condition
         ) VALUES (
@@ -33,7 +33,7 @@
         SELECT 
             installment_id, product_id, loan_limit, repayment_start_date, repayment_end_date,
             min_interest_rate, max_interest_rate, reward, reward_condition
-        FROM fund_db.loan
+        FROM loan
         WHERE installment_id = #{installmentId}
     </select>
 
@@ -42,13 +42,13 @@
         SELECT 
             installment_id, product_id, loan_limit, repayment_start_date, repayment_end_date,
             min_interest_rate, max_interest_rate, reward, reward_condition
-        FROM fund_db.loan
+        FROM loan
         WHERE product_id = #{productId}
     </select>
 
     <!-- 대출 상품 업데이트 -->
     <update id="update" parameterType="org.funding.financialProduct.vo.LoanVO">
-        UPDATE fund_db.loan
+        UPDATE loan
         SET 
             loan_limit = #{loanLimit},
             repayment_start_date = #{repaymentStartDate},
@@ -62,13 +62,13 @@
 
     <!-- 대출 상품 삭제 -->
     <delete id="delete" parameterType="long">
-        DELETE FROM fund_db.loan
+        DELETE FROM loan
         WHERE installment_id = #{installmentId}
     </delete>
     
     <!-- 금융상품 ID로 대출 상품 삭제 -->
     <delete id="deleteByProductId" parameterType="long">
-        DELETE FROM fund_db.loan
+        DELETE FROM loan
         WHERE product_id = #{productId}
     </delete>
 
@@ -77,7 +77,7 @@
         SELECT 
             installment_id, product_id, loan_limit, repayment_start_date, repayment_end_date,
             min_interest_rate, max_interest_rate, reward, reward_condition
-        FROM fund_db.loan
+        FROM loan
         ORDER BY installment_id DESC
     </select>
 

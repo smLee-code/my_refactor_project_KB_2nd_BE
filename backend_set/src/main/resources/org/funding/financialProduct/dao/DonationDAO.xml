@@ -17,7 +17,7 @@
 
     <!-- 기부 상품 생성 -->
     <insert id="insertDonation" parameterType="org.funding.financialProduct.vo.DonationVO" useGeneratedKeys="true" keyProperty="donationId">
-        INSERT INTO fund_db.donation (
+        INSERT INTO donation (
             product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
         ) VALUES (
             #{productId}, #{recipient}, #{usagePlan}, #{minDonationAmount}, #{maxDonationAmount}, #{targetAmount}
@@ -28,7 +28,7 @@
     <select id="selectById" parameterType="long" resultMap="donationMap">
         SELECT 
             donation_id, product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
-        FROM fund_db.donation
+        FROM donation
         WHERE donation_id = #{donationId}
     </select>
 
@@ -36,13 +36,13 @@
     <select id="selectByProductId" parameterType="long" resultMap="donationMap">
         SELECT 
             donation_id, product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
-        FROM fund_db.donation
+        FROM donation
         WHERE product_id = #{productId}
     </select>
 
     <!-- 기부 상품 업데이트 -->
     <update id="update" parameterType="org.funding.financialProduct.vo.DonationVO">
-        UPDATE fund_db.donation
+        UPDATE donation
         SET 
             recipient = #{recipient},
             usage_plan = #{usagePlan},
@@ -54,13 +54,13 @@
 
     <!-- 기부 상품 삭제 -->
     <delete id="delete" parameterType="long">
-        DELETE FROM fund_db.donation
+        DELETE FROM donation
         WHERE donation_id = #{donationId}
     </delete>
     
     <!-- 금융상품 ID로 기부 상품 삭제 -->
     <delete id="deleteByProductId" parameterType="long">
-        DELETE FROM fund_db.donation
+        DELETE FROM donation
         WHERE product_id = #{productId}
     </delete>
 
@@ -68,7 +68,7 @@
     <select id="selectAll" resultMap="donationMap">
         SELECT 
             donation_id, product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
-        FROM fund_db.donation
+        FROM donation
         ORDER BY donation_id DESC
     </select>
 

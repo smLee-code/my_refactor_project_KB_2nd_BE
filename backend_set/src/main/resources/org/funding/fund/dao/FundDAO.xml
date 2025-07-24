@@ -17,7 +17,7 @@
 
     <!-- 펀딩 생성 -->
     <insert id="insert" parameterType="org.funding.fund.vo.FundVO" useGeneratedKeys="true" keyProperty="fundId">
-        INSERT INTO fund_db.fund (
+        INSERT INTO fund (
             product_id, project_id, progress, launch_at, end_at, financial_institution
         ) VALUES (
             #{productId}, #{projectId}, #{progress}, #{launchAt}, #{endAt}, #{financialInstitution}
@@ -28,7 +28,7 @@
     <select id="selectById" parameterType="long" resultMap="fundVOResultMap">
         SELECT 
             fund_id, product_id, project_id, progress, launch_at, end_at, financial_institution
-        FROM fund_db.fund
+        FROM fund
         WHERE fund_id = #{fundId}
     </select>
 
@@ -36,7 +36,7 @@
     <select id="selectByProjectId" parameterType="long" resultMap="fundVOResultMap">
         SELECT 
             fund_id, product_id, project_id, progress, launch_at, end_at, financial_institution
-        FROM fund_db.fund
+        FROM fund
         WHERE project_id = #{projectId}
         ORDER BY fund_id DESC
     </select>
@@ -45,7 +45,7 @@
     <select id="selectByProductId" parameterType="long" resultMap="fundVOResultMap">
         SELECT 
             fund_id, product_id, project_id, progress, launch_at, end_at, financial_institution
-        FROM fund_db.fund
+        FROM fund
         WHERE product_id = #{productId}
         ORDER BY fund_id DESC
     </select>
@@ -53,7 +53,7 @@
 
     <!-- 펀딩 업데이트 -->
     <update id="update" parameterType="org.funding.fund.vo.FundVO">
-        UPDATE fund_db.fund
+        UPDATE fund
         SET 
             progress = #{progress},
             launch_at = #{launchAt},
@@ -64,14 +64,14 @@
 
     <!-- 펀딩 상태 업데이트 -->
     <update id="updateProgress" parameterType="map">
-        UPDATE fund_db.fund
+        UPDATE fund
         SET progress = #{progress}
         WHERE fund_id = #{fundId}
     </update>
 
     <!-- 펀딩 삭제 -->
     <delete id="delete" parameterType="long">
-        DELETE FROM fund_db.fund
+        DELETE FROM fund
         WHERE fund_id = #{fundId}
     </delete>
 
@@ -79,14 +79,14 @@
     <select id="selectAll" resultMap="fundVOResultMap">
         SELECT 
             fund_id, product_id, project_id, progress, launch_at, end_at, financial_institution
-        FROM fund_db.fund
+        FROM fund
         ORDER BY fund_id DESC
     </select>
 
     <!-- 펀딩 통계 조회 -->
     <select id="countByProgress" parameterType="string" resultType="int">
         SELECT COUNT(*)
-        FROM fund_db.fund
+        FROM fund
         WHERE progress = #{progress}
     </select>
 
@@ -116,10 +116,10 @@
             f.financial_institution as financialInstitution,
             f.retry_votes_count as retryVotesCount,
             fp.name as name,
-            fp.icon_url as thumbnail,
+            fp.thumbnail as thumbnail,
             fp.fund_type as fundType
-        FROM fund_db.fund f
-        INNER JOIN fund_db.financial_product fp ON f.product_id = fp.product_id
+        FROM fund f
+        INNER JOIN financial_product fp ON f.product_id = fp.product_id
         WHERE f.progress = #{progress}
         <if test="fundType != null">
             AND fp.fund_type = #{fundType}
@@ -178,11 +178,8 @@
             fp.name as name,
             fp.detail as detail,
             fp.fund_type as fundType,
-            fp.icon_url as iconUrl,
-            fp.final_url as finalUrl,
-            fp.start_date as startDate,
-            fp.end_date as endDate,
-            fp.product_condition as productCondition,
+            fp.thumbnail as iconUrl,
+            fp.join_condition as productCondition,
             s.period_days as periodDays,
             s.interest_rate as interestRate,
             s.success_condition as successCondition,
@@ -201,12 +198,12 @@
             c.challenge_period_days as challengePeriodDays,
             c.reward as challengeReward,
             c.reward_condition as challengeRewardCondition
-        FROM fund_db.fund f
-        INNER JOIN fund_db.financial_product fp ON f.product_id = fp.product_id
-        LEFT JOIN fund_db.savings s ON fp.product_id = s.product_id AND fp.fund_type = 'SAVINGS'
-        LEFT JOIN fund_db.donation d ON fp.product_id = d.product_id AND fp.fund_type = 'DONATION'
-        LEFT JOIN fund_db.loan l ON fp.product_id = l.product_id AND fp.fund_type = 'LOAN'
-        LEFT JOIN fund_db.challenge c ON fp.product_id = c.product_id AND fp.fund_type = 'CHALLENGE'
+        FROM fund f
+        INNER JOIN financial_product fp ON f.product_id = fp.product_id
+        LEFT JOIN savings s ON fp.product_id = s.product_id AND fp.fund_type = 'SAVINGS'
+        LEFT JOIN donation d ON fp.product_id = d.product_id AND fp.fund_type = 'DONATION'
+        LEFT JOIN loan l ON fp.product_id = l.product_id AND fp.fund_type = 'LOAN'
+        LEFT JOIN challenge c ON fp.product_id = c.product_id AND fp.fund_type = 'CHALLENGE'
         WHERE f.fund_id = #{fundId}
     </select>
 

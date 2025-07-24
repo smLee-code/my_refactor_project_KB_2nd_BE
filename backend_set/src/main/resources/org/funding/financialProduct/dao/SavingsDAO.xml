@@ -15,7 +15,7 @@
 
     <!-- 적금 상품 생성 -->
     <insert id="insertSavings" parameterType="org.funding.financialProduct.vo.SavingsVO" useGeneratedKeys="true" keyProperty="savingsId">
-        INSERT INTO fund_db.savings (
+        INSERT INTO savings (
             product_id, period_days, interest_rate, success_condition
         ) VALUES (
             #{productId}, #{periodDays}, #{interestRate}, #{successCondition}
@@ -26,7 +26,7 @@
     <select id="selectById" parameterType="long" resultMap="savingsMap">
         SELECT 
             savings_id, product_id, period_days, interest_rate, success_condition
-        FROM fund_db.savings
+        FROM savings
         WHERE savings_id = #{savingsId}
     </select>
 
@@ -34,13 +34,13 @@
     <select id="selectByProductId" parameterType="long" resultMap="savingsMap">
         SELECT 
             savings_id, product_id, period_days, interest_rate, success_condition
-        FROM fund_db.savings
+        FROM savings
         WHERE product_id = #{productId}
     </select>
 
     <!-- 적금 상품 업데이트 -->
     <update id="update" parameterType="org.funding.financialProduct.vo.SavingsVO">
-        UPDATE fund_db.savings
+        UPDATE savings
         SET 
             period_days = #{periodDays},
             interest_rate = #{interestRate},
@@ -50,13 +50,13 @@
 
     <!-- 적금 상품 삭제 -->
     <delete id="delete" parameterType="long">
-        DELETE FROM fund_db.savings
+        DELETE FROM savings
         WHERE savings_id = #{savingsId}
     </delete>
     
     <!-- 금융상품 ID로 적금 상품 삭제 -->
     <delete id="deleteByProductId" parameterType="long">
-        DELETE FROM fund_db.savings
+        DELETE FROM savings
         WHERE product_id = #{productId}
     </delete>
 
@@ -64,7 +64,7 @@
     <select id="selectAll" resultMap="savingsMap">
         SELECT 
             savings_id, product_id, period_days, interest_rate, success_condition
-        FROM fund_db.savings
+        FROM savings
         ORDER BY savings_id DESC
     </select>
 
