@@ -15,10 +15,10 @@
 
     <!-- 챌린지 상품 생성 -->
     <insert id="insertChallenge" parameterType="org.funding.financialProduct.vo.ChallengeVO" useGeneratedKeys="true" keyProperty="challengeId">
-        INSERT INTO challenge (
-            product_id, challenge_period_days, reward, reward_condition
+        INSERT INTO fund_db.challenge (
+            product_id, challenge_period_days, reward, reward_condition, verify_standard
         ) VALUES (
-            #{productId}, #{challengePeriodDays}, #{reward}, #{rewardCondition}
+            #{productId}, #{challengePeriodDays}, #{reward}, #{rewardCondition}, #{verifyStandard}
         )
     </insert>
 

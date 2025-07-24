@@ -136,7 +136,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/ai/{fundId}/ai-recommend",
                             "/badge/all/badge",
                             "/retryVotes/do",
-                            "/retryVotes/cancel").permitAll()
+                            "/retryVotes/cancel",
+                            "/ai/analyze-image").permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
