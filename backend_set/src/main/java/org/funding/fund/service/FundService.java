@@ -179,6 +179,7 @@ public class FundService {
                 .challengePeriodDays(request.getChallengePeriodDays())
                 .reward(request.getReward())
                 .rewardCondition(request.getRewardCondition())
+                    .verifyStandard(request.getVerifyStandard()) // 검증 기준 추가
                 .build();
             
             challengeDAO.insertChallenge(challenge);
