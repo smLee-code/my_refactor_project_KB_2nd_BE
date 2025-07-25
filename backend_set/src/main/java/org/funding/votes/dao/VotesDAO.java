@@ -18,4 +18,9 @@ public interface VotesDAO {
     List<Long> selectVotedProjectsByUserId(Long userId);
 
     Long countVotes(Long projectId);
+
+    // 해당 유저가 몇번의 투표를 했는지
+    int countVotesByUserId(Long userId);
+
+
 }
