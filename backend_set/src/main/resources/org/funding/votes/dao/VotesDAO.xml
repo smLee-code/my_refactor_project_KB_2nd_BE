@@ -30,6 +30,12 @@
         SELECT count(*) FROM votes WHERE project_id = #{projectId}
     </select>
 
+    <!-- 유저 ID로 투표 수 카운트 -->
+    <select id="countVotesByUserId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM votes
+        WHERE user_id = #{userId}
+    </select>
 
 
 </mapper>
