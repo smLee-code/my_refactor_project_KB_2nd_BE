@@ -79,7 +79,7 @@ public class UserChallengeService {
 
         ChallengeLogVO existing = challengeLogDAO.selectLogByUserAndDate(userChallengeId, logDate);
         if (existing != null) {
-            throw new RuntimeException("이미 인증 되었습니다");
+            throw new RuntimeException("금일은 이미 인증 되었습니다");
         }
 
         ChallengeLogVO log = new ChallengeLogVO();
