@@ -17,4 +17,7 @@ public interface UserChallengeDAO {
     void updateUserChallengeFail(@Param("userChallengeId") Long id);
 
     void updateChallengeStatus(@Param("userChallengeId") Long id, @Param("status") String status);
+
+    // 유저가 첼린지에 가입되어있는지 여부
+    boolean existsByIdAndUserId(@Param("fundId") Long fundId, @Param("userId") Long userId);
 }

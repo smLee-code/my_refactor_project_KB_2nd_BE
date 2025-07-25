@@ -21,12 +21,11 @@ public class UserChallengeController {
         return ResponseEntity.ok("가입이 완료되었습니다");
     }
 
+
     // 첼린지 인증 로직
     @PostMapping("/{id}/verify")
     public ResponseEntity<?> verifyChallenge(@PathVariable("id") Long id, @RequestBody ChallengeRequestDTO challengeRequestDTO) {
-        userChallengeService.verifyDailyChallenge(id, challengeRequestDTO.getImageUrl(), challengeRequestDTO.getDate());
+        userChallengeService.verifyDailyChallenge(id, challengeRequestDTO.getUserId(), challengeRequestDTO.getImageUrl(), challengeRequestDTO.getDate());
         return ResponseEntity.ok("인증 완료");
     }
-
-
 }

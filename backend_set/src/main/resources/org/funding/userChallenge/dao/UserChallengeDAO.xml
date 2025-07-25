@@ -36,4 +36,14 @@
         WHERE user_challenge_id = #{userChallengeId}
     </update>
 
+<!--    유저가 첼린지 동참여부 판단-->
+    <select id="existsByIdAndUserId" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_challenge
+        WHERE fund_id = #{fundId}
+          AND user_id = #{userId}
+    </select>
+
+
+
 </mapper>

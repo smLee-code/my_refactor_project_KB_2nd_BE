@@ -6,7 +6,7 @@ import org.funding.userChallenge.vo.enumType.ChallengeStatus;
 @Data
 public class UserChallengeVO {
     private Long userChallengeId;
-    private Long productId;
+    private Long fundId;
     private Long userId;
     private int currentCount;
     private int failCount;
