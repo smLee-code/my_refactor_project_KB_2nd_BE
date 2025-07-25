@@ -31,13 +31,15 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Configuration
 @EnableWebSecurity
 @Slf4j
 @MapperScan(basePackages = {"org.funding.security.account.mapper"})
 @ComponentScan(basePackages = {"org.funding.security"})
 @RequiredArgsConstructor
-@EnableWebMvc
+//@EnableWebMvc
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserDetailsService userDetailsService;
@@ -95,11 +97,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
+            .cors()
+            .and()
             // 필터 등록 순서
             .addFilterBefore(encodingFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
             .addFilterBefore(authenticationErrorFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            //            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//            .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
             // 예외 처리 핸들러
             .exceptionHandling()
@@ -133,7 +137,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/badge/all/badge",
                             "/retryVotes/do",
                             "/retryVotes/cancel",
-                            "/ai/analyze-image").permitAll()
+                            "/ai/analyze-image",
+                            "/api/project/**",
+//                            "/chat-app/**",
+//                            "/topic/**",
+                            "/api/chat/history/**",
+                            "/api/app/chat/history/**").permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
@@ -155,6 +164,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     config.addAllowedOriginPattern("*");
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
+    config.addAllowedOrigin("http://localhost:5173");
 
     source.registerCorsConfiguration("/**", config);
     return new CorsFilter(source);
@@ -179,6 +189,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/ai/fund",
             "/badge/create",
             "/badge/{id}",
+            "/chat-app/**",
+            "/websocket/**",
+            "/ws/**",      // 혹시 사용하는 경로가 다를 경우 대비
+            "/topic/**",
+            "/api/chat/history/**",
 
             "/badge/all/badge",
             "/ai/{fundId}/ai-recommend"
