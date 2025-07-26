@@ -77,4 +77,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             principal, null, principal.getAuthorities()
     );
   }
+
+  //화이트 리스트 경로 예외
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    return path.startsWith("/api/chat/history/");
+  }
 }
