@@ -9,6 +9,8 @@ import org.funding.project.dto.request.*;
 import org.funding.project.dto.response.*;
 import org.funding.project.vo.*;
 import org.funding.project.vo.enumType.ProjectType;
+import org.funding.votes.dao.VotesDAO;
+import org.funding.votes.service.VotesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,8 @@ public class ProjectService {
 
 
     private final ProjectDAO projectDAO;
+    private final VotesDAO votesDAO;
+
 
 
     public ProjectVO selectProjectById(Long projectId) {
@@ -35,6 +39,8 @@ public class ProjectService {
         ProjectVO project = selectProjectById(projectId);
 
         Object detailInfo = null;
+
+
 
         switch (project.getProjectType()) {
             case Loan:
@@ -58,9 +64,14 @@ public class ProjectService {
         }
 
 
+
         ProjectResponseDTO dto = new ProjectResponseDTO();
         dto.setBasicInfo(project);
         dto.setDetailInfo(detailInfo);
+
+        Long voteCount = votesDAO.countVotes(projectId);
+        dto.setVoteCount(voteCount);
+
 
         return dto;
     }

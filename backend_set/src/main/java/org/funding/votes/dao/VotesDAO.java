@@ -22,5 +22,8 @@ public interface VotesDAO {
     // 해당 유저가 몇번의 투표를 했는지
     int countVotesByUserId(Long userId);
 
+    //userId, projectId 고려한 투표 삭제
+    void deleteVotesByUserIdAndProjectId(Long userId, Long projectId);
+
 
 }

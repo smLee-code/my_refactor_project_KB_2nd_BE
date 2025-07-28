@@ -142,7 +142,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                            "/chat-app/**",
 //                            "/topic/**",
                             "/api/chat/history/**",
-                            "/api/app/chat/history/**").permitAll()
+                            "/api/app/chat/history/**", "/api/votes/**").permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
@@ -196,7 +196,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/chat/history/**",
 
             "/badge/all/badge",
-            "/ai/{fundId}/ai-recommend"
+            "/ai/{fundId}/ai-recommend",
+
+            "/api/votes/**"
+
     );
   }
 }

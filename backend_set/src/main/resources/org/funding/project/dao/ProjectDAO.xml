@@ -32,17 +32,33 @@
     <!--    프로젝트 공통 항목 조회 쿼리-->
     <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
         SELECT
-            project_id,
-            title,
-            promotion,
-            project_type,
-            progress,
-            create_at,
-            deadline,
-            user_id
-        FROM project
-        WHERE project_id = #{projectId}
+            p.project_id,
+            p.title,
+            p.promotion,
+            p.project_type,
+            p.progress,
+            p.create_at,
+            p.deadline,
+            p.user_id,
+
+            u.nickname,
+            u.email,
+
+            b.badgeId,
+            b.name AS badgeName
+        FROM project p
+                 JOIN user u ON p.user_id = u.userId
+                 LEFT JOIN userbadge ub ON u.userId = ub.userId
+                 LEFT JOIN badge b ON ub.badgeId = b.badgeId
+        WHERE p.project_id = #{projectId}
     </select>
+
+<!--    프로젝트 투표수 계산 쿼리-->
+    <!-- MyBatis Mapper XML -->
+    <select id="countVotes" parameterType="Long" resultType="Long">
+        SELECT COUNT(*) FROM votes WHERE project_id = #{projectId}
+    </select>
+
 
     <!--    프로젝트 타입별 상세 조회 쿼리-->
 

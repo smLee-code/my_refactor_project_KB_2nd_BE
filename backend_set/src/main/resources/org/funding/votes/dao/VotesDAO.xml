@@ -37,5 +37,12 @@
         WHERE user_id = #{userId}
     </select>
 
+    <delete id="deleteVotesByUserIdAndProjectId">
+        DELETE FROM votes
+        WHERE user_id = #{userId}
+          AND project_id = #{projectId}
+    </delete>
+
+
 
 </mapper>
