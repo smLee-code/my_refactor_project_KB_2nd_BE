@@ -30,4 +30,10 @@ public class ProjectVO {
     private String nickname;
     private String email;
 
+    private Long badgeId;
+    private String badgeName;
+
+    private Long voteCount;
+
+
 }
