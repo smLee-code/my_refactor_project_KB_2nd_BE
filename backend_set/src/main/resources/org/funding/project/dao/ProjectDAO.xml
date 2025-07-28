@@ -32,16 +32,19 @@
     <!--    프로젝트 공통 항목 조회 쿼리-->
     <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
         SELECT
-            project_id,
-            title,
-            promotion,
-            project_type,
-            progress,
-            create_at,
-            deadline,
-            user_id
-        FROM project
-        WHERE project_id = #{projectId}
+            p.project_id,
+            p.title,
+            p.promotion,
+            p.project_type,
+            p.progress,
+            p.create_at,
+            p.deadline,
+            p.user_id,
+            u.nickname,
+            u.email
+        FROM project p
+                 JOIN user u ON p.user_id = u.userId
+        WHERE p.project_id = #{projectId}
     </select>
 
     <!--    프로젝트 타입별 상세 조회 쿼리-->
