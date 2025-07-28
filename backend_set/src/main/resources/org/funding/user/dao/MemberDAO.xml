@@ -28,7 +28,24 @@
             WHERE email = #{email}
         </select>
 
-    </mapper>
+<!--    id로 유저 찾기-->
+    <select id="findById" parameterType="long" resultType="org.funding.user.vo.MemberVO">
+        SELECT
+            user_id,
+            username,
+            password,
+            email,
+            nickname,
+            phone_number,
+            role,
+            create_at,
+            update_at
+        FROM tbl_member
+        WHERE user_id = #{userId}
+    </select>
+
+
+</mapper>
 
 
 

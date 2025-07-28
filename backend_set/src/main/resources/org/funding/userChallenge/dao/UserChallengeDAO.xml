@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.userChallenge.dao.UserChallengeDAO">
+
+    <!-- 사용자 챌린지 참여 등록 -->
+    <insert id="insertUserChallenge" parameterType="org.funding.userChallenge.vo.UserChallengeVO">
+        INSERT INTO user_challenge (
+            user_id, challenge_id, start_date, end_date
+        )
+        VALUES (
+                   #{userId}, #{challengeId}, #{startDate}, #{endDate}
+               )
+    </insert>
+
+    <!-- 인증 성공 시 성공 카운트 증가 -->
+    <update id="updateUserChallengeSuccess">
+        UPDATE user_challenge
+        SET success_count = success_count + 1
+        WHERE user_challenge_id = #{userChallengeId}
+    </update>
+
+    <!-- 인증 실패 시 실패 카운트 증가 -->
+    <update id="updateUserChallengeFail">
+        UPDATE user_challenge
+        SET fail_count = fail_count + 1
+        WHERE user_challenge_id = #{userChallengeId}
+    </update>
+
+    <!-- 챌린지 상태 변경 ('성공', '실패', '진행중') -->
+    <update id="updateChallengeStatus">
+        UPDATE user_challenge
+        SET status = #{status}
+        WHERE user_challenge_id = #{userChallengeId}
+    </update>
+
+<!--    유저가 첼린지 동참여부 판단-->
+    <select id="existsByIdAndUserId" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_challenge
+        WHERE fund_id = #{fundId}
+          AND user_id = #{userId}
+    </select>
+
+<!--    id로 첼린지 조회-->
+    <select id="findById" resultType="org.funding.userChallenge.vo.UserChallengeVO" parameterType="long">
+        SELECT
+            user_challenge_id,
+            fund_id,
+            user_id,
+            success_count,
+            fail_count,
+        FROM user_challenge
+        WHERE user_challenge_id = #{userChallengeId}
+    </select>
+
+    <!-- ID로 유저 챌린지 삭제 -->
+    <delete id="deleteUserChallenge" parameterType="long">
+        DELETE FROM user_challenge
+        WHERE user_challenge_id = #{userChallengeId}
+    </delete>
+
+</mapper>
