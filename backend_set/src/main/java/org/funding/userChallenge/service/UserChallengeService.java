@@ -13,6 +13,7 @@ import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userChallenge.dao.UserChallengeDAO;
 import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
+import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
 import org.funding.userChallenge.vo.UserChallengeVO;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,6 @@ public class UserChallengeService {
     private final UserChallengeDAO userChallengeDAO;
     private final OpenAIVisionClient openAIVisionClient;
     private final ChallengeLogDAO challengeLogDAO;
-    private final FinancialProductDAO financialProductDAO;
     private final MemberDAO memberDAO;
     private final FundDAO fundDAO;
 
@@ -82,6 +82,15 @@ public class UserChallengeService {
             throw new RuntimeException("금일은 이미 인증 되었습니다");
         }
 
+        // 펀딩 진행 예외처리
+        UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
+        Long fundId = userChallenge.getFundId();
+        FundVO fund = fundDAO.selectById(fundId);
+        ProgressType type = fund.getProgress();
+        if (type != ProgressType.Launch) {
+            throw new RuntimeException("해당 펀딩은 종료된 펀딩입니다");
+        }
+
         ChallengeLogVO log = new ChallengeLogVO();
         log.setUserChallengeId(userChallengeId);
         log.setLogDate(logDate);
@@ -95,5 +104,20 @@ public class UserChallengeService {
         } else {
             userChallengeDAO.updateUserChallengeFail(userChallengeId);
         }
+    }
+
+    // 챌린지 취소 로직
+    public void deleteChallenge(Long userChallengeId, DeleteChallengeRequestDTO deleteChallengeRequestDTO) {
+        MemberVO member = memberDAO.findById(deleteChallengeRequestDTO.getUserId());
+        if (member == null) {
+            throw new RuntimeException("해당 유저는 존재하지 않는 유저입니다.");
+        }
+
+        UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
+        if (userChallenge == null) {
+            throw new RuntimeException("첼린지에 참여히시지 않으셨습니다.");
+        }
+
+        userChallengeDAO.deleteUserChallenge(userChallengeId);
     }
 }

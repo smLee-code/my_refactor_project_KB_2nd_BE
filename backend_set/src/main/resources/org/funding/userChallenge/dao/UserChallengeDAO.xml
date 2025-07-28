@@ -44,6 +44,22 @@
           AND user_id = #{userId}
     </select>
 
+<!--    id로 첼린지 조회-->
+    <select id="findById" resultType="org.funding.userChallenge.vo.UserChallengeVO" parameterType="long">
+        SELECT
+            user_challenge_id,
+            fund_id,
+            user_id,
+            success_count,
+            fail_count,
+        FROM user_challenge
+        WHERE user_challenge_id = #{userChallengeId}
+    </select>
 
+    <!-- ID로 유저 챌린지 삭제 -->
+    <delete id="deleteUserChallenge" parameterType="long">
+        DELETE FROM user_challenge
+        WHERE user_challenge_id = #{userChallengeId}
+    </delete>
 
 </mapper>

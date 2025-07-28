@@ -3,6 +3,7 @@ package org.funding.userChallenge.controller;
 import lombok.RequiredArgsConstructor;
 import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
 import org.funding.userChallenge.dto.ChallengeRequestDTO;
+import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
 import org.funding.userChallenge.service.UserChallengeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,12 @@ public class UserChallengeController {
         return ResponseEntity.ok("가입이 완료되었습니다");
     }
 
+    // 첼린지 가입 취소 로직
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteChallenge(@PathVariable Long id, @RequestBody DeleteChallengeRequestDTO deleteChallengeRequestDTO) {
+        userChallengeService.deleteChallenge(id, deleteChallengeRequestDTO);
+        return ResponseEntity.ok("정상적으로 챌린지에 취소되었습니다.");
+    }
 
     // 첼린지 인증 로직
     @PostMapping("/{id}/verify")
