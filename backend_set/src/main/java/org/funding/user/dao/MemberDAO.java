@@ -8,4 +8,6 @@ public interface MemberDAO {
     // 멤버 회원가입
     void insertMember(MemberVO member);
     MemberVO findByEmail(String username);
+
+    MemberVO findById(Long userId);
 }
