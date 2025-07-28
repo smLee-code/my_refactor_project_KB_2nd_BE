@@ -3,10 +3,13 @@ package org.funding.userChallenge.service;
 import lombok.RequiredArgsConstructor;
 import org.funding.challengeLog.dao.ChallengeLogDAO;
 import org.funding.challengeLog.vo.ChallengeLogVO;
+import org.funding.financialProduct.dao.ChallengeDAO;
 import org.funding.financialProduct.dao.FinancialProductDAO;
+import org.funding.financialProduct.vo.ChallengeVO;
 import org.funding.financialProduct.vo.FinancialProductVO;
 import org.funding.fund.dao.FundDAO;
 import org.funding.fund.vo.FundVO;
+import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.openAi.client.OpenAIVisionClient;
 import org.funding.user.dao.MemberDAO;
@@ -28,6 +31,8 @@ public class UserChallengeService {
     private final ChallengeLogDAO challengeLogDAO;
     private final MemberDAO memberDAO;
     private final FundDAO fundDAO;
+    private final FinancialProductDAO financialProductDAO;
+    private final ChallengeDAO challengeDAO;
 
     // 첼린지 가입 로직 (가입 전에 결제 로직 추가해줘야함)
     public void applyChallenge(Long fundId, ApplyChallengeRequestDTO challengeRequestDTO) {
@@ -68,42 +73,63 @@ public class UserChallengeService {
     // 첼린지 인증 로직
     public void verifyDailyChallenge(Long userChallengeId, Long userId, String imageUrl, LocalDate logDate) {
 
+        // 펀딩 진행 예외처리
+        UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
+        Long fundId = userChallenge.getFundId();
+        FundVO fund = fundDAO.selectById(fundId);
+        ProgressType type = fund.getProgress();
+        Long productId = fund.getProductId();
+        FinancialProductVO product = financialProductDAO.selectById(productId);
+
+        // 상품 예외처리
+        if (product == null) {
+            throw new RuntimeException("해당 상품은 존재하지 않습니다.");
+        }
+
+        // 펀딩 예외처리
+        if (type != ProgressType.Launch) {
+            throw new RuntimeException("해당 펀딩은 종료된 펀딩입니다");
+        }
+
+        // 유형 예외처리
+        FundType fundType = product.getFundType();
+        if (fundType != FundType.Challenge) {
+            throw new RuntimeException("해당 상품은 첼린지 상품이 아닙니다.");
+        }
+
+        // 중복 예외처리
+        ChallengeLogVO existing = challengeLogDAO.selectLogByUserAndDate(userChallengeId, logDate);
+        if (existing != null) {
+            throw new RuntimeException("금일은 이미 인증 되었습니다");
+        }
+
+        ChallengeVO challenge = challengeDAO.selectByProductId(product.getProductId());
+        // 검증 기준
+        String rewardCondition = challenge.getRewardCondition();
+
         // 해당 사용자가 첼린지에 가입이 되어있는지
         boolean isVerify = userChallengeDAO.existsByIdAndUserId(userChallengeId, userId);
         if (!isVerify) {
             throw new RuntimeException("해당 유저는 첼린지에 가입되어있지 않습니다.");
         }
 
-        String result = openAIVisionClient.analyzeImageWithPrompt(imageUrl, "해당 검증 입력값");
-        boolean isVerified = result.contains("검증 물체") && result.contains("검증 행위");
+        String result = openAIVisionClient.analyzeImageWithPrompt(imageUrl, rewardCondition);
+        boolean isVerified = result.contains("확인되었습니다.");
 
-        ChallengeLogVO existing = challengeLogDAO.selectLogByUserAndDate(userChallengeId, logDate);
-        if (existing != null) {
-            throw new RuntimeException("금일은 이미 인증 되었습니다");
-        }
-
-        // 펀딩 진행 예외처리
-        UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
-        Long fundId = userChallenge.getFundId();
-        FundVO fund = fundDAO.selectById(fundId);
-        ProgressType type = fund.getProgress();
-        if (type != ProgressType.Launch) {
-            throw new RuntimeException("해당 펀딩은 종료된 펀딩입니다");
+        // 인증 예외처리
+        if (!isVerified) {
+            throw new RuntimeException("해당 사진이 리워드 조건 기준에 도달하지 못하였습니다.");
         }
 
         ChallengeLogVO log = new ChallengeLogVO();
         log.setUserChallengeId(userChallengeId);
         log.setLogDate(logDate);
         log.setImageUrl(imageUrl);
-        log.setVerified(isVerified);
+        log.setVerified(true);
         log.setVerifiedResult(result);
         challengeLogDAO.insertChallengeLog(log);
 
-        if (isVerified) {
-            userChallengeDAO.updateUserChallengeSuccess(userChallengeId);
-        } else {
-            userChallengeDAO.updateUserChallengeFail(userChallengeId);
-        }
+        userChallengeDAO.updateUserChallengeSuccess(userChallengeId);
     }
 
     // 챌린지 취소 로직
