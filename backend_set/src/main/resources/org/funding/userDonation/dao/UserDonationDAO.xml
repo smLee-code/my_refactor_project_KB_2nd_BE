@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.userDonation.dao.UserDonationDAO">
+
+    <!-- 생성 -->
+    <insert id="insertUserDonation" parameterType="org.funding.userDonation.vo.UserDonationVO">
+        INSERT INTO user_saving (
+            user_id,
+            saving_amount,
+            anonymous
+        ) VALUES (
+                     #{userId},
+                     #{savingAmount},
+                     #{anonymous}
+                 )
+    </insert>
+
+    <!-- id로 단건 조회 -->
+    <select id="findById" parameterType="long" resultType="org.funding.userDonation.vo.UserDonationVO">
+        SELECT
+            user_saving_id,
+            user_id,
+            saving_amount,
+            anonymous
+        FROM user_saving
+        WHERE user_saving_id = #{userSavingId}
+    </select>
+
+    <!-- 유저 id로 전체 조회 -->
+    <select id="findByUserId" parameterType="long" resultType="org.funding.userDonation.vo.UserDonationVO">
+        SELECT
+            user_saving_id,
+            user_id,
+            saving_amount,
+            anonymous
+        FROM user_saving
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 기부 내역 업데이트 -->
+    <update id="updateUserDonation" parameterType="org.funding.userDonation.vo.UserDonationVO">
+        UPDATE user_saving
+        SET
+            user_id = #{userId},
+            saving_amount = #{savingAmount},
+            anonymous = #{anonymous}
+        WHERE user_saving_id = #{userSavingId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteUserDonation" parameterType="long">
+        DELETE FROM user_saving
+        WHERE user_saving_id = #{userSavingId}
+    </delete>
+
+</mapper>

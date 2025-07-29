@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.userLoan.dao.UserLoanDAO">
+
+    <!-- 저장 -->
+    <insert id="insertUserLoan" parameterType="org.funding.userLoan.vo.UserLoanVO" useGeneratedKeys="true" keyProperty="userLoanId">
+        INSERT INTO user_loan (fund_id, user_id, loan_amount, loan_access, full_payment)
+        VALUES (#{fundId}, #{userId}, #{loanAmount}, #{loanAccess}, #{fullPayment})
+    </insert>
+
+    <!-- 단건 조회 -->
+    <select id="findById" parameterType="long" resultType="org.funding.userLoan.vo.UserLoanVO">
+        SELECT user_loan_id, fund_id, user_id, loan_amount, loan_access, full_payment
+        FROM user_loan
+        WHERE user_loan_id = #{userLoanId}
+    </select>
+
+    <!-- 전체 조회 -->
+    <select id="findAll" resultType="org.funding.userLoan.vo.UserLoanVO">
+        SELECT user_loan_id, fund_id, user_id, loan_amount, loan_access, full_payment
+        FROM user_loan
+    </select>
+
+    <!-- 업데이트 -->
+    <update id="updateUserLoan" parameterType="org.funding.userLoan.vo.UserLoanVO">
+        UPDATE user_loan
+        SET fund_id = #{fundId},
+            user_id = #{userId},
+            loan_amount = #{loanAmount},
+            loan_access = #{loanAccess},
+            full_payment = #{fullPayment}
+        WHERE user_loan_id = #{userLoanId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteUserLoan" parameterType="long">
+        DELETE FROM user_loan WHERE user_loan_id = #{userLoanId}
+    </delete>
+
+    <!-- SuccessType 기준 조회 -->
+    <select id="findByLoanAccess" parameterType="org.funding.global.type.SuccessType" resultType="org.funding.userLoan.vo.UserLoanVO">
+        SELECT user_loan_id, fund_id, user_id, loan_amount, loan_access, full_payment
+        FROM user_loan
+        WHERE loan_access = #{loanAccess}
+    </select>
+
+</mapper>
