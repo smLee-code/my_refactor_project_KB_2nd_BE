@@ -1,8 +1,12 @@
 package org.funding.userLoan.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.financialProduct.dao.FinancialProductDAO;
+import org.funding.financialProduct.dao.LoanDAO;
+import org.funding.financialProduct.vo.LoanVO;
 import org.funding.fund.dao.FundDAO;
 import org.funding.fund.vo.FundVO;
+import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userLoan.dao.UserLoanDAO;
@@ -21,6 +25,7 @@ public class UserLoanService {
     private final MemberDAO memberDAO;
     private final FundDAO fundDAO;
     private final UserLoanDAO userLoanDAO;
+    private final LoanDAO loanDAO;
 
     // 대출 승인 신청
     public ResponseEntity<UserLoanResponseDTO> applyLoan(Long fundId, UserLoanRequestDTO loanRequestDTO) {
@@ -33,6 +38,19 @@ public class UserLoanService {
         FundVO fund = fundDAO.selectById(fundId);
         if (fund == null) {
             throw new RuntimeException("해당 펀딩은 존재하지 않습니다.");
+        }
+
+        if (fund.getProgress() == ProgressType.End) {
+            throw new RuntimeException("해당 펀딩은 종료되었습니다.");
+        }
+
+        Long productId = fund.getProductId();
+        LoanVO loan = loanDAO.selectByProductId(productId);
+
+        // 대출 한도 예외처리
+        Integer amount = loanRequestDTO.getLoanAmount();
+        if (amount > loan.getLoanLimit()) {
+            throw new RuntimeException("대출 한도는 넘었습니다.");
         }
 
         UserLoanVO userLoan = new UserLoanVO();
@@ -90,6 +108,7 @@ public class UserLoanService {
         return "허가 완료";
     }
 
+    // 대출 반려
     public String rejectLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO) {
         Long userId = approveUserLoanRequestDTO.getUserId();
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
