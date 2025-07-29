@@ -7,6 +7,7 @@ import org.funding.project.vo.ProjectVO;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -33,8 +34,8 @@ public abstract class CreateProjectRequestDTO {
     private ProjectType projectType; // 프로젝트 타입
     private String title; // 프로젝트 제목
     private String promotion; // 프로젝트 홍보글
-    private ProjectProgress progress; // 프로젝트 진행도
-    private LocalDateTime deadline; // 마감일
+//    private ProjectProgress progress; // 프로젝트 진행도
+    private LocalDate deadline; // 마감일
 
     public ProjectVO toCommonVO() {
         return ProjectVO.builder()
@@ -42,8 +43,8 @@ public abstract class CreateProjectRequestDTO {
                 .projectType(this.getProjectType())
                 .title(this.getTitle())
                 .promotion(this.getPromotion())
-                .progress(this.getProgress())
-                .deadline(this.getDeadline())
+                .progress(ProjectProgress.Active)
+                .deadline(this.getDeadline().atStartOfDay())
                 .build();
     }
 }
