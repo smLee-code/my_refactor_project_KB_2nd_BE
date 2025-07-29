@@ -24,13 +24,13 @@ public class UserDonationController {
 
 
     // 기부 내역 상세 조회
-    @GetMapping("/{id}")
+    @GetMapping("/donation/{id}")
     public ResponseEntity<UserDonationVO> getDonation(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userDonationService.getDonation(id));
     }
 
     // 유저의 기부 내역 전체 조회
-    @GetMapping("/{id}")
+    @GetMapping("/donation-history/{id}")
     public ResponseEntity<List<UserDonationVO>> getAllDonations(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userDonationService.getAllDonations(id));
     }
