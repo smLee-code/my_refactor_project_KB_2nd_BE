@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.funding.payment.dao.PaymentDAO">
+
+    <!-- 결제 정보 저장 -->
+    <insert id="insertPayment" parameterType="org.funding.payment.vo.PaymentVO">
+        INSERT INTO payments (
+            merchant_uid, user_id, project_id, funding_type, 
+            amount, status
+        ) VALUES (
+            #{merchantUid}, #{userId}, #{projectId}, #{fundingType}, 
+            #{amount}, #{status}
+        )
+    </insert>
+    
+    <!-- merchant_uid로 결제 정보 조회 -->
+    <select id="selectPaymentByMerchantUid" parameterType="string" resultType="org.funding.payment.vo.PaymentVO">
+        SELECT 
+            payment_id as paymentId,
+            merchant_uid as merchantUid,
+            imp_uid as impUid,
+            user_id as userId,
+            project_id as projectId,
+            funding_type as fundingType,
+            amount,
+            status,
+            pay_method as payMethod,
+            pg_provider as pgProvider,
+            created_at as createdAt,
+            paid_at as paidAt,
+            updated_at as updatedAt
+        FROM payments
+        WHERE merchant_uid = #{merchantUid}
+    </select>
+    
+    <!-- imp_uid로 결제 정보 조회 -->
+    <select id="selectPaymentByImpUid" parameterType="string" resultType="org.funding.payment.vo.PaymentVO">
+        SELECT 
+            payment_id as paymentId,
+            merchant_uid as merchantUid,
+            imp_uid as impUid,
+            user_id as userId,
+            project_id as projectId,
+            funding_type as fundingType,
+            amount,
+            status,
+            pay_method as payMethod,
+            pg_provider as pgProvider,
+            created_at as createdAt,
+            paid_at as paidAt,
+            updated_at as updatedAt
+        FROM payments
+        WHERE imp_uid = #{impUid}
+    </select>
+    
+    <!-- 결제 상태 업데이트 -->
+    <update id="updatePaymentStatus" parameterType="org.funding.payment.vo.PaymentVO">
+        UPDATE payments
+        SET status = #{status},
+            updated_at = NOW()
+        WHERE merchant_uid = #{merchantUid}
+    </update>
+    
+    <!-- 결제 완료 처리 -->
+    <update id="updatePaymentComplete" parameterType="org.funding.payment.vo.PaymentVO">
+        UPDATE payments
+        SET imp_uid = #{impUid},
+            status = #{status},
+            pay_method = #{payMethod},
+            pg_provider = #{pgProvider},
+            paid_at = NOW(),
+            updated_at = NOW()
+        WHERE merchant_uid = #{merchantUid}
+    </update>
+
+</mapper>
