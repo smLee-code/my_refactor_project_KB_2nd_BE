@@ -7,7 +7,6 @@ import org.funding.userSaving.dao.UserSavingDAO;
 import org.funding.userSaving.dto.UserSavingRequestDTO;
 import org.funding.userSaving.vo.UserSavingVO;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -24,12 +23,10 @@ public class UserSavingService {
             throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
         }
 
-
         UserSavingVO userSaving = new UserSavingVO();
         userSaving.setUserId(userSaving.getUserId());
         userSaving.setFundId(userSaving.getFundId());
         userSaving.setSavingAmount(userSaving.getSavingAmount());
-
 
         userSavingDAO.insertUserSaving(userSaving);
         return "정상적으로 저축에 가입하셨습니다.";
