@@ -1,4 +1,2 @@
-FROM openjdk:17-jdk
-ARG JAR_FILE=build/libs/*war
-COPY ${JAR_FILE} app.war
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.war"]
+FROM tomcat:9.0-jdk17
+COPY build/libs/app.war /usr/local/tomcat/webapps/
