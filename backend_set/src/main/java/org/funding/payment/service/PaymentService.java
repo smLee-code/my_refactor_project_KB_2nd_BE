@@ -48,7 +48,7 @@ public class PaymentService {
     @Value("${imp.api.key}")
     private String apiKey;
     
-    @Value("${imp.api.secretkey}")
+    @Value("${imp.api.secret}")
     private String apiSecret;
     
     // 사용자 ID 추출

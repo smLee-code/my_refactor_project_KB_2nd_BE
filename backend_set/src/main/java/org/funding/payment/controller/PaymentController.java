@@ -54,8 +54,10 @@ public class PaymentController {
     @PostMapping("/complete")
     @ApiOperation(value = "결제 완료", notes = "포트원 결제 완료 후 검증 및 펀딩 가입 처리를 합니다.")
     public ResponseEntity<Map<String, Object>> completePayment(@RequestBody PaymentCompleteRequestDTO request) {
+        log.info("===== 결제 완료 API 호출됨 =====");
         try {
-            log.info("결제 완료 요청 - imp_uid: {}", request.getImpUid());
+            log.info("결제 완료 요청 - imp_uid: {}, merchant_uid: {}", 
+                request.getImpUid(), request.getMerchantUid());
             
             // 1. 결제 완료 처리
             Map<String, Object> result = paymentService.completePayment(request);
