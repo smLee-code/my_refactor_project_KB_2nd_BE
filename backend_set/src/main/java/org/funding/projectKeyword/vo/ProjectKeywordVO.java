@@ -1,17 +1,16 @@
-package org.funding.category.service;
+package org.funding.projectKeyword.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryVO {
-    private Long categoryId;
-    private String name;
-    private Integer weight;
+public class ProjectKeywordVO {
+    private Long projectKeywordId;
+    private Long projectId;
+    private Long keywordId;
 }

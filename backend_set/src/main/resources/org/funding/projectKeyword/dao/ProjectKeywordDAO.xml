@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.projectKeyword.dao.ProjectKeywordDAO">
+
+    <select id="selectProjectKeyword" parameterType="org.funding.projectKeyword.dto.ProjectKeywordRequestDTO" resultType="org.funding.projectKeyword.vo.ProjectKeywordVO">
+        select *
+        from project_keywords
+        where project_id = #{projectId} and keyword_id = #{keywordId}
+    </select>
+
+    <insert id="insertProjectKeyword" parameterType="org.funding.projectKeyword.dto.ProjectKeywordRequestDTO">
+        insert into project_keywords (project_id, keyword_id)
+        values (#{projectId}, #{keywordId})
+    </insert>
+
+    <delete id="deleteProjectKeyword" parameterType="org.funding.projectKeyword.dto.ProjectKeywordRequestDTO">
+        delete from project_keywords
+        where project_id = #{projectId} and keyword_id = #{keywordId}
+    </delete>
+</mapper>
