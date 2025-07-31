@@ -84,7 +84,7 @@
     </select>
 
     <select id="getAllProjects" resultType="org.funding.project.dto.response.ProjectListDTO">
-        SELECT project_id,title, project_type, create_at, user_id, deadline FROM project
+        SELECT project_id,title, project_type, create_at, user_id, deadline, progress, promotion FROM project
     </select>
 
     <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
