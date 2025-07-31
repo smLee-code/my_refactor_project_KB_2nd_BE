@@ -21,6 +21,9 @@ public interface VotesDAO {
 
     // 해당 유저가 몇번의 투표를 했는지
     int countVotesByUserId(Long userId);
+    
+    // 해당 유저의 모든 투표 조회
+    List<VotesVO> findByUserId(Long userId);
 
 
 }

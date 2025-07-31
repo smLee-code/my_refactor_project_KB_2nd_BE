@@ -46,5 +46,10 @@ public interface ProjectDAO {
 
     void deleteDonationProjectById(Long projectId);
 
+    List<ProjectVO> findByUserId(Long userId); // 유저 프로젝트 조회
+
+    int countByUserId(Long userId); // 유저 프로젝트 개수 조회
+
+    ProjectVO findById(Long projectId); // 프로젝트 조회
 
 }
