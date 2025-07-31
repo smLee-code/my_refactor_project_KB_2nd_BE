@@ -28,7 +28,11 @@ import javax.sql.DataSource;
         "org.funding.retryVotes.dao",
         "org.funding.chatting.dao",
         "org.funding.comment.dao",
-        "org.funding.project.dao"
+        "org.funding.project.dao",
+        "org.funding.category.dao",
+        "org.funding.keyword.dao",
+        "org.funding.userKeyword.dao",
+        "org.funding.projectKeyword.dao"
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
@@ -49,10 +53,17 @@ public class RootConfig {
     HikariConfig config = new HikariConfig();
 
     // 데이터베이스 연결 정보 설정
-    config.setDriverClassName(driver);          // JDBC 드라이버 클래스
-    config.setJdbcUrl(url);                    // 데이터베이스 URL
-    config.setUsername(username);              // 사용자명
-    config.setPassword(password);              // 비밀번호
+//    config.setDriverClassName(driver);          // JDBC 드라이버 클래스
+//    config.setJdbcUrl(url);                    // 데이터베이스 URL
+//    config.setUsername(username);              // 사용자명
+//    config.setPassword(password);              // 비밀번호
+
+      config.setDriverClassName("com.mysql.cj.jdbc.Driver");          // JDBC 드라이버 클래스
+      config.setJdbcUrl("jdbc:mysql://database-2.c528io8smt7e.ap-northeast-2.rds.amazonaws.com:3306/FunzyProject?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8"); // 데이터베이스 URL
+      config.setUsername("funzyuser");              // 사용자명
+      config.setPassword("funzy1234!");              // 비밀번호
+
+
 
     // 커넥션 풀 추가 설정 (선택사항)
     config.setMaximumPoolSize(10);             // 최대 커넥션 수

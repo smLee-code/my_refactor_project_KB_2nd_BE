@@ -17,15 +17,15 @@ public class KeywordController {
 
     private final KeywordService keywordService;
 
-    @GetMapping("")
-    public ResponseEntity<KeywordResponseDTO> getKeyword(@RequestParam String name) {
+    @GetMapping("/{name}")
+    public ResponseEntity<KeywordResponseDTO> getKeyword(@PathVariable("name") String name) {
         KeywordResponseDTO keyword = keywordService.findKeyword(name);
 
         return new ResponseEntity<>(keyword, HttpStatus.OK);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<KeywordResponseDTO>> getAllKeywords(@RequestParam String categoryName) {
+    public ResponseEntity<List<KeywordResponseDTO>> getAllKeywords(@RequestParam("categoryName") String categoryName) {
         List<KeywordResponseDTO> allKeywords = keywordService.findAllKeywords(categoryName);
 
         return new ResponseEntity<>(allKeywords, HttpStatus.OK);

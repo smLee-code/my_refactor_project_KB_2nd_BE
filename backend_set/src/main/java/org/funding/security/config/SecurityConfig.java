@@ -139,6 +139,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/retryVotes/cancel",
                             "/ai/analyze-image",
                             "/api/project/**",
+                            "/api/category/**",
+                            "/api/keyword/**",
 //                            "/chat-app/**",
 //                            "/topic/**",
                             "/api/chat/history/**",
