@@ -84,7 +84,7 @@
     </select>
 
     <select id="getAllProjects" resultType="org.funding.project.dto.response.ProjectListDTO">
-        SELECT project_id,title, project_type, create_at, user_id, deadline FROM project
+        SELECT project_id,title, project_type, create_at, user_id, deadline, progress, promotion FROM project
     </select>
 
     <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
@@ -114,4 +114,40 @@
     <delete id="deleteDonationProjectById" parameterType="Long">
         DELETE FROM donation_project WHERE project_id = #{projectId}
     </delete>
+
+    <!-- 마이페이지 관련 쿼리들 -->
+    <select id="findByUserId" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
+        SELECT
+            project_id,
+            title,
+            promotion,
+            project_type,
+            progress,
+            create_at,
+            deadline,
+            user_id
+        FROM project
+        WHERE user_id = #{userId}
+        ORDER BY create_at DESC
+    </select>
+
+    <select id="countByUserId" parameterType="Long" resultType="int">
+        SELECT COUNT(*)
+        FROM project
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
+        SELECT
+            project_id,
+            title,
+            promotion,
+            project_type,
+            progress,
+            create_at,
+            deadline,
+            user_id
+        FROM project
+        WHERE project_id = #{projectId}
+    </select>
 </mapper>

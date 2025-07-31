@@ -31,6 +31,7 @@ public class VotesService {
         // 투표하지 않은 상태 → 추가
         VotesVO votesVO = requestDTO.toVO();
         votesDAO.insertVotes(votesVO);
+
         VotesVO selectedVotesVO = votesDAO.selectVotesById(votesVO.getVoteId());
         return VotesResponseDTO.fromVO(selectedVotesVO);
     }
@@ -84,7 +85,14 @@ public class VotesService {
     }
 
 
+    public Boolean hasVoted(VotesRequestDTO requestDTO) {
+        VotesVO votesVO = votesDAO.selectVotes(requestDTO);
 
-
-
+        if(votesVO == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }

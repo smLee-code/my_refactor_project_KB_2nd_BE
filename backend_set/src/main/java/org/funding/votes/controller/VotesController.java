@@ -32,6 +32,18 @@ public class VotesController {
 //
 //    }
 
+    @GetMapping("")
+    public ResponseEntity<Boolean> hasVoted(@RequestParam("userId") Long userId, @RequestParam("projectId") Long projectId) {
+
+        VotesRequestDTO requestDTO = new VotesRequestDTO();
+        requestDTO.setUserId(userId);
+        requestDTO.setProjectId(projectId);
+
+        Boolean voted = votesService.hasVoted(requestDTO);
+
+        return ResponseEntity.ok(voted);
+    }
+
     @DeleteMapping("")
     public ResponseEntity<Void> cancelVote(@RequestBody VotesRequestDTO requestDTO) {
         votesService.deleteVotes(requestDTO);

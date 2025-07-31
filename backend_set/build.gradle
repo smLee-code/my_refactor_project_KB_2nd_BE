@@ -13,6 +13,10 @@ repositories {
     maven { url 'https://jitpack.io' } // iamport관련 사용
 }
 
+jar {
+    enabled = false
+}
+
 // 프로젝트에서 사용할 라이브러리 버전을 변수로 정의
 // -> 버전 관리가 용이하고 일관성을 유지할 수 있음
 ext {
