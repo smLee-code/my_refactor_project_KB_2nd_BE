@@ -153,6 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
            //.antMatchers("/api/fund/list").permitAll()
            //..antMatchers("/api/fund/admin").hasRole("ADMIN")
             .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
+            .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
             .anyRequest().authenticated();
   }
 
