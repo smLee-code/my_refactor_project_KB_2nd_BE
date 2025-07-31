@@ -13,7 +13,7 @@
     <select id="selectKeywordsByCategoryName" parameterType="String" resultType="org.funding.keyword.dto.KeywordResponseDTO">
         select *
         from keywords
-        where categoryId = (select categoryId
+        where category_id = (select category_id
                             from categories
                             where name = #{categoryName})
     </select>

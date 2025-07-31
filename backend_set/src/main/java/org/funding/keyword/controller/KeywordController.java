@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/keywords")
+@RequestMapping("/api/keyword")
 @RequiredArgsConstructor
 public class KeywordController {
 
@@ -32,7 +32,7 @@ public class KeywordController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> addKeyword(@RequestBody KeywordRequestDTO requestDTO) {
+    public ResponseEntity<String> createKeyword(@RequestBody KeywordRequestDTO requestDTO) {
         keywordService.addKeyword(requestDTO);
         return ResponseEntity.ok("키워드 추가 성공");
     }
