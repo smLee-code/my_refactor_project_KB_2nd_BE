@@ -25,5 +25,8 @@ public interface VotesDAO {
     // 해당 유저의 모든 투표 조회
     List<VotesVO> findByUserId(Long userId);
 
+    //userId, projectId 고려한 투표 삭제
+    void deleteVotesByUserIdAndProjectId(Long userId, Long projectId);
+
 
 }

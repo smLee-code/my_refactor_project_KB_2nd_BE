@@ -12,9 +12,10 @@ public interface MemberDAO {
     // 멤버 회원가입
     void insertMember(MemberVO member);
     MemberVO findByEmail(String username);
+
+    MemberVO findById(Long userId);
     
     // 마이페이지 관련 메서드들
-    MemberVO findById(Long userId); // 유저 정보 조회
     void updateMember(MemberVO member); // 유저 정보 수정
 
     // 키워드 관련 메서드들

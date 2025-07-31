@@ -29,7 +29,9 @@ public class OpenAIVisionClient {
 
             JSONObject textObject = new JSONObject();
             textObject.put("type", "text");
-            textObject.put("text", prompt);
+            String refinedPrompt = prompt +
+                    " 이 조건을 만족하는지 판단해줘. 만약 사진이 이 조건에 부합한다면 '확인되었습니다.'라는 문장을 마지막에 꼭 포함해서 답변해줘.";
+            textObject.put("text", refinedPrompt);
             contentArray.put(textObject);
 
             JSONObject imageObject = new JSONObject();

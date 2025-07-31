@@ -12,4 +12,6 @@ public class ProjectResponseDTO {
 
     private ProjectVO basicInfo;
     private Object detailInfo;
+    private Long voteCount;
+
 }

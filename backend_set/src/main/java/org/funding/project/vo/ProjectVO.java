@@ -27,4 +27,13 @@ public class ProjectVO {
     // 연관 관계
     private Long userId; // 제안자 id
 
+    private String nickname;
+    private String email;
+
+    private Long badgeId;
+    private String badgeName;
+
+    private Long voteCount;
+
+
 }

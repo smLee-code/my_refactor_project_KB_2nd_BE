@@ -1,6 +1,8 @@
 package org.funding.project.dto.response;
 
 import lombok.Data;
+import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
 
 import java.time.LocalDateTime;
@@ -13,4 +15,6 @@ public class ProjectListDTO {
     private LocalDateTime createAt; // 생성일 (프로젝트는 수정 못함)
     private String userId;
     private ProjectType projectType;
+    private ProjectProgress progress;
+    private String promotion;
 }

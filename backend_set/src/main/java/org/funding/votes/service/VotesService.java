@@ -18,11 +18,32 @@ public class VotesService {
 
     private final VotesDAO votesDAO;
 
+    @Transactional
+    public VotesResponseDTO toggleVote(VotesRequestDTO requestDTO) {
+        VotesVO existingVote = votesDAO.selectVotes(requestDTO);
+
+        if (existingVote != null) {
+            // 이미 투표한 상태 → 삭제
+            votesDAO.deleteVotes(existingVote.getVoteId());
+            return null; // 또는 삭제된 정보 리턴할 수도 있음
+        }
+
+        // 투표하지 않은 상태 → 추가
+        VotesVO votesVO = requestDTO.toVO();
+        votesDAO.insertVotes(votesVO);
+
+        VotesVO selectedVotesVO = votesDAO.selectVotesById(votesVO.getVoteId());
+        return VotesResponseDTO.fromVO(selectedVotesVO);
+    }
+
+
     public VotesResponseDTO createVotes(VotesRequestDTO requestDTO) {
 
-        if(votesDAO.selectVotes(requestDTO) != null) {
-            throw new DuplicateVoteException("이미 투표한 프로젝트입니다. (중복 투표 불가)");
-        }
+
+        //투표는 토글 기능이라서 중복 투표 개념이 없을거같음
+//        if(votesDAO.selectVotes(requestDTO) != null) {
+//            throw new DuplicateVoteException("이미 투표한 프로젝트입니다. (중복 투표 불가)");
+//        }
 
         VotesVO votesVO = requestDTO.toVO();
         votesDAO.insertVotes(votesVO);
@@ -56,5 +77,22 @@ public class VotesService {
         Long voteCount = votesDAO.countVotes(projectId);
 
         return voteCount;
+    }
+
+    //어디에 쓰일지 잘 모르겠음
+    public void deleteVotesDirect(Long userId, Long projectId) {
+        votesDAO.deleteVotesByUserIdAndProjectId(userId, projectId);
+    }
+
+
+    public Boolean hasVoted(VotesRequestDTO requestDTO) {
+        VotesVO votesVO = votesDAO.selectVotes(requestDTO);
+
+        if(votesVO == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

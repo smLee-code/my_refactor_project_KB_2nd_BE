@@ -13,7 +13,7 @@
         SELECT * FROM votes WHERE vote_id = #{voteId}
     </select>
 
-    <insert id="insertVotes" parameterType="org.funding.votes.dto.VotesRequestDTO" useGeneratedKeys="true" keyProperty="voteId">
+    <insert id="insertVotes" parameterType="org.funding.votes.vo.VotesVO" useGeneratedKeys="true" keyProperty="voteId">
         INSERT INTO votes (user_id, project_id, vote_time)
         VALUES (#{userId}, #{projectId}, NOW())
     </insert>
@@ -44,5 +44,14 @@
         WHERE user_id = #{userId}
         ORDER BY vote_time DESC
     </select>
+
+    <delete id="deleteVotesByUserIdAndProjectId">
+        DELETE FROM votes
+        WHERE user_id = #{userId}
+          AND project_id = #{projectId}
+    </delete>
+
+
+>>>>>>> develop
 
 </mapper>

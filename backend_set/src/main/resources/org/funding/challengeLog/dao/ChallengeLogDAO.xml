@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.challengeLog.dao.ChallengeLogDAO">
+
+    <!-- 인증 로그 저장 -->
+    <insert id="insertChallengeLog" parameterType="org.funding.challengeLog.vo.ChallengeLogVO">
+        INSERT INTO challenge_log (
+            user_challenge_id, log_date, verified, image_url, verified_result
+        )
+        VALUES (
+                   #{userChallengeId}, #{logDate}, #{verified}, #{imageUrl}, #{verifiedResult}
+               )
+    </insert>
+
+    <!-- 특정 날짜에 대한 인증 로그 조회 -->
+    <select id="selectLogByUserAndDate" resultType="org.funding.challengeLog.vo.ChallengeLogVO">
+        SELECT *
+        FROM challenge_log
+        WHERE user_challenge_id = #{userChallengeId}
+          AND log_date = #{logDate}
+    </select>
+
+
+</mapper>
