@@ -1,4 +1,2 @@
-FROM openjdk:17-jdk
-ARG JAR_FILE=build/libs/*jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
+FROM tomcat:9.0-jdk17
+COPY build/libs/backend_set-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/
