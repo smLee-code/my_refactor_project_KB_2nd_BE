@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Slf4j
@@ -34,6 +35,9 @@ import java.util.Map;
 public class PaymentService {
     
     private final RestTemplate restTemplate = new RestTemplate();
+    
+    // 결제별 metadata 임시 저장소
+    private final Map<String, Map<String, Object>> paymentMetadata = new ConcurrentHashMap<>();
 
     // TODO: Service 의존성 문제 해결 후 사용
     // private final UserDonationService userDonationService;
@@ -84,6 +88,12 @@ public class PaymentService {
                 .build();
                 
             paymentDAO.insertPayment(payment);
+            
+            // 5. metadata 저장 (있는 경우)
+            if (request.getMetadata() != null && !request.getMetadata().isEmpty()) {
+                paymentMetadata.put(merchantUid, request.getMetadata());
+                log.info("Metadata 저장 - merchantUid: {}, metadata: {}", merchantUid, request.getMetadata());
+            }
             
             return Map.of(
                 "merchant_uid", merchantUid,
@@ -255,16 +265,27 @@ public class PaymentService {
     
     // 기부형 펀딩 가입
     private String processDonationJoin(PaymentVO payment) {
+        // metadata에서 익명여부 가져오기
+        Map<String, Object> metadata = paymentMetadata.get(payment.getMerchantUid());
+        Boolean anonymous = false;
+        
+        if (metadata != null && metadata.containsKey("anonymous")) {
+            anonymous = (Boolean) metadata.get("anonymous");
+            log.info("익명여부 설정 - merchantUid: {}, anonymous: {}", payment.getMerchantUid(), anonymous);
+            // 사용 후 metadata 제거 (메모리 관리)
+            paymentMetadata.remove(payment.getMerchantUid());
+        }
+        
         // DAO를 직접 사용하여 기부 정보 저장
         UserDonationVO userDonation = new UserDonationVO();
         userDonation.setFundId(payment.getFundId());
         userDonation.setUserId(payment.getUserId());
         userDonation.setDonationAmount(payment.getAmount());
-        userDonation.setAnonymous(false);
+        userDonation.setAnonymous(anonymous);
         
         userDonationDAO.insertUserDonation(userDonation);
-        log.info("기부 정보 저장 완료 - userId: {}, fundId: {}, amount: {}", 
-            payment.getUserId(), payment.getFundId(), payment.getAmount());
+        log.info("기부 정보 저장 완료 - userId: {}, fundId: {}, amount: {}, anonymous: {}", 
+            payment.getUserId(), payment.getFundId(), payment.getAmount(), anonymous);
         
         return "기부가 완료되었습니다.";
     }

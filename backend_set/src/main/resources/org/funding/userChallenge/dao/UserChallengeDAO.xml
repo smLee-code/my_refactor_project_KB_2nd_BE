@@ -51,7 +51,7 @@
             fund_id,
             user_id,
             success_count,
-            fail_count,
+            fail_count
         FROM user_challenge
         WHERE user_challenge_id = #{userChallengeId}
     </select>
