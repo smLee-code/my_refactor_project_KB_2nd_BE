@@ -255,14 +255,14 @@ public class PaymentService {
     
     // 기부형 펀딩 가입
     private String processDonationJoin(PaymentVO payment) {
-        // Service를 사용하여 기부 처리
-        DonateRequestDTO request = new DonateRequestDTO();
-        request.setUserId(payment.getUserId());
-        request.setFundId(payment.getFundId());
-        request.setDonateAmount(payment.getAmount());
-        request.setAnonymous(false);
+        // DAO를 직접 사용하여 기부 정보 저장
+        UserDonationVO userDonation = new UserDonationVO();
+        userDonation.setFundId(payment.getFundId());
+        userDonation.setUserId(payment.getUserId());
+        userDonation.setDonationAmount(payment.getAmount());
+        userDonation.setAnonymous(false);
         
-        // userDonationService.donate(request); // Service 의존성 문제로 주석
+        userDonationDAO.insertUserDonation(userDonation);
         log.info("기부 정보 저장 완료 - userId: {}, fundId: {}, amount: {}", 
             payment.getUserId(), payment.getFundId(), payment.getAmount());
         

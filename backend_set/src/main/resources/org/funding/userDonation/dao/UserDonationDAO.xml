@@ -7,13 +7,15 @@
 
     <!-- 생성 -->
     <insert id="insertUserDonation" parameterType="org.funding.userDonation.vo.UserDonationVO">
-        INSERT INTO user_saving (
+        INSERT INTO user_donation (
+            fund_id,
             user_id,
-            saving_amount,
+            donation_amount,
             anonymous
         ) VALUES (
+                     #{fundId},
                      #{userId},
-                     #{savingAmount},
+                     #{donationAmount},
                      #{anonymous}
                  )
     </insert>
