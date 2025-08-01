@@ -53,6 +53,21 @@
         WHERE p.project_id = #{projectId}
     </select>
 
+    <select id="selectTopProject" resultType="org.funding.project.vo.ProjectVO">
+        SELECT
+            p.project_id,
+            p.title,
+            p.promotion,
+            COUNT(v.vote_id) AS vote_count
+        FROM project p
+                 LEFT JOIN votes v
+                           ON p.project_id = v.project_id
+        GROUP BY p.project_id, p.title, p.promotion
+        ORDER BY vote_count DESC, p.create_at DESC
+            LIMIT 5
+    </select>
+
+
 <!--    프로젝트 투표수 계산 쿼리-->
     <!-- MyBatis Mapper XML -->
     <select id="countVotes" parameterType="Long" resultType="Long">
