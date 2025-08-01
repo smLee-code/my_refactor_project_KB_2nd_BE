@@ -37,7 +37,7 @@ public class ProjectService {
 
     public List<TopProjectDTO> getTopProjects() {
 
-        List<TopProjectDTO> list = projectDAO.getTopProjects222();
+        List<TopProjectDTO> list = projectDAO.getTopProjects();
 
         return list;
     }

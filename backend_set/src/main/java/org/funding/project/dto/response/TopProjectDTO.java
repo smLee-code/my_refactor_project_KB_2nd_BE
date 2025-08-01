@@ -9,12 +9,11 @@ import java.time.LocalDateTime;
 @Data
 public class TopProjectDTO {
     private Long projectId;
-    private Long userId;
     private ProjectType projectType;
     private String title;
     private String promotion;
     private ProjectProgress progress;
     private LocalDateTime deadline;
     private LocalDateTime createAt;
-//    private Integer voteCount;
+    private Integer voteCount;
 }

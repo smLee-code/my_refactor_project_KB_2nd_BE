@@ -9,16 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="20d3053a-9474-41f7-b424-00ec888d5b5b" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/dto/response/TopProjectDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f0a9107d-c371-463d-afd6-acfe826f7905.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f0a9107d-c371-463d-afd6-acfe826f7905.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/controller/ProjectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/dao/ProjectDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/dao/ProjectDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/service/ProjectService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/vo/ProjectVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/vo/ProjectVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend_set/src/main/resources/org/funding/project/dao/ProjectDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/resources/org/funding/project/dao/ProjectDAO.xml" afterDir="false" />
-    </list>
+    <list default="true" id="20d3053a-9474-41f7-b424-00ec888d5b5b" name="변경" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -111,6 +102,17 @@
   }
 }</component>
   <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="backend_set" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="backend_set" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
     <configuration name="Tomcat 9.0.106" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.106" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="hot-swap-classes" />
       <deployment>
