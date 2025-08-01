@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.aspectj:aspectjrt:1.9.20.1" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.aspectj" artifactId="aspectjrt" version="1.9.20.1" baseVersion="1.9.20.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.9.20.1/26954e413fd6e4278c5720abe29726a904f14bc8/aspectjrt-1.9.20.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
