@@ -14,6 +14,7 @@ import org.funding.votes.service.VotesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +25,22 @@ public class ProjectService {
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
 
+//    public List<TopProjectDTO> getTopProjects() {
+//        List<TopProjectDTO> topProjects = projectDAO.getTopProjects();
+//
+//        if (topProjects == null) {
+//            throw new RuntimeException("<UNK>");
+//        }
+//
+//        return topProjects;
+//    }
+
+    public List<TopProjectDTO> getTopProjects() {
+
+        List<TopProjectDTO> list = projectDAO.getTopProjects222();
+
+        return list;
+    }
 
 
     public ProjectVO selectProjectById(Long projectId) {
@@ -87,6 +104,8 @@ public class ProjectService {
     public List<ProjectListDTO> getAllProjects() {
         return projectDAO.getAllProjects();
     }
+
+
 
     @Transactional
     public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO) {
@@ -166,4 +185,6 @@ public class ProjectService {
 
         projectDAO.deleteProjectById(projectId);
     }
+
+
 }

@@ -9,7 +9,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="20d3053a-9474-41f7-b424-00ec888d5b5b" name="변경" comment="" />
+    <list default="true" id="20d3053a-9474-41f7-b424-00ec888d5b5b" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/dto/response/TopProjectDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f0a9107d-c371-463d-afd6-acfe826f7905.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f0a9107d-c371-463d-afd6-acfe826f7905.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/controller/ProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/controller/ProjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/dao/ProjectDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/dao/ProjectDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/service/ProjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/vo/ProjectVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/java/org/funding/project/vo/ProjectVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend_set/src/main/resources/org/funding/project/dao/ProjectDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend_set/src/main/resources/org/funding/project/dao/ProjectDAO.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,6 +45,13 @@
         </projects_view>
       </state>
     </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -67,33 +83,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.backend_set 빌드.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Tomcat 서버.Tomcat 9.0.106.executor": "Run",
-    "git-widget-placeholder": "develop",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/funding/server",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "모듈",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.backend_set 빌드.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Tomcat 서버.Tomcat 9.0.106.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;test#89-fe-home&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/funding/server&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;모듈&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Tomcat 9.0.106" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.106" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="hot-swap-classes" />
@@ -215,7 +231,10 @@
       <updated>1753491891080</updated>
       <workItem from="1753491892247" duration="21972000" />
       <workItem from="1753749722539" duration="11844000" />
-      <workItem from="1753835897111" duration="21167000" />
+      <workItem from="1753835897111" duration="21477000" />
+      <workItem from="1754008401332" duration="5903000" />
+      <workItem from="1754014333698" duration="2221000" />
+      <workItem from="1754020884256" duration="2085000" />
     </task>
     <servers />
   </component>
