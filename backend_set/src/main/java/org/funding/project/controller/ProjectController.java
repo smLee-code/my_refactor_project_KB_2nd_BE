@@ -1,11 +1,14 @@
 package org.funding.project.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.keyword.dto.KeywordRequestDTO;
+import org.funding.keyword.dto.KeywordResponseDTO;
 import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.request.CreateProjectRequestDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
 import org.funding.project.service.ProjectService;
 import org.funding.project.vo.ProjectVO;
+import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +45,6 @@ public class ProjectController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String type) {
 
-
         if (keyword != null && !keyword.isEmpty()) {
             return projectService.searchByKeyword(keyword);
         } else if (type != null && !type.isEmpty()) {
@@ -63,4 +65,28 @@ public class ProjectController {
         projectService.deleteProject(id);
     }
 
+    /* 키워드 관련 api */
+
+    @GetMapping("/keyword/{id}")
+    public ResponseEntity<List<KeywordResponseDTO>> getProjectKeywords(@PathVariable("id") Long projectId) {
+        List<KeywordResponseDTO> list = projectService.getProjectKeywords(projectId);
+
+        return ResponseEntity.ok(list);
+    }
+
+    @PostMapping("/keyword")
+    public ResponseEntity<String> addKeywordIntoProject(@RequestBody ProjectKeywordRequestDTO requestDTO) {
+
+        projectService.addKeywordIntoProject(requestDTO);
+
+        return ResponseEntity.ok("키워드 추가 완료");
+    }
+
+    @DeleteMapping("/keyword")
+    public ResponseEntity<String> deleteKeywordFromProject(@RequestBody ProjectKeywordRequestDTO requestDTO) {
+
+        projectService.deleteKeywordFromProject(requestDTO);
+
+        return ResponseEntity.ok("키워드 삭제 완료");
+    }
 }

@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface KeywordDAO {
 
-    KeywordResponseDTO selectKeyword(String name);
+    KeywordResponseDTO selectKeywordById(Long keywordId);
+
+    KeywordResponseDTO selectKeywordByName(String name);
 
     List<KeywordResponseDTO> selectKeywordsByCategoryName(String categoryName);
 

@@ -16,7 +16,7 @@ public class KeywordService {
     private final KeywordDAO keywordDAO;
 
     public KeywordResponseDTO findKeyword(String name) {
-        return keywordDAO.selectKeyword(name);
+        return keywordDAO.selectKeywordByName(name);
     }
 
     public List<KeywordResponseDTO> findAllKeywords(String categoryName) {

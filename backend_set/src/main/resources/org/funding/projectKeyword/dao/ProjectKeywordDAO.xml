@@ -5,11 +5,19 @@
 
 <mapper namespace="org.funding.projectKeyword.dao.ProjectKeywordDAO">
 
-    <select id="selectProjectKeyword" parameterType="org.funding.projectKeyword.dto.ProjectKeywordRequestDTO" resultType="org.funding.projectKeyword.vo.ProjectKeywordVO">
+    <select id="findProjectKeywordMapping" parameterType="org.funding.projectKeyword.dto.ProjectKeywordRequestDTO" resultType="org.funding.projectKeyword.vo.ProjectKeywordVO">
         select *
         from project_keywords
         where project_id = #{projectId} and keyword_id = #{keywordId}
     </select>
+
+    <select id="selectKeywordIdsByProjectId" parameterType="Long" resultType="Long">
+        select keyword_id
+        from project_keywords
+        where project_id = #{project_id}
+    </select>
+
+
 
     <insert id="insertProjectKeyword" parameterType="org.funding.projectKeyword.dto.ProjectKeywordRequestDTO">
         insert into project_keywords (project_id, keyword_id)

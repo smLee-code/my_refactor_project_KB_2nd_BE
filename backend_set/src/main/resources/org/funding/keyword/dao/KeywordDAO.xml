@@ -4,7 +4,14 @@
 
 <mapper namespace="org.funding.keyword.dao.KeywordDAO">
 
-    <select id="selectKeyword" parameterType="String" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+    <select id="selectKeywordById" parameterType="Long" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+        select *
+        from keywords
+        where keyword_id = #{keywordId}
+    </select>
+
+
+    <select id="selectKeywordByName" parameterType="String" resultType="org.funding.keyword.dto.KeywordResponseDTO">
         select *
         from keywords
         where name = #{name}
