@@ -30,17 +30,7 @@ public class ProjectService {
 
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
-<<<<<<< HEAD
 
-//    public List<TopProjectDTO> getTopProjects() {
-//        List<TopProjectDTO> topProjects = projectDAO.getTopProjects();
-//
-//        if (topProjects == null) {
-//            throw new RuntimeException("<UNK>");
-//        }
-//
-//        return topProjects;
-//    }
 
     public List<TopProjectDTO> getTopProjects() {
 
@@ -48,9 +38,9 @@ public class ProjectService {
 
         return list;
     }
-=======
+
     private final ProjectKeywordService projectKeywordService;
->>>>>>> origin
+
 
 
     public ProjectVO selectProjectById(Long projectId) {
@@ -196,9 +186,6 @@ public class ProjectService {
         projectDAO.deleteProjectById(projectId);
     }
 
-<<<<<<< HEAD
-
-=======
     public List<KeywordResponseDTO> getProjectKeywords(Long projectId) {
         List<KeywordResponseDTO> keywordDTOList = projectKeywordService.findKeywordIdsByProjectId(projectId);
 
@@ -214,5 +201,5 @@ public class ProjectService {
 
         projectKeywordService.unmapProjectKeyword(requestDTO);
     }
->>>>>>> origin
+
 }
