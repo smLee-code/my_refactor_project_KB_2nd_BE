@@ -70,7 +70,11 @@ import java.util.List;
         "org.funding.keyword.controller",
         "org.funding.keyword.service",
         "org.funding.userKeyword.service",
-        "org.funding.projectKeyword.service"
+        "org.funding.projectKeyword.service",
+        "org.funding.chatting.config",
+        "org.funding.payment.controller",
+        "org.funding.payment.service",
+        "org.funding.healthChecker.controller",
 
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {

@@ -8,10 +8,10 @@
     <!-- 사용자 챌린지 참여 등록 -->
     <insert id="insertUserChallenge" parameterType="org.funding.userChallenge.vo.UserChallengeVO">
         INSERT INTO user_challenge (
-            user_id, challenge_id, start_date, end_date
+            user_id, fund_id
         )
         VALUES (
-                   #{userId}, #{challengeId}, #{startDate}, #{endDate}
+                   #{userId}, #{fundId}
                )
     </insert>
 
@@ -51,7 +51,7 @@
             fund_id,
             user_id,
             success_count,
-            fail_count,
+            fail_count
         FROM user_challenge
         WHERE user_challenge_id = #{userChallengeId}
     </select>
