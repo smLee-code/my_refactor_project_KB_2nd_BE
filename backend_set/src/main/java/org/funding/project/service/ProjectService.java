@@ -1,6 +1,9 @@
 package org.funding.project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.keyword.dao.KeywordDAO;
+import org.funding.keyword.dto.KeywordResponseDTO;
+import org.funding.keyword.service.KeywordService;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
@@ -9,6 +12,9 @@ import org.funding.project.dto.request.*;
 import org.funding.project.dto.response.*;
 import org.funding.project.vo.*;
 import org.funding.project.vo.enumType.ProjectType;
+import org.funding.projectKeyword.dao.ProjectKeywordDAO;
+import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
+import org.funding.projectKeyword.service.ProjectKeywordService;
 import org.funding.votes.dao.VotesDAO;
 import org.funding.votes.service.VotesService;
 import org.springframework.stereotype.Service;
@@ -24,6 +30,7 @@ public class ProjectService {
 
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
+<<<<<<< HEAD
 
 //    public List<TopProjectDTO> getTopProjects() {
 //        List<TopProjectDTO> topProjects = projectDAO.getTopProjects();
@@ -41,6 +48,9 @@ public class ProjectService {
 
         return list;
     }
+=======
+    private final ProjectKeywordService projectKeywordService;
+>>>>>>> origin
 
 
     public ProjectVO selectProjectById(Long projectId) {
@@ -186,5 +196,23 @@ public class ProjectService {
         projectDAO.deleteProjectById(projectId);
     }
 
+<<<<<<< HEAD
 
+=======
+    public List<KeywordResponseDTO> getProjectKeywords(Long projectId) {
+        List<KeywordResponseDTO> keywordDTOList = projectKeywordService.findKeywordIdsByProjectId(projectId);
+
+        return keywordDTOList;
+    }
+
+    public void addKeywordIntoProject(ProjectKeywordRequestDTO requestDTO) {
+
+        projectKeywordService.mapProjectKeyword(requestDTO);
+    }
+
+    public void deleteKeywordFromProject(ProjectKeywordRequestDTO requestDTO) {
+
+        projectKeywordService.unmapProjectKeyword(requestDTO);
+    }
+>>>>>>> origin
 }

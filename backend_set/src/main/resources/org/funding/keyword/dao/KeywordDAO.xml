@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.keyword.dao.KeywordDAO">
+
+    <select id="selectKeywordById" parameterType="Long" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+        select *
+        from keywords
+        where keyword_id = #{keywordId}
+    </select>
+
+
+    <select id="selectKeywordByName" parameterType="String" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+        select *
+        from keywords
+        where name = #{name}
+    </select>
+
+    <select id="selectKeywordsByCategoryName" parameterType="String" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+        select *
+        from keywords
+        where category_id = (select category_id
+                            from categories
+                            where name = #{categoryName})
+    </select>
+
+    <insert id="insertKeyword" parameterType="org.funding.keyword.dto.KeywordRequestDTO">
+        insert into keywords (category_id, name)
+        values (#{categoryId}, #{name})
+    </insert>
+
+    <delete id="deleteKeyword" parameterType="String">
+        delete from keywords
+        where name = #{name}
+    </delete>
+</mapper>

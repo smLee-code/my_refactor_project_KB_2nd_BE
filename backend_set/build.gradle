@@ -10,11 +10,9 @@ version '1.0-SNAPSHOT'    // 프로젝트 버전 (SNAPSHOT: 개발 중인 버전
 // 의존성 라이브러리를 다운로드할 저장소 설정
 repositories {
     mavenCentral()  // Maven 중앙 저장소 사용
+    maven { url 'https://jitpack.io' } // iamport관련 사용
 }
 
-jar {
-    enabled = false
-}
 
 // 프로젝트에서 사용할 라이브러리 버전을 변수로 정의
 // -> 버전 관리가 용이하고 일관성을 유지할 수 있음
@@ -180,7 +178,8 @@ dependencies {
     testImplementation 'org.springframework:spring-test:5.3.30'
     testImplementation 'org.hamcrest:hamcrest:2.2'
 
-
+    // iamport 결제 관련
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'
 
 }
 // 테스트 실행 설정

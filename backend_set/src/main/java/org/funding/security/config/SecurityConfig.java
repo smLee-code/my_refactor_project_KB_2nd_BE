@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 @Slf4j
 @MapperScan(basePackages = {"org.funding.security.account.mapper"})
-@ComponentScan(basePackages = {"org.funding.security"})
+@ComponentScan(basePackages = {"org.funding.security", "org.funding.user.service"})
 @RequiredArgsConstructor
 //@EnableWebMvc
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -139,10 +139,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/retryVotes/cancel",
                             "/ai/analyze-image",
                             "/api/project/**",
+                            "/api/category/**",
+                            "/api/keyword/**",
 //                            "/chat-app/**",
 //                            "/topic/**",
                             "/api/chat/history/**",
-                            "/api/app/chat/history/**", "/api/votes/**").permitAll()
+                            "/api/app/chat/history/**", "/api/votes/**",
+                            "/health" // 헬스체커 api 항상 열어놓을것!
+                    ).permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
             .antMatchers("/api/security/admin").hasRole("ADMIN")
@@ -151,6 +155,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
            //.antMatchers("/api/fund/list").permitAll()
            //..antMatchers("/api/fund/admin").hasRole("ADMIN")
             .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
+            .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
             .anyRequest().authenticated();
   }
 
@@ -198,7 +203,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/badge/all/badge",
             "/ai/{fundId}/ai-recommend",
 
-            "/api/votes/**"
+            "/api/votes/**",
+            "/health" // 헬스체커 api 항상 열어놓을것!
 
     );
   }

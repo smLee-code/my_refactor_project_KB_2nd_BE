@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 
@@ -28,7 +29,16 @@ import javax.sql.DataSource;
         "org.funding.retryVotes.dao",
         "org.funding.chatting.dao",
         "org.funding.comment.dao",
-        "org.funding.project.dao"
+        "org.funding.project.dao",
+        "org.funding.category.dao",
+        "org.funding.keyword.dao",
+        "org.funding.userKeyword.dao",
+        "org.funding.projectKeyword.dao",
+        "org.funding.project.dao",
+        "org.funding.payment.dao",
+        "org.funding.userDonation.dao",
+        "org.funding.userChallenge.dao",
+        "org.funding.challengeLog.dao"
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
@@ -82,6 +92,11 @@ public class RootConfig {
   public DataSourceTransactionManager transactionManager(DataSource dataSource) {
     DataSourceTransactionManager manager = new DataSourceTransactionManager(dataSource);
     return manager;
+  }
+
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
   }
 
 }

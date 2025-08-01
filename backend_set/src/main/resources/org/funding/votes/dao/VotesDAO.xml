@@ -37,12 +37,19 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 유저 ID로 모든 투표 조회 -->
+    <select id="findByUserId" parameterType="Long" resultType="org.funding.votes.vo.VotesVO">
+        SELECT vote_id, user_id, project_id, vote_time
+        FROM votes
+        WHERE user_id = #{userId}
+        ORDER BY vote_time DESC
+    </select>
+
     <delete id="deleteVotesByUserIdAndProjectId">
         DELETE FROM votes
         WHERE user_id = #{userId}
           AND project_id = #{projectId}
     </delete>
-
 
 
 </mapper>
