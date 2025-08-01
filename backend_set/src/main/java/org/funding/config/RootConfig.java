@@ -34,7 +34,6 @@ import javax.sql.DataSource;
         "org.funding.keyword.dao",
         "org.funding.userKeyword.dao",
         "org.funding.projectKeyword.dao",
-        "org.funding.project.dao",
         "org.funding.payment.dao",
         "org.funding.userDonation.dao",
         "org.funding.userChallenge.dao",
