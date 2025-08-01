@@ -1,6 +1,7 @@
 package org.funding.project.dao;
 
 import org.funding.project.dto.response.ProjectListDTO;
+import org.funding.project.dto.response.TopProjectDTO;
 import org.funding.project.vo.*;
 import org.springframework.stereotype.Repository;
 
@@ -36,6 +37,8 @@ public interface ProjectDAO {
 
     List<ProjectListDTO> searchProjectsByKeyword(String keyword);
 
+    List<TopProjectDTO> getTopProjects();
+
     void deleteProjectById(Long projectId);
 
     void deleteSavingsProjectById(Long projectId);
@@ -52,4 +55,5 @@ public interface ProjectDAO {
 
     ProjectVO findById(Long projectId); // 프로젝트 조회
 
+    List<TopProjectDTO> getTopProjects222();
 }

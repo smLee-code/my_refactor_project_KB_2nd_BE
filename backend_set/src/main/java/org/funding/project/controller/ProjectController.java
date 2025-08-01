@@ -1,19 +1,24 @@
 package org.funding.project.controller;
 
 import lombok.RequiredArgsConstructor;
+
 import org.funding.keyword.dto.KeywordRequestDTO;
 import org.funding.keyword.dto.KeywordResponseDTO;
+
 import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.request.CreateProjectRequestDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
+import org.funding.project.dto.response.TopProjectDTO;
 import org.funding.project.service.ProjectService;
 import org.funding.project.vo.ProjectVO;
+
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/project")
@@ -22,6 +27,20 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+//    //인기프로젝트 조회
+//    @GetMapping("/top")
+//    public ResponseEntity<List<TopProjectDTO>> getTopProjects() {
+//        List<TopProjectDTO> topProjects = projectService.getTopProjects();
+//
+//        return new ResponseEntity<>(topProjects, HttpStatus.OK);
+//    }
+
+    @GetMapping("/top")
+    public ResponseEntity<List<TopProjectDTO>> getTopProject() {
+        List<TopProjectDTO> list = projectService.getTopProjects();
+
+        return ResponseEntity.ok(list);
+    }
 
     @GetMapping("/list/detail/{id}")
     public ResponseEntity<ProjectVO> getProjectDetail(@PathVariable("id") Long id) {

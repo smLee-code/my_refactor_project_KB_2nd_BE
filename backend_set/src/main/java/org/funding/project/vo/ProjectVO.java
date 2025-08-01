@@ -33,7 +33,6 @@ public class ProjectVO {
     private Long badgeId;
     private String badgeName;
 
-    private Long voteCount;
 
 
 }
