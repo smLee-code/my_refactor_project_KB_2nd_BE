@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 @Slf4j
 @MapperScan(basePackages = {"org.funding.security.account.mapper"})
-@ComponentScan(basePackages = {"org.funding"})
+@ComponentScan(basePackages = {"org.funding.security", "org.funding.user.service"})
 @RequiredArgsConstructor
 //@EnableWebMvc
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
