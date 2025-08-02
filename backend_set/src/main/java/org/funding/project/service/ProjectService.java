@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.keyword.dao.KeywordDAO;
 import org.funding.keyword.dto.KeywordResponseDTO;
 import org.funding.keyword.service.KeywordService;
+import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
@@ -28,6 +29,8 @@ import java.util.List;
 public class ProjectService {
 
 
+    private final ProjectKeywordService projectKeywordService;
+
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
 
@@ -38,10 +41,6 @@ public class ProjectService {
 
         return list;
     }
-
-    private final ProjectKeywordService projectKeywordService;
-
-
 
     public ProjectVO selectProjectById(Long projectId) {
         ProjectVO project = projectDAO.selectProjectById(projectId);
@@ -186,8 +185,8 @@ public class ProjectService {
         projectDAO.deleteProjectById(projectId);
     }
 
-    public List<KeywordResponseDTO> getProjectKeywords(Long projectId) {
-        List<KeywordResponseDTO> keywordDTOList = projectKeywordService.findKeywordIdsByProjectId(projectId);
+    public List<KeywordVO> getProjectKeywords(Long projectId) {
+        List<KeywordVO> keywordDTOList = projectKeywordService.findKeywordIdsByProjectId(projectId);
 
         return keywordDTOList;
     }

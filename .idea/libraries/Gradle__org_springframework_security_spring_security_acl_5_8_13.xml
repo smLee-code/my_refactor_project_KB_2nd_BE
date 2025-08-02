@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.security:spring-security-acl:5.8.13" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.springframework.security" artifactId="spring-security-acl" version="5.8.13" baseVersion="5.8.13" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-acl/5.8.13/95b6439d95767e1beaae7aee9337e3d915a08592/spring-security-acl-5.8.13.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-acl/5.8.13/a6209883810c527c88b57eb69f5e2997abaff5c9/spring-security-acl-5.8.13-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-acl/5.8.13/9cae2c079d349e5089a846e7d98e96f1a04c9bf8/spring-security-acl-5.8.13-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

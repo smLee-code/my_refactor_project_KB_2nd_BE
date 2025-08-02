@@ -1,7 +1,7 @@
 package org.funding.keyword.dao;
 
 import org.funding.keyword.dto.KeywordRequestDTO;
-import org.funding.keyword.dto.KeywordResponseDTO;
+import org.funding.keyword.vo.KeywordVO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.List;
 @Repository
 public interface KeywordDAO {
 
-    KeywordResponseDTO selectKeywordById(Long keywordId);
+    KeywordVO selectKeywordById(Long keywordId);
 
-    KeywordResponseDTO selectKeywordByName(String name);
+    KeywordVO selectKeywordByName(String name);
 
-    List<KeywordResponseDTO> selectKeywordsByCategoryName(String categoryName);
+    List<KeywordVO> selectKeywordsByCategoryName(String categoryName);
 
     public void insertKeyword(KeywordRequestDTO requestDTO);
 

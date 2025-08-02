@@ -3,12 +3,16 @@ package org.funding.user.service;
 import lombok.RequiredArgsConstructor;
 import org.funding.InterestingKeyword.vo.InterestingKeywordVO;
 import org.funding.fund.dao.FundDAO;
-import org.funding.fund.vo.FundVO;
+import org.funding.keyword.dao.KeywordDAO;
+import org.funding.keyword.dto.KeywordResponseDTO;
+import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.vo.ProjectVO;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.dto.*;
 import org.funding.user.vo.MemberVO;
+import org.funding.userKeyword.dao.UserKeywordDAO;
+import org.funding.userKeyword.dto.UserKeywordRequestDTO;
 import org.funding.votes.dao.VotesDAO;
 import org.funding.votes.vo.VotesVO;
 import org.springframework.security.core.Authentication;
@@ -27,6 +31,8 @@ public class MyPageService {
     private final VotesDAO votesDAO;
     private final ProjectDAO projectDAO;
     private final FundDAO fundDAO;
+    private final KeywordDAO keywordDAO;
+    private final UserKeywordDAO userKeywordDAO;
 
     // 현재 로그인한 사용자의 ID를 가져옴
     private Long getCurrentUserId() {
@@ -69,13 +75,21 @@ public class MyPageService {
     // 4.2.2 키워드 조회
     public List<KeywordResponseDTO> getMyKeywords() {
         Long userId = getCurrentUserId();
-        List<InterestingKeywordVO> keywords = memberDAO.findKeywordsByUserId(userId);
-        
-        return keywords.stream()
-                .map(keyword -> KeywordResponseDTO.builder()
-                        .interestId(keyword.getInterestId())
-                        .keyword(keyword.getKeyword())
-                        .build())
+
+//        List<InterestingKeywordVO> keywords = memberDAO.findKeywordsByUserId(userId);
+//
+//        return keywords.stream()
+//                .map(keyword -> KeywordResponseDTO.builder()
+//                        .interestId(keyword.getInterestId())
+//                        .keyword(keyword.getKeyword())
+//                        .build())
+//                .collect(Collectors.toList());
+
+        List<Long> keywordIds = userKeywordDAO.selectKeywordIdsByUserId(userId);
+
+        return keywordIds.stream()
+                .map(keywordDAO::selectKeywordById)
+                .map(KeywordResponseDTO::fromVO)
                 .collect(Collectors.toList());
     }
 
@@ -85,11 +99,17 @@ public class MyPageService {
         Long userId = getCurrentUserId();
         
         // 기존 키워드 삭제
-        memberDAO.deleteKeywordsByUserId(userId);
-        
+//        memberDAO.deleteKeywordsByUserId(userId);
+        userKeywordDAO.deleteKeywordsByUserId(userId);
+
         // 새로운 키워드 추가
         for (String keyword : newKeywords) {
-            memberDAO.insertKeyword(userId, keyword);
+
+            KeywordVO keywordVO = keywordDAO.selectKeywordByName(keyword);
+            Long keywordId = keywordVO.getKeywordId();
+
+//            memberDAO.insertKeyword(userId, keyword);
+            userKeywordDAO.insertUserKeyword(new UserKeywordRequestDTO(userId, keywordId));
         }
     }
 
