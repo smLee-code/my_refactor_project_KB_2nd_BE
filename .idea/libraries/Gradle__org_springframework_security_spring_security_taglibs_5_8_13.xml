@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.security:spring-security-taglibs:5.8.13" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.springframework.security" artifactId="spring-security-taglibs" version="5.8.13" baseVersion="5.8.13" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-taglibs/5.8.13/708a66fa1c44912f88c16a208efb7882c529dbcd/spring-security-taglibs-5.8.13.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-taglibs/5.8.13/d09d82591f2b710c2a63464fad4dc5e7db7862a4/spring-security-taglibs-5.8.13-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-taglibs/5.8.13/76e8d3bfdc203f1470b3649f1813cde56e178f28/spring-security-taglibs-5.8.13-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
