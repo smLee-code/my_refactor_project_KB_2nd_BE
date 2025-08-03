@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -18,6 +19,31 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({"classpath:/application.properties"})
+@ComponentScan(basePackages = {
+        "org.funding.config",
+        "org.funding.openAi.client",
+        "org.funding.user.service",
+        "org.funding.emailAuth.service",
+        "org.funding.openAi.service",
+        "org.funding.badge.service",
+        "org.funding.fund.service",
+        "org.funding.retryVotes.service",
+        "org.funding.comment.service",
+        "org.funding.project.service",
+        "org.funding.votes.service",
+        "org.funding.chatting.service",
+        "org.funding.category.service",
+        "org.funding.keyword.service",
+        "org.funding.userKeyword.service",
+        "org.funding.projectKeyword.service",
+        "org.funding.payment.service",
+        "org.funding.userChallenge.service",
+        "org.funding.userDonation.service",
+        "org.funding.userLoan.service",
+        "org.funding.userSaving.service",
+        "org.funding.challengeLog.service",
+        "org.funding.security.service"
+})
 @MapperScan({
         "org.funding.user.dao",
         "org.funding.emailAuth.dao",
@@ -34,11 +60,12 @@ import javax.sql.DataSource;
         "org.funding.keyword.dao",
         "org.funding.userKeyword.dao",
         "org.funding.projectKeyword.dao",
-        "org.funding.project.dao",
         "org.funding.payment.dao",
         "org.funding.userDonation.dao",
         "org.funding.userChallenge.dao",
-        "org.funding.challengeLog.dao"
+        "org.funding.challengeLog.dao",
+        "org.funding.userLoan.dao",
+        "org.funding.userSaving.dao"
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
