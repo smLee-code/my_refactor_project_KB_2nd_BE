@@ -38,8 +38,8 @@ public class MyPageService {
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        
-        MemberVO member = memberDAO.findByEmail(username);
+
+        MemberVO member = memberDAO.findByUsername(username);
         return member.getUserId();
     }
 
@@ -106,6 +106,12 @@ public class MyPageService {
         for (String keyword : newKeywords) {
 
             KeywordVO keywordVO = keywordDAO.selectKeywordByName(keyword);
+
+            if (keywordVO == null) {
+                // 해당 이름의 키워드가 존재하지 않음.
+                continue;
+            }
+
             Long keywordId = keywordVO.getKeywordId();
 
 //            memberDAO.insertKeyword(userId, keyword);
