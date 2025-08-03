@@ -41,7 +41,7 @@
     </delete>
 
     <!-- SuccessType 기준 조회 -->
-    <select id="findByLoanAccess" parameterType="org.funding.global.type.SuccessType" resultType="org.funding.userLoan.vo.UserLoanVO">
+    <select id="findByLoanAccess" parameterType="org.funding.userLoan.vo.enumType.SuccessType" resultType="org.funding.userLoan.vo.UserLoanVO">
         SELECT user_loan_id, fund_id, user_id, loan_amount, loan_access, full_payment
         FROM user_loan
         WHERE loan_access = #{loanAccess}
