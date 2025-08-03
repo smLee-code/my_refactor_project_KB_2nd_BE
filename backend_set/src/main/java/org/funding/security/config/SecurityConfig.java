@@ -141,6 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/project/**",
                             "/api/category/**",
                             "/api/keyword/**",
+                            "/api/mypage/**",
 //                            "/chat-app/**",
 //                            "/topic/**",
                             "/api/chat/history/**",
