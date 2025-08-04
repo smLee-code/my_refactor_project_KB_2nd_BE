@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/payments")
 @CrossOrigin(originPatterns = "*", allowCredentials = "true")
-@Api(tags = "payments-controller", description = "포트원 결제 연동 API")
+@Api(tags = "payments-controller", description = "Payment Controller")
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentController {
