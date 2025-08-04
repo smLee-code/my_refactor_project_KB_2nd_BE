@@ -38,7 +38,8 @@ import javax.sql.DataSource;
         "org.funding.payment.dao",
         "org.funding.userDonation.dao",
         "org.funding.userChallenge.dao",
-        "org.funding.challengeLog.dao"
+        "org.funding.challengeLog.dao",
+        "org.funding.S3.dao"
 })
 public class RootConfig {
   @Value("${jdbc.driver}")

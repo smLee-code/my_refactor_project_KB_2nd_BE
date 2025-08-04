@@ -30,16 +30,24 @@ public class S3ImageService {
     // 이미지 등록
     public void  uploadImagesForPost(ImageType imageType, Long postId, List<MultipartFile> files) throws IOException {
         for (MultipartFile file : files) {
+            String folder = "";
+            if (imageType == ImageType.Funding) {
+                folder = "funding/";
+            } else if (imageType == ImageType.Project) {
+                folder = "project/";
+            }
+
             String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            String key = folder + fileName;
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
 
-            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata)
+            amazonS3.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
-            String imageUrl = amazonS3.getUrl(bucketName, fileName).toString();
+            String imageUrl = amazonS3.getUrl(bucketName, key).toString();
 
             S3ImageVO imageVO = new S3ImageVO(imageType, postId, imageUrl, LocalDateTime.now());
             s3ImageDAO.insertFile(imageVO);
