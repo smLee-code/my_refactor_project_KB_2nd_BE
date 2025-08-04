@@ -46,6 +46,10 @@ import javax.sql.DataSource;
         "org.funding.security.service",
         "org.funding.S3.service",
         "org.funding.payment.service",
+        "org.funding.userChallenge.service",
+        "org.funding.userDonation.service",
+        "org.funding.userLoan.service",
+        "org.funding.userSaving.service",
 })
 @MapperScan({
         "org.funding.user.dao",
@@ -69,6 +73,10 @@ import javax.sql.DataSource;
         "org.funding.userChallenge.dao",
         "org.funding.challengeLog.dao",
         "org.funding.S3.dao",
+        "org.funding.userLoan.dao",
+        "org.funding.userSaving.dao",
+        "org.funding.userChallenge.dao",
+        "org.funding.userDonation.dao",
         "org.funding.userLoan.dao",
         "org.funding.userSaving.dao",
 })

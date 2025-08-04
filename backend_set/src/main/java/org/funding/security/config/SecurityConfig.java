@@ -147,7 +147,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/chat/history/**",
                             "/api/app/chat/history/**", "/api/votes/**",
                             "/health", // 헬스체커 api 항상 열어놓을것!
-                            "/s3/images"
+                            "/s3/images",
+                            "/userChallenge/{id}/verify",
+                            "/userChallenge/{id}",
+                            "/user-saving/saving",
+                            "/user-saving/donation/{id}",
+                            "/user-saving/donation-history/{id}",
+                            "/user-saving/{id}",
+                            "/user-saving/{id}",
+                            "/user-loan/{id}",
+                            "/user-loan/{id}",
+                            "/user-loan/approve",
+                            "/user-loan/reject",
+                            "/user-loan/payment",
+                            "/userSaving/apply",
+                            "/userSaving/cancel/{id}",
+                            "/userSaving/{id}",
+                            "/userSaving/user/{id}"
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
@@ -207,7 +223,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             "/api/votes/**",
             "/health", // 헬스체커 api 항상 열어놓을것!
-            "/s3/images"
+            "/s3/images",
+            "/userChallenge/{id}/verify",
+            "/userChallenge/{id}",
+            "/user-saving/saving",
+            "/user-saving/donation/{id}",
+            "/user-saving/donation-history/{id}",
+            "/user-saving/{id}",
+            "/user-saving/{id}",
+            "/user-loan/{id}",
+            "/user-loan/{id}",
+            "/user-loan/approve",
+            "/user-loan/reject",
+            "/user-loan/payment",
+            "/userSaving/apply",
+            "/userSaving/cancel/{id}",
+            "/userSaving/{id}",
+            "/userSaving/user/{id}"
     );
   }
 }
