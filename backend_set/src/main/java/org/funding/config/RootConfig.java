@@ -66,7 +66,7 @@ import javax.sql.DataSource;
         "org.funding.userDonation.dao",
         "org.funding.userChallenge.dao",
         "org.funding.challengeLog.dao",
-        "org.funding.S3.dao"
+        "org.funding.S3.dao",
         "org.funding.userLoan.dao",
         "org.funding.userSaving.dao",
 })
