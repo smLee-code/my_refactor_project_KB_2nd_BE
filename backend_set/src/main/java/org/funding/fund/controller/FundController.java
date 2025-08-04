@@ -9,8 +9,10 @@ import org.funding.fund.service.FundService;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,27 +27,35 @@ public class FundController {
 
     //summary = "펀딩 상품 개설",
     //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다."
-    @PostMapping("/create/savings")
-    public ResponseEntity<?> createSavingsFund(@RequestBody FundProductRequestDTO.SavingsRequest request) {
-        fundService.createSavingsFund(request);
+    @PostMapping(value = "/create/savings", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createSavingsFund(
+            @RequestPart("savingInfo") FundProductRequestDTO.SavingsRequest request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        fundService.createSavingsFund(request, images);
         return ResponseEntity.ok("Savings fund successfully created.");
     }
 
-    @PostMapping("/create/loan")
-    public ResponseEntity<?> createLoanFund(@RequestBody FundProductRequestDTO.LoanRequest request) {
-        fundService.createLoanFund(request);
+    @PostMapping(value = "/create/loan", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createLoanFund(
+            @RequestPart("loadInfo") FundProductRequestDTO.LoanRequest request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        fundService.createLoanFund(request, images);
         return ResponseEntity.ok("Loan fund successfully created.");
     }
 
-    @PostMapping("/create/challenge")
-    public ResponseEntity<?> createChallengeFund(@RequestBody FundProductRequestDTO.ChallengeRequest request) {
-        fundService.createChallengeFund(request);
+    @PostMapping(value = "/create/challenge", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createChallengeFund(
+            @RequestPart("challengeInfo") FundProductRequestDTO.ChallengeRequest request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        fundService.createChallengeFund(request, images);
         return ResponseEntity.ok("Challenge fund successfully created.");
     }
 
-    @PostMapping("/create/donation")
-    public ResponseEntity<?> createDonationFund(@RequestBody FundProductRequestDTO.DonationRequest request) {
-        fundService.createDonationFund(request);
+    @PostMapping(value = "/create/donation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createDonationFund(
+            @RequestPart("donationInfo") FundProductRequestDTO.DonationRequest request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        fundService.createDonationFund(request, images);
         return ResponseEntity.ok("Donation fund successfully created.");
     }
 
