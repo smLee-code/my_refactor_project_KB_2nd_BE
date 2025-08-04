@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.funding.S3.vo.S3ImageVO;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.project.vo.ProjectVO;
 import org.funding.project.vo.enumType.ProjectProgress;
@@ -24,6 +25,7 @@ public class ProjectListDTO {
     private ProjectType projectType;
     private ProjectProgress progress;
     private String promotion;
+    private S3ImageVO thumbnailImage; // 썸네일 이미지
 
     public static ProjectListDTO fromVO(ProjectVO vo) {
         return ProjectListDTO.builder()

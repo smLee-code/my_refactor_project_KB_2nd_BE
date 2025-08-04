@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class ProjectController {
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProjectResponseDTO> createProject(
             @RequestPart("projectInfo") CreateProjectRequestDTO createRequestDTO,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
         ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO, images);
         return ResponseEntity.ok(responseDTO);
     }

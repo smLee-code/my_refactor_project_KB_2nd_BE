@@ -2,7 +2,9 @@ package org.funding.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.S3.service.S3ImageService;
+import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
+import org.funding.fund.dto.FundListResponseDTO;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
@@ -87,20 +89,50 @@ public class ProjectService {
         Long voteCount = votesDAO.countVotes(projectId);
         dto.setVoteCount(voteCount);
 
+        // 프로젝트 이미지 추출
+        List<S3ImageVO> images = s3ImageService.getImagesForPost(ImageType.Project, projectId);
+        dto.setImageList(images);
 
         return dto;
     }
 
     public List<ProjectListDTO> searchByType(String type) {
-        return projectDAO.searchProjectsByType(type);
+        List<ProjectListDTO> projectList = projectDAO.searchProjectsByType(type);
+
+        // 프로젝트 썸네일 이미지 추출
+        for (ProjectListDTO project : projectList) {
+            Long projectId = project.getProjectId();
+            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
+            project.setThumbnailImage(image);
+        }
+
+        return projectList;
     }
 
     public List<ProjectListDTO> searchByKeyword(String keyword) {
-        return projectDAO.searchProjectsByKeyword(keyword);
+        List<ProjectListDTO> projectList = projectDAO.searchProjectsByKeyword(keyword);
+
+        // 프로젝트 썸네일 이미지 추출
+        for (ProjectListDTO project : projectList) {
+            Long projectId = project.getProjectId();
+            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
+            project.setThumbnailImage(image);
+        }
+
+        return projectList;
     }
 
     public List<ProjectListDTO> getAllProjects() {
-        return projectDAO.getAllProjects();
+        List<ProjectListDTO> projectList = projectDAO.getAllProjects();
+
+        // 프로젝트 썸네일 이미지 추출
+        for (ProjectListDTO project : projectList) {
+            Long projectId = project.getProjectId();
+            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
+            project.setThumbnailImage(image);
+        }
+
+        return projectList;
     }
 
     public List<ProjectListDTO> getRelatedProjects(Long projectId) {
