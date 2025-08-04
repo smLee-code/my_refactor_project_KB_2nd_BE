@@ -3,6 +3,11 @@ package org.funding.fund.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.funding.S3.vo.S3ImageVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 
@@ -10,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.funding.keyword.vo.KeywordVO;
 
 @Data
 @Builder
@@ -64,4 +70,8 @@ public class FundDetailResponseDTO {
     private Integer challengePeriodDays;
     private String challengeReward;
     private String challengeRewardCondition;
+    
+    // Keywords 정보
+    @Setter
+    private List<KeywordVO> keywords;
 }
