@@ -3,6 +3,7 @@ package org.funding.fund.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.funding.S3.service.S3ImageService;
+import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
 import org.funding.financialProduct.dao.*;
 import org.funding.financialProduct.dto.*;
@@ -300,7 +301,15 @@ public class FundService {
      * @return 조건에 맞는 펀딩 목록 (상품명과 썸네일 포함)
      */
     public List<FundListResponseDTO> getFundsByProgressAndType(ProgressType progress, FundType fundType) {
-        return fundDAO.selectByProgressAndFundType(progress, fundType);
+        List<FundListResponseDTO> funds = fundDAO.selectByProgressAndFundType(progress, fundType);
+
+        for (FundListResponseDTO fund : funds) {
+            Long productId = fund.getProductId();
+            S3ImageVO thumbnailImage = s3ImageService.getFirstImageForPost(ImageType.Funding, productId);
+            fund.setThumbnailImage(thumbnailImage);
+        }
+
+        return funds;
     }
     
     /**
@@ -311,10 +320,18 @@ public class FundService {
      * @return 펀딩 상세 정보 (fund + financial_product + 타입별 상세)
      */
     public FundDetailResponseDTO getFundDetail(Long fundId) {
+        FundVO fund = fundDAO.selectById(fundId);
+        Long productId = fund.getProductId();
+
+        List<S3ImageVO> imageUrls = s3ImageService.getImagesForPost(ImageType.Funding, productId);
+
+
         FundDetailResponseDTO fundDetail = fundDAO.selectDetailById(fundId);
         if (fundDetail == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 펀딩입니다. fundId: " + fundId);
         }
+        fundDetail.setImageUrls(imageUrls);
+
         return fundDetail;
     }
     

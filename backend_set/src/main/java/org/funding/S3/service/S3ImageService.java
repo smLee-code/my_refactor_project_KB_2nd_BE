@@ -59,4 +59,10 @@ public class S3ImageService {
         return s3ImageDAO.findImagesByPost(imageType, postId);
     }
 
+    // 썸네일 이미지 출력
+    public S3ImageVO getFirstImageForPost(ImageType imageType, Long postId) {
+        return s3ImageDAO.findFirstImageByPost(imageType, postId);
+    }
+
+
 }

@@ -1,18 +1,17 @@
 package org.funding.fund.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.funding.S3.vo.S3ImageVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +27,7 @@ public class FundDetailResponseDTO {
     private LocalDateTime endAt;
     private String financialInstitution;
     private int retryVotesCount;
+    private List<S3ImageVO> imageUrls;
     
     // Financial Product 테이블 정보
     private String name;

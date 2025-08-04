@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.funding.S3.vo.S3ImageVO;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.fund.vo.enumType.FundType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +28,7 @@ public class FundListResponseDTO {
     private LocalDateTime endAt;
     private String financialInstitution;
     private int retryVotesCount;
+    private S3ImageVO thumbnailImage;
     
     // FinancialProduct 정보
     private String name;
