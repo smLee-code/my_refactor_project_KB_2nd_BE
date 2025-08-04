@@ -1,9 +1,10 @@
 package org.funding.category.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.category.dto.CategoryWithKeywordsResponseDTO;
 import org.funding.category.dto.CategoryRequestDTO;
-import org.funding.category.dto.CategoryResponseDTO;
 import org.funding.category.service.CategoryService;
+import org.funding.category.vo.CategoryVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,16 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("")
-    public ResponseEntity<List<CategoryResponseDTO>> getAllCategories() {
-        List<CategoryResponseDTO> allCategories = categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryVO>> getAllCategories() {
+        List<CategoryVO> allCategories = categoryService.getAllCategories();
         return new ResponseEntity<>(allCategories, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CategoryWithKeywordsResponseDTO>> getAllCategoriesWithKeywords() {
+        List<CategoryWithKeywordsResponseDTO> allWithKeywords = categoryService.getAllWithKeywords();
+
+        return new ResponseEntity<>(allWithKeywords, HttpStatus.OK);
     }
 
     @PostMapping("")
