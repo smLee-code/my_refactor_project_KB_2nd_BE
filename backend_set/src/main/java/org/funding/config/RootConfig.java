@@ -68,19 +68,19 @@ import javax.sql.DataSource;
         "org.funding.challengeLog.dao",
         "org.funding.S3.dao"
         "org.funding.userLoan.dao",
-        "org.funding.userSaving.dao"
+        "org.funding.userSaving.dao",
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
-  String driver;
+  private String driver;
   @Value("${jdbc.url}")
-  String url;
+  private String url;
   @Value("${jdbc.username}")
-  String username;
+  private String username;
   @Value("${jdbc.password}")
-  String password;
+  private String password;
   @Autowired
-  ApplicationContext applicationContext;
+  private ApplicationContext applicationContext;
 
 
   @Bean
