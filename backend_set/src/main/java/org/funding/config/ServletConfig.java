@@ -56,7 +56,9 @@ import java.util.List;
         "org.funding.category.controller",
         "org.funding.keyword.controller",
         "org.funding.payment.controller",
-        "org.funding.healthChecker.controller"
+        "org.funding.healthChecker.controller",
+        "org.funding.S3.controller",
+        
 
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {
