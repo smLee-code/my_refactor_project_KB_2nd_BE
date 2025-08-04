@@ -74,6 +74,14 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/related/{id}")
+    public ResponseEntity<List<ProjectListDTO>> getRelatedProjects(@PathVariable("id") Long projectId) {
+        List<ProjectListDTO> projectList = projectService.getRelatedProjects(projectId);
+
+        return ResponseEntity.ok(projectList);
+
+    }
+
     @PostMapping("")
     public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody CreateProjectRequestDTO createRequestDTO) {
         ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO);

@@ -1,9 +1,6 @@
 package org.funding.project.service;
 
 import lombok.RequiredArgsConstructor;
-import org.funding.keyword.dao.KeywordDAO;
-import org.funding.keyword.dto.KeywordResponseDTO;
-import org.funding.keyword.service.KeywordService;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
@@ -12,17 +9,14 @@ import org.funding.project.vo.ProjectVO;
 import org.funding.project.dto.request.*;
 import org.funding.project.dto.response.*;
 import org.funding.project.vo.*;
-import org.funding.project.vo.enumType.ProjectType;
-import org.funding.projectKeyword.dao.ProjectKeywordDAO;
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.service.ProjectKeywordService;
 import org.funding.votes.dao.VotesDAO;
-import org.funding.votes.service.VotesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -104,7 +98,55 @@ public class ProjectService {
         return projectDAO.getAllProjects();
     }
 
+    public List<ProjectListDTO> getRelatedProjects(Long projectId) {
 
+        ProjectListDTO baseProject =  ProjectListDTO.fromVO(projectDAO.selectProjectById(projectId));
+        List<KeywordVO> baseKeywords = projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId());
+
+        List<ProjectListDTO> sameTypeProjects = projectDAO.searchProjectsByType(String.valueOf(baseProject.getProjectType()));
+
+        if (baseKeywords == null || baseKeywords.isEmpty()) { // baseKeywords가 null이거나 비어있으면
+            // 같은 타입의 프로젝트 중 최대 4개만 반환
+            return sameTypeProjects.stream()
+                    .limit(4)
+                    .collect(Collectors.toList());
+        }
+
+        // baseKeywords의 키워드 ID만 추출하여 Set으로 변환 (빠른 비교를 위함)
+
+        List<Long> baseKeywordIds = baseKeywords.stream()
+                .map(KeywordVO::getKeywordId)
+                .toList();
+
+        // 각 프로젝트별로 일치하는 키워드 개수를 저장할 맵
+        Map<ProjectListDTO, Long> projectMatchCounts = new HashMap<>();
+
+        for (ProjectListDTO project : sameTypeProjects) {
+            if (project.getProjectId().equals(projectId)) {
+                continue; // 자기 자신은 관련 프로젝트에서 제외
+            }
+
+            List<KeywordVO> projectKeywords = projectKeywordService.findKeywordsByProjectId(project.getProjectId());
+            if (projectKeywords == null || projectKeywords.isEmpty()) {
+                continue; // 키워드가 없는 프로젝트는 스킵
+            }
+
+            long matchCount = projectKeywords.stream()
+                    .filter(keyword -> baseKeywordIds.contains(keyword.getKeywordId())) // KeywordVO에 getKeywordName() 메서드가 있다고 가정
+                    .count();
+
+            if (matchCount > 0) {
+                projectMatchCounts.put(project, matchCount);
+            }
+        }
+
+        // 일치하는 키워드 개수가 많은 순서대로 정렬하고, 최대 3개만 반환
+        return projectMatchCounts.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 일치 개수 내림차순 정렬
+                .map(Map.Entry::getKey)
+                .limit(4)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO) {
@@ -186,7 +228,7 @@ public class ProjectService {
     }
 
     public List<KeywordVO> getProjectKeywords(Long projectId) {
-        List<KeywordVO> keywordDTOList = projectKeywordService.findKeywordIdsByProjectId(projectId);
+        List<KeywordVO> keywordDTOList = projectKeywordService.findKeywordsByProjectId(projectId);
 
         return keywordDTOList;
     }
