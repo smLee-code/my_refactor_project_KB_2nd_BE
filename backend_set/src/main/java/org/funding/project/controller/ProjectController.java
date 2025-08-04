@@ -15,8 +15,10 @@ import org.funding.project.vo.ProjectVO;
 
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
@@ -82,9 +84,11 @@ public class ProjectController {
 
     }
 
-    @PostMapping("")
-    public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody CreateProjectRequestDTO createRequestDTO) {
-        ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO);
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProjectResponseDTO> createProject(
+            @RequestPart("projectInfo") CreateProjectRequestDTO createRequestDTO,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO, images);
         return ResponseEntity.ok(responseDTO);
     }
 

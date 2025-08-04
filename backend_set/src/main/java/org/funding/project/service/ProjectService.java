@@ -1,6 +1,8 @@
 package org.funding.project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.S3.service.S3ImageService;
+import org.funding.S3.vo.enumType.ImageType;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
@@ -14,7 +16,9 @@ import org.funding.projectKeyword.service.ProjectKeywordService;
 import org.funding.votes.dao.VotesDAO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,7 @@ public class ProjectService {
 
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
+    private final S3ImageService s3ImageService;
 
 
     public List<TopProjectDTO> getTopProjects() {
@@ -149,11 +154,16 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO) {
+    public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO, List<MultipartFile> images) throws IOException {
         // 1. 공통 프로젝트 정보 매핑 및 삽입
         ProjectVO projectVO = createRequestDTO.toCommonVO();
         projectDAO.insertProject(projectVO); // 이 호출 후 projectVO에 projectId가 채워질 것으로 예상
         Long projectId = projectVO.getProjectId(); // 삽입된 프로젝트의 ID
+
+        // 등록한 이미지에 대해서 이미지 저장
+        if (images != null && images.size() > 0) {
+            s3ImageService.uploadImagesForPost(ImageType.Funding, projectId, images);
+        }
 
         // 2. 리턴할 응답 객체 생성, 공통 정보 매핑 및 삽입
         ProjectResponseDTO responseDTO = new ProjectResponseDTO();
