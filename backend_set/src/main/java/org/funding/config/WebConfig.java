@@ -1,5 +1,6 @@
 package org.funding.config;
 
+import io.swagger.models.Swagger;
 import org.funding.security.config.SecurityConfig;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -18,7 +19,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] { ServletConfig.class, WebConfig.class };
+        return new Class[] { ServletConfig.class, WebConfig.class, SwaggerConfig.class };
     }
 
 

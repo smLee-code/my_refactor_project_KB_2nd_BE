@@ -11,6 +11,12 @@
         where user_id = #{userId} and keyword_id = #{keywordId}
     </select>
 
+    <select id="selectKeywordIdsByUserId" parameterType="Long" resultType="Long">
+        select keyword_id
+        from user_keywords
+        where user_id = #{userId}
+    </select>
+
     <insert id="insertUserKeyword" parameterType="org.funding.userKeyword.dto.UserKeywordRequestDTO">
         insert into user_keywords (user_id, keyword_id)
         values (#{userId}, #{keywordId})
@@ -19,6 +25,11 @@
     <delete id="deleteUserKeyword" parameterType="org.funding.userKeyword.dto.UserKeywordRequestDTO">
         delete from user_keywords
         where user_id = #{userId} and keyword_id = #{keywordId}
+    </delete>
+
+    <delete id="deleteKeywordsByUserId" parameterType="Long">
+        delete from user_keywords
+        where user_id = #{userId}
     </delete>
 
 </mapper>

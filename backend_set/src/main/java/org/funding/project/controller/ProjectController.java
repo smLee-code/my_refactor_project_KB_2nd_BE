@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.keyword.dto.KeywordRequestDTO;
 import org.funding.keyword.dto.KeywordResponseDTO;
 
+import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.request.CreateProjectRequestDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
@@ -73,6 +74,14 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/related/{id}")
+    public ResponseEntity<List<ProjectListDTO>> getRelatedProjects(@PathVariable("id") Long projectId) {
+        List<ProjectListDTO> projectList = projectService.getRelatedProjects(projectId);
+
+        return ResponseEntity.ok(projectList);
+
+    }
+
     @PostMapping("")
     public ResponseEntity<ProjectResponseDTO> createProject(@RequestBody CreateProjectRequestDTO createRequestDTO) {
         ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO);
@@ -87,8 +96,8 @@ public class ProjectController {
     /* 키워드 관련 api */
 
     @GetMapping("/keyword/{id}")
-    public ResponseEntity<List<KeywordResponseDTO>> getProjectKeywords(@PathVariable("id") Long projectId) {
-        List<KeywordResponseDTO> list = projectService.getProjectKeywords(projectId);
+    public ResponseEntity<List<KeywordVO>> getProjectKeywords(@PathVariable("id") Long projectId) {
+        List<KeywordVO> list = projectService.getProjectKeywords(projectId);
 
         return ResponseEntity.ok(list);
     }

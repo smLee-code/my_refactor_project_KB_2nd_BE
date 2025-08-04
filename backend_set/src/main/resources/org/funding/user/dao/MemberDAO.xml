@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.funding.user.dao.MemberDAO">
+    <mapper namespace="org.funding.user.dao.MemberDAO">
 
-    <insert id="insertMember" parameterType="org.funding.user.vo.MemberVO">
-        INSERT INTO member (
-            username, password, email, nickname, phone_number, role, create_at, update_at
-        ) VALUES (
-#{username}, #{password}, #{email}, #{nickname}, #{phoneNumber}, #{role}, NOW(), NOW()
-)
-    </insert>
+        <insert id="insertMember" parameterType="org.funding.user.vo.MemberVO">
+            INSERT INTO member (
+                username, password, email, nickname, phone_number, role, create_at, update_at
+            ) VALUES (
+    #{username}, #{password}, #{email}, #{nickname}, #{phoneNumber}, #{role}, NOW(), NOW()
+    )
+        </insert>
 
 
         <select id="findByEmail" parameterType="String" resultType="org.funding.user.vo.MemberVO">
@@ -24,8 +24,23 @@
                 role,
                 create_at,
                 update_at
-            FROM tbl_member
+            FROM member
             WHERE email = #{email}
+        </select>
+
+        <select id="findByUsername" parameterType="String" resultType="org.funding.user.vo.MemberVO">
+            SELECT
+                user_id,
+                username,
+                password,
+                email,
+                nickname,
+                phone_number,
+                role,
+                create_at,
+                update_at
+            FROM member
+            WHERE username = #{username}
         </select>
 
         <!-- 마이페이지 관련 쿼리들 -->
@@ -40,12 +55,12 @@
                 role,
                 create_at,
                 update_at
-            FROM tbl_member
+            FROM member
             WHERE user_id = #{userId}
         </select>
 
         <update id="updateMember" parameterType="org.funding.user.vo.MemberVO">
-            UPDATE tbl_member
+            UPDATE member
             SET username = #{username},
                 nickname = #{nickname},
                 phone_number = #{phoneNumber},
