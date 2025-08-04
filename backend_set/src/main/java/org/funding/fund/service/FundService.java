@@ -13,6 +13,9 @@ import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.fund.dto.FundListResponseDTO;
 import org.funding.fund.dto.FundDetailResponseDTO;
 import org.funding.fund.dto.FundUpdateRequestDTO;
+import org.funding.fundKeyword.service.FundKeywordService;
+import org.funding.fundKeyword.dto.FundKeywordRequestDTO;
+import org.funding.keyword.vo.KeywordVO;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,6 +41,7 @@ public class FundService {
     private final LoanDAO loanDAO;
     private final ChallengeDAO challengeDAO;
     private final DonationDAO donationDAO;
+    private final FundKeywordService fundKeywordService;
 
     /**
      * 적금 펀딩 생성
@@ -84,6 +88,18 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+            
             log.info("Savings fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Savings fund and Fund created successfully";
         } catch (Exception e) {
@@ -141,6 +157,18 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+            
             log.info("Loan fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Loan fund and Fund created successfully";
         } catch (Exception e) {
@@ -195,6 +223,18 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+            
             log.info("Challenge fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Challenge fund and Fund created successfully";
         } catch (Exception e) {
@@ -250,6 +290,18 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+            
             log.info("Donation fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Donation fund and Fund created successfully";
         } catch (Exception e) {
@@ -279,7 +331,15 @@ public class FundService {
      * @return 조건에 맞는 펀딩 목록 (상품명과 썸네일 포함)
      */
     public List<FundListResponseDTO> getFundsByProgressAndType(ProgressType progress, FundType fundType) {
-        return fundDAO.selectByProgressAndFundType(progress, fundType);
+        List<FundListResponseDTO> funds = fundDAO.selectByProgressAndFundType(progress, fundType);
+        
+        // 각 펀드에 대해 키워드 정보 추가
+        for (FundListResponseDTO fund : funds) {
+            List<KeywordVO> keywords = fundKeywordService.findKeywordIdsByFundId(fund.getFundId());
+            fund.setKeywords(keywords);
+        }
+        
+        return funds;
     }
     
     /**
@@ -294,6 +354,11 @@ public class FundService {
         if (fundDetail == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 펀딩입니다. fundId: " + fundId);
         }
+        
+        // 키워드 정보 추가
+        List<KeywordVO> keywords = fundKeywordService.findKeywordIdsByFundId(fundId);
+        fundDetail.setKeywords(keywords);
+        
         return fundDetail;
     }
     
