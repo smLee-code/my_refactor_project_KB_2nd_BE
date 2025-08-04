@@ -34,24 +34,23 @@ import javax.sql.DataSource;
         "org.funding.keyword.dao",
         "org.funding.userKeyword.dao",
         "org.funding.projectKeyword.dao",
-        "org.funding.project.dao",
         "org.funding.payment.dao",
         "org.funding.userDonation.dao",
         "org.funding.userChallenge.dao",
         "org.funding.challengeLog.dao",
-        "org.funding.S3.dao"
+        "org.funding.S3.dao",
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
-  String driver;
+  private String driver;
   @Value("${jdbc.url}")
-  String url;
+  private String url;
   @Value("${jdbc.username}")
-  String username;
+  private String username;
   @Value("${jdbc.password}")
-  String password;
+  private String password;
   @Autowired
-  ApplicationContext applicationContext;
+  private ApplicationContext applicationContext;
 
 
   @Bean
