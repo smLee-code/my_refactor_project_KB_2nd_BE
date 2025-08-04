@@ -55,5 +55,4 @@ public interface ProjectDAO {
 
     ProjectVO findById(Long projectId); // 프로젝트 조회
 
-    List<TopProjectDTO> getTopProjects222();
 }

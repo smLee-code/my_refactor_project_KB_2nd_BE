@@ -44,12 +44,12 @@
             u.nickname,
             u.email,
 
-            b.badgeId,
+            b.badge_id,
             b.name AS badgeName
         FROM project p
-                 JOIN user u ON p.user_id = u.userId
-                 LEFT JOIN userbadge ub ON u.userId = ub.userId
-                 LEFT JOIN badge b ON ub.badgeId = b.badgeId
+                 JOIN member u ON p.user_id = u.user_id
+                 LEFT JOIN user_badge ub ON u.user_id = ub.user_id
+                 LEFT JOIN badge b ON ub.badge_id = b.badge_id
         WHERE p.project_id = #{projectId}
     </select>
 
