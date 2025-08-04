@@ -4,20 +4,20 @@
 
 <mapper namespace="org.funding.keyword.dao.KeywordDAO">
 
-    <select id="selectKeywordById" parameterType="Long" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+    <select id="selectKeywordById" parameterType="Long" resultType="org.funding.keyword.vo.KeywordVO">
         select *
         from keywords
         where keyword_id = #{keywordId}
     </select>
 
 
-    <select id="selectKeywordByName" parameterType="String" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+    <select id="selectKeywordByName" parameterType="String" resultType="org.funding.keyword.vo.KeywordVO">
         select *
         from keywords
         where name = #{name}
     </select>
 
-    <select id="selectKeywordsByCategoryName" parameterType="String" resultType="org.funding.keyword.dto.KeywordResponseDTO">
+    <select id="selectKeywordsByCategoryName" parameterType="String" resultType="org.funding.keyword.vo.KeywordVO">
         select *
         from keywords
         where category_id = (select category_id

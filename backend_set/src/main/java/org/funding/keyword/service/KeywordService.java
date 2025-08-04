@@ -3,7 +3,6 @@ package org.funding.keyword.service;
 import lombok.RequiredArgsConstructor;
 import org.funding.keyword.dao.KeywordDAO;
 import org.funding.keyword.dto.KeywordRequestDTO;
-import org.funding.keyword.dto.KeywordResponseDTO;
 import org.funding.keyword.vo.KeywordVO;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +14,11 @@ public class KeywordService {
 
     private final KeywordDAO keywordDAO;
 
-    public KeywordResponseDTO findKeyword(String name) {
+    public KeywordVO findKeyword(String name) {
         return keywordDAO.selectKeywordByName(name);
     }
 
-    public List<KeywordResponseDTO> findAllKeywords(String categoryName) {
+    public List<KeywordVO> findAllKeywords(String categoryName) {
         return keywordDAO.selectKeywordsByCategoryName(categoryName);
     }
 

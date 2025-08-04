@@ -11,7 +11,9 @@ import java.util.List;
 public interface MemberDAO {
     // 멤버 회원가입
     void insertMember(MemberVO member);
-    MemberVO findByEmail(String username);
+    MemberVO findByEmail(String email);
+
+    MemberVO findByUsername(String username);
 
     MemberVO findById(Long userId);
     
