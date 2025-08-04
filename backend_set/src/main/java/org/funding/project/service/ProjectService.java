@@ -162,7 +162,7 @@ public class ProjectService {
 
         // 등록한 이미지에 대해서 이미지 저장
         if (images != null && images.size() > 0) {
-            s3ImageService.uploadImagesForPost(ImageType.Funding, projectId, images);
+            s3ImageService.uploadImagesForPost(ImageType.Project, projectId, images);
         }
 
         // 2. 리턴할 응답 객체 생성, 공통 정보 매핑 및 삽입
