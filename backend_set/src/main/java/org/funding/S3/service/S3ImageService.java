@@ -44,13 +44,13 @@ public class S3ImageService {
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
 
-            amazonS3.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), metadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
+            amazonS3.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), metadata));
+                    // .withCannedAcl(CannedAccessControlList.PublicRead));
 
             String imageUrl = amazonS3.getUrl(bucketName, key).toString();
 
             S3ImageVO imageVO = new S3ImageVO(imageType, postId, imageUrl, LocalDateTime.now());
-            s3ImageDAO.insertFile(imageVO);
+            s3ImageDAO.insertImage(imageVO);
         }
     }
 

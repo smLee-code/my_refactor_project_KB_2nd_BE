@@ -145,7 +145,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                            "/topic/**",
                             "/api/chat/history/**",
                             "/api/app/chat/history/**", "/api/votes/**",
-                            "/health" // 헬스체커 api 항상 열어놓을것!
+                            "/health", // 헬스체커 api 항상 열어놓을것!
+                            "/s3/images"
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
@@ -204,8 +205,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/ai/{fundId}/ai-recommend",
 
             "/api/votes/**",
-            "/health" // 헬스체커 api 항상 열어놓을것!
-
+            "/health", // 헬스체커 api 항상 열어놓을것!
+            "/s3/images"
     );
   }
 }

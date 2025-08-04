@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface S3ImageDAO {
     // 이미지 저장
-    void insertFile(S3ImageVO s3ImageVO);
+    void insertImage(S3ImageVO s3ImageVO);
 
     // 타입에 따른 이미지 리스트 추출
     List<S3ImageVO> findImagesByPost(@Param("imageType") ImageType imageType, @Param("postId") Long postId);
