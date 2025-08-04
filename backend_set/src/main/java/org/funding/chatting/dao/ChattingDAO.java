@@ -11,5 +11,5 @@ public interface ChattingDAO {
 
     void saveMessage(ChattingMessage message);
 
-    List<ChattingMessage> findMessagesByRoomId(@Param("roomId") Long roomId);
+    List<ChattingMessage> findMessagesByRoomId(@Param("projectId") Long projectId);
 }
