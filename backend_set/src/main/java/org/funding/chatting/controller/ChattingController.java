@@ -27,18 +27,18 @@ public class ChattingController {
         return new GreetingMessage("hello," + message.getName());
     }
 
-    @MessageMapping("/chat/{roomId}")
-    @SendTo("/topic/chat/{roomId}")
-    public ChattingMessage chat(@DestinationVariable Long roomId, ChattingMessage message) throws Exception {
-        message.setRoomId(roomId);
+    @MessageMapping("/chat/{projectId}")
+    @SendTo("/topic/chat/{projectId}")
+    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message) throws Exception {
+        message.setProjectId(projectId);
         chattingService.saveMessage(message); //db 저장
 
         return message;
     }
 
-    @GetMapping("/chat/history/{roomId}")
-    public List<ChattingMessage> getChatHistory(@PathVariable Long roomId) {
-        System.out.println("🔥 채팅 내역 요청 roomId = " + roomId);
-        return chattingService.getMessages(roomId);
+    @GetMapping("/chat/history/{projectId}")
+    public List<ChattingMessage> getChatHistory(@PathVariable Long projectId) {
+        System.out.println("🔥 채팅 내역 요청 projectId = " + projectId);
+        return chattingService.getMessages(projectId);
     }
 }

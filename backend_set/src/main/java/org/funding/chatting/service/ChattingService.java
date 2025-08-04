@@ -21,7 +21,7 @@ public class ChattingService {
 
     }
 
-    public List<ChattingMessage> getMessages(Long roomId) {
-        return chattingDAO.findMessagesByRoomId(roomId);
+    public List<ChattingMessage> getMessages(Long projectId) {
+        return chattingDAO.findMessagesByRoomId(projectId);
     }
 }
