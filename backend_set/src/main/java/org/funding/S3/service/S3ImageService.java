@@ -28,7 +28,7 @@ public class S3ImageService {
     private String bucketName;
 
     // 이미지 등록
-    public void  uploadImagesForPost(ImageType imageType, Long postId, List<MultipartFile> files) throws IOException {
+    public void uploadImagesForPost(ImageType imageType, Long postId, List<MultipartFile> files) throws IOException {
         for (MultipartFile file : files) {
             String folder = "";
             if (imageType == ImageType.Funding) {
@@ -58,5 +58,11 @@ public class S3ImageService {
     public List<S3ImageVO> getImagesForPost(ImageType imageType, Long postId) {
         return s3ImageDAO.findImagesByPost(imageType, postId);
     }
+
+    // 썸네일 이미지 출력
+    public S3ImageVO getFirstImageForPost(ImageType imageType, Long postId) {
+        return s3ImageDAO.findFirstImageByPost(imageType, postId);
+    }
+
 
 }
