@@ -18,7 +18,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] { ServletConfig.class, WebConfig.class };
+        return new Class[] { ServletConfig.class, WebConfig.class, SwaggerConfig.class };
     }
 
 

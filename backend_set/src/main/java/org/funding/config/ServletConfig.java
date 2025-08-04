@@ -39,6 +39,7 @@ import java.util.List;
  */
 @EnableWebMvc
 @ComponentScan(basePackages = {
+        "org.funding.config",
         "org.funding.exception",
         "org.funding.controller",
         "org.funding.user.controller",
