@@ -37,7 +37,7 @@ public class FundController {
 
     @PostMapping(value = "/create/loan", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createLoanFund(
-            @RequestPart("loadInfo") FundProductRequestDTO.LoanRequest request,
+            @RequestPart("loanInfo") FundProductRequestDTO.LoanRequest request,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         fundService.createLoanFund(request, images);
         return ResponseEntity.ok("Loan fund successfully created.");
@@ -71,7 +71,6 @@ public class FundController {
             case "savings" -> {
                 example.put("name", "청년 희망 적금");
                 example.put("detail", "청년을 위한 특별 금리 적금 상품");
-                example.put("thumbnail", null);
                 example.put("joinCondition", "만 19-34세, 소득 증빙 필요");
                 example.put("interestRate", 3.5);
                 example.put("periodDays", 365);
@@ -86,7 +85,6 @@ public class FundController {
             case "loan" -> {
                 example.put("name", "청년 창업 대출");
                 example.put("detail", "청년 창업자를 위한 저금리 대출");
-                example.put("thumbnail", null);
                 example.put("joinCondition", "만 20-39세, 사업자등록증 필요");
                 example.put("loanLimit", 50000000);
                 example.put("minInterestRate", 2.5);
@@ -103,7 +101,6 @@ public class FundController {
             case "challenge" -> {
                 example.put("name", "30일 절약 챌린지");
                 example.put("detail", "30일간 절약 목표 달성 챌린지");
-                example.put("thumbnail", null);
                 example.put("joinCondition", "누구나 참여 가능");
                 example.put("challengePeriodDays", 30);
                 example.put("reward", "스타벅스 기프티콘");
@@ -119,7 +116,6 @@ public class FundController {
             case "donation" -> {
                 example.put("name", "아동 교육 지원 기부");
                 example.put("detail", "소외계층 아동들의 교육을 지원하는 기부");
-                example.put("thumbnail", null);
                 example.put("joinCondition", "누구나 참여 가능");
                 example.put("recipient", "사회복지법인 아이들의꿈");
                 example.put("usagePlan", "교육용품 구입 및 장학금 지원");
