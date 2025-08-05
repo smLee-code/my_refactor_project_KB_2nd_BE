@@ -557,7 +557,7 @@ public class FundService {
             // 2. fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
             fundDAO.delete(fundId);
             log.info("Fund deleted with id: {}", fundId);
-            
+
             // 3. 타입별 상세 테이블에서 삭제
             switch (fundType) {
                 case Savings:
@@ -581,7 +581,10 @@ public class FundService {
             // 4. financial_product 테이블에서 삭제 (외래키 참조가 없어진 후)
             financialProductDAO.delete(productId);
             log.info("Financial product deleted with id: {}", productId);
-            
+
+            // 해당 펀딩 이미지 삭제
+            s3ImageService.deleteImagesForPost(ImageType.Funding, productId);
+
             return "펀딩이 성공적으로 삭제되었습니다.";
             
         } catch (ResponseStatusException e) {

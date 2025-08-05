@@ -267,6 +267,9 @@ public class ProjectService {
         }
 
         projectDAO.deleteProjectById(projectId);
+
+        // 프로젝트 관련 이미지 삭제
+        s3ImageService.deleteImagesForPost(ImageType.Project, projectId);
     }
 
     public List<KeywordVO> getProjectKeywords(Long projectId) {
