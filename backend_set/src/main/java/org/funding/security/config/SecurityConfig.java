@@ -163,7 +163,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/userSaving/apply",
                             "/userSaving/cancel/{id}",
                             "/userSaving/{id}",
-                            "/userSaving/user/{id}"
+                            "/userSaving/user/{id}",
+                            "/badge/create",
+                            "/badge/all/badge",
+                            "/badge/{id}"
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
@@ -239,7 +242,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/userSaving/apply",
             "/userSaving/cancel/{id}",
             "/userSaving/{id}",
-            "/userSaving/user/{id}"
+            "/userSaving/user/{id}",
+            "/badge/create",
+            "/badge/all/badge",
+            "/badge/{id}"
     );
   }
 }

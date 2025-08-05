@@ -19,6 +19,9 @@ import org.funding.fund.dto.FundUpdateRequestDTO;
 import org.funding.fundKeyword.service.FundKeywordService;
 import org.funding.fundKeyword.dto.FundKeywordRequestDTO;
 import org.funding.keyword.vo.KeywordVO;
+import org.funding.project.dao.ProjectDAO;
+import org.funding.project.vo.ProjectVO;
+import org.funding.project.vo.enumType.ProjectProgress;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +50,7 @@ public class FundService {
     private final DonationDAO donationDAO;
     private final S3ImageService s3ImageService;
     private final FundKeywordService fundKeywordService;
+    private final ProjectDAO projectDAO;
 
     /**
      * 적금 펀딩 생성
@@ -98,6 +102,12 @@ public class FundService {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
 
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
             
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -171,6 +181,13 @@ public class FundService {
             if (images != null && images.size() > 0) {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
+
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
             
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -241,6 +258,13 @@ public class FundService {
             if (images != null && images.size() > 0) {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
+
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
             
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -312,6 +336,13 @@ public class FundService {
             if (images != null && images.size() > 0) {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
+
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
             
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
