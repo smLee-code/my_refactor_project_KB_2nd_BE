@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +23,6 @@ public class FundProductRequestDTO {
         // 공통 필드
         private String name;
         private String detail;
-        private String thumbnail;
         private String joinCondition;
         
         // 적금 전용 필드
@@ -57,7 +57,7 @@ public class FundProductRequestDTO {
         private String detail;
         private String thumbnail;
         private String joinCondition;
-        
+
         // 대출 전용 필드
         private Long loanLimit;
         private Double minInterestRate;
