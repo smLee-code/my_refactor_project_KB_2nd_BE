@@ -17,9 +17,9 @@
     <!-- 금융상품 생성 -->
     <insert id="insert" parameterType="org.funding.financialProduct.vo.FinancialProductVO" useGeneratedKeys="true" keyProperty="productId">
         INSERT INTO financial_product (
-            name, detail, fund_type, thumbnail, join_condition
+            name, detail, fund_type, join_condition
         ) VALUES (
-            #{name}, #{detail}, #{fundType}, #{thumbnail}, #{joinCondition}
+            #{name}, #{detail}, #{fundType}, #{joinCondition}
         )
     </insert>
 
