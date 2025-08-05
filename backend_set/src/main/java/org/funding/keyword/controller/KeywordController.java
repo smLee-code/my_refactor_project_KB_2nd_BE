@@ -26,7 +26,7 @@ public class KeywordController {
 
     @GetMapping("")
     public ResponseEntity<List<KeywordVO>> getAllKeywords(@RequestParam("categoryName") String categoryName) {
-        List<KeywordVO> allKeywords = keywordService.findAllKeywords(categoryName);
+        List<KeywordVO> allKeywords = keywordService.findAllKeywordsByCategoryName(categoryName);
 
         return new ResponseEntity<>(allKeywords, HttpStatus.OK);
     }

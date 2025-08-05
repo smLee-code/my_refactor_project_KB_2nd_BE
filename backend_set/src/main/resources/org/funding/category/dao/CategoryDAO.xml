@@ -11,9 +11,10 @@
         where name = #{name}
     </select>
 
-    <select id="selectAllCategories" resultType="org.funding.category.dto.CategoryResponseDTO">
+    <select id="selectAllCategories" resultType="org.funding.category.vo.CategoryVO">
         select * from categories
     </select>
+
 
     <insert id="insertCategory" parameterType="org.funding.category.dto.CategoryRequestDTO">
         insert into categories (name, weight)

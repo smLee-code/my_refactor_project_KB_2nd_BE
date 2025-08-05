@@ -25,6 +25,12 @@
                             where name = #{categoryName})
     </select>
 
+    <select id="selectKeywordsByCategoryId" parameterType="Long" resultType="org.funding.keyword.vo.KeywordVO">
+        select *
+        from keywords
+        where category_id = #{categoryId}
+    </select>
+
     <insert id="insertKeyword" parameterType="org.funding.keyword.dto.KeywordRequestDTO">
         insert into keywords (category_id, name)
         values (#{categoryId}, #{name})
