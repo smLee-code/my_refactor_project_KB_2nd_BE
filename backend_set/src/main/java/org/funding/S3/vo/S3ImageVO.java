@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@ConstructorProperties({"imageType", "postId", "imageUrl", "createdAt"})
 public class S3ImageVO {
     private ImageType imageType;
     private Long postId;

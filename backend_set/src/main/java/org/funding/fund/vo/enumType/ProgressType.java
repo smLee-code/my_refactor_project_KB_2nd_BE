@@ -1,8 +1,5 @@
 package org.funding.fund.vo.enumType;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum ProgressType {
     Launch, End;
     public static ProgressType fromString(String value) {

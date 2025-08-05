@@ -1,8 +1,5 @@
 package org.funding.user.vo.enumType;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum Role {
 
     ROLE_NORMAL, ROLE_FINANCE, ROLE_ADMIN;

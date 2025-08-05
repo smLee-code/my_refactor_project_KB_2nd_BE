@@ -37,6 +37,4 @@ public class KeywordService {
     public void deleteKeyword(String name) {
         keywordDAO.deleteKeyword(name);
     }
-
-
 }

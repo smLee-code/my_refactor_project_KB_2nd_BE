@@ -1,8 +1,5 @@
 package org.funding.S3.vo.enumType;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum ImageType {
     Funding, Project;
 
