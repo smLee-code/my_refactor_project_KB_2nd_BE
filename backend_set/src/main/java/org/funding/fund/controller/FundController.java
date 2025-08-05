@@ -27,7 +27,7 @@ public class FundController {
 
     //summary = "펀딩 상품 개설",
     //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다."
-    @PostMapping(value = "/create/savings", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create/savings", consumes = "multipart/form-data")
     public ResponseEntity<?> createSavingsFund(
             @RequestPart("savingInfo") FundProductRequestDTO.SavingsRequest request,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) {
