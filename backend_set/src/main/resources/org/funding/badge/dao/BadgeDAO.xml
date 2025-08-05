@@ -73,9 +73,9 @@
     <select id="isAdmin" resultType="boolean" parameterType="long">
         SELECT EXISTS(
             SELECT 1
-            FROM user
+            FROM member
             WHERE user_id = #{userId}
-              AND role = 'ADMIN'
+              AND role = 'ROLE_ADMIN'
         )
     </select>
 
@@ -83,8 +83,8 @@
     <select id="hasDonated" resultType="boolean" parameterType="long">
         SELECT EXISTS(
             SELECT 1
-            FROM donation
-            WHERE user_id = #{userId}
+            FROM user_donation
+            WHERE user_donation_id = #{userId}
         )
     </select>
 
@@ -92,8 +92,8 @@
     <select id="hasJoinedChallenge" resultType="boolean" parameterType="long">
         SELECT EXISTS(
             SELECT 1
-            FROM challenge_participant
-            WHERE user_id = #{userId}
+            FROM user_challenge
+            WHERE user_challenge_id = #{userId}
         )
     </select>
 
@@ -101,22 +101,32 @@
     <select id="hasSubscribedFinancialProduct" resultType="boolean" parameterType="long">
         SELECT EXISTS(
             SELECT 1
-            FROM user_financial_product
-            WHERE user_id = #{userId}
+            FROM user_saving
+            WHERE user_saving_id = #{userId}
+
+            UNION ALL
+
+            SELECT 1
+            FROM user_loan
+            WHERE user_loan_id = #{userId}
         )
     </select>
+
 
     <!-- 6. 인플루언서: 유저가 작성한 프로젝트에 댓글이 10개 이상 있는지 확인 -->
     <select id="hasProjectWithTenOrMoreComments" resultType="boolean" parameterType="long">
         SELECT EXISTS(
             SELECT 1
-            FROM donation_project dp
-                     JOIN project_comment pc ON dp.project_id = pc.project_id
-            WHERE dp.user_id = #{userId}
-            GROUP BY dp.project_id
-            HAVING COUNT(pc.comment_id) >= 10
+            FROM project p
+                     JOIN comment c
+                          ON c.targetType = 'Project'
+                              AND c.targetId = p.projectId
+            WHERE p.userId = #{userId}
+            GROUP BY p.projectId
+            HAVING COUNT(c.commentId) >= 10
         )
     </select>
+
 
     <!-- 7. 댓글왕: 유저가 단 댓글이 10개 이상인지 확인 -->
     <select id="hasPostedTenComments" resultType="boolean" parameterType="long">
