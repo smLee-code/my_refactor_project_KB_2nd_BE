@@ -6,10 +6,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.funding.keyword.dto.KeywordResponseDTO;
+import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.user.dto.*;
 import org.funding.user.service.MyPageService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.funding.votes.dto.VotesResponseDTO;
 
 import java.util.List;
 
@@ -27,9 +30,17 @@ public class MyPageController {
         @ApiResponse(code = 500, message = "서버 오류")
     })
     @GetMapping("")
-    public ResponseEntity<MyPageResponseDTO> getMyPageInfo() {
-        MyPageResponseDTO myPageInfo = myPageService.getMyPageInfo();
-        return ResponseEntity.ok(myPageInfo);
+    public ResponseEntity<?> getMyPageInfo() {
+        try {
+            MyPageResponseDTO myPageInfo = myPageService.getMyPageInfo();
+            return ResponseEntity.ok(myPageInfo);
+        } catch (IllegalStateException e) { // 인증 실패
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) { // 서버 오류
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류가 발생했습니다: " + e.getMessage() + "\"}");
+        }
     }
 
     @ApiOperation(value = "관심 키워드 조회", notes = "사용자의 현재 관심 키워드 목록을 조회합니다.")
@@ -38,9 +49,17 @@ public class MyPageController {
         @ApiResponse(code = 401, message = "인증 실패")
     })
     @GetMapping("/keywords")
-    public ResponseEntity<List<KeywordResponseDTO>> getMyKeywords() {
-        List<KeywordResponseDTO> keywords = myPageService.getMyKeywords();
-        return ResponseEntity.ok(keywords);
+    public ResponseEntity<?> getMyKeywords() {
+        try {
+            List<KeywordResponseDTO> keywords = myPageService.getMyKeywords();
+            return ResponseEntity.ok(keywords);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류가 발생했습니다: " + e.getMessage() + "\"}");
+        }
     }
 
     @ApiOperation(value = "관심 키워드 수정", notes = "사용자의 관심 키워드 목록을 전체 교체 방식으로 수정합니다.")
@@ -50,9 +69,17 @@ public class MyPageController {
         @ApiResponse(code = 400, message = "잘못된 요청")
     })
     @PutMapping("/keywords")
-    public ResponseEntity<String> updateMyKeywords(@RequestBody UpdateKeywordsRequestDTO request) {
-        myPageService.updateMyKeywords(request.getKeywords());
-        return ResponseEntity.ok("키워드가 성공적으로 수정되었습니다.");
+    public ResponseEntity<?> updateMyKeywords(@RequestBody List<String> keywords) {
+        try {
+            myPageService.updateMyKeywords(keywords);
+            return ResponseEntity.ok("키워드가 성공적으로 수정되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류가 발생했습니다: " + e.getMessage() + "\"}");
+        }
     }
 
     @ApiOperation(value = "개인정보 수정", notes = "사용자의 개인정보(이름, 닉네임, 전화번호)를 수정합니다.")
@@ -62,9 +89,17 @@ public class MyPageController {
         @ApiResponse(code = 400, message = "잘못된 요청")
     })
     @PutMapping("/account")
-    public ResponseEntity<String> updateAccountInfo(@RequestBody UpdateAccountRequestDTO request) {
-        myPageService.updateAccountInfo(request);
-        return ResponseEntity.ok("개인정보가 성공적으로 수정되었습니다.");
+    public ResponseEntity<?> updateAccountInfo(@RequestBody UpdateAccountRequestDTO request) {
+        try {
+            myPageService.updateAccountInfo(request);
+            return ResponseEntity.ok("개인정보가 성공적으로 수정되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류가 발생했습니다: " + e.getMessage() + "\"}");
+        }
     }
 
     @ApiOperation(value = "내 투표 조회", notes = "사용자가 투표한 프로젝트 목록을 조회합니다.")
@@ -73,9 +108,17 @@ public class MyPageController {
         @ApiResponse(code = 401, message = "인증 실패")
     })
     @GetMapping("/votes")
-    public ResponseEntity<List<MyVoteResponseDTO>> getMyVotes() {
-        List<MyVoteResponseDTO> votes = myPageService.getMyVotes();
-        return ResponseEntity.ok(votes);
+    public ResponseEntity<?> getMyVotes() {
+        try {
+            List<VotesResponseDTO> votes = myPageService.getMyVotes();
+            return ResponseEntity.ok(votes);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류가 발생했습니다: " + e.getMessage() + "\"}");
+        }
     }
 
     @ApiOperation(value = "작성한 프로젝트 조회", notes = "사용자가 작성한 프로젝트 목록을 조회합니다.")
@@ -84,10 +127,16 @@ public class MyPageController {
         @ApiResponse(code = 401, message = "인증 실패")
     })
     @GetMapping("/projects")
-    public ResponseEntity<List<MyProjectResponseDTO>> getMyProjects() {
-        List<MyProjectResponseDTO> projects = myPageService.getMyProjects();
-        return ResponseEntity.ok(projects);
+    public ResponseEntity<?> getMyProjects() {
+        try {
+            List<ProjectListDTO> projects = myPageService.getMyProjects();
+            return ResponseEntity.ok(projects);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류가 발생했습니다: " + e.getMessage() + "\"}");
+        }
     }
-
-
 } 
