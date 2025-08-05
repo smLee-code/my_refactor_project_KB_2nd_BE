@@ -20,4 +20,8 @@ public interface S3ImageDAO {
     // 이미지 한 개 출력
     S3ImageVO findFirstImageByPost(@Param("imageType") ImageType imageType, @Param("postId") Long postId);
 
+    // 이미지 삭제
+    void deleteImagesByPost(@Param("imageType") ImageType imageType, @Param("postId") Long postId);
+
+
 }
