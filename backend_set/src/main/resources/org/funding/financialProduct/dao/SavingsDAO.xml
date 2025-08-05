@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.financialProduct.dao.SavingsDAO">
+
+    <!-- 적금 상품 정보 resultMap -->
+    <resultMap id="savingsMap" type="org.funding.financialProduct.vo.SavingsVO">
+        <id property="savingsId" column="savings_id" />
+        <result property="productId" column="product_id" />
+        <result property="periodDays" column="period_days" />
+        <result property="interestRate" column="interest_rate" />
+        <result property="successCondition" column="success_condition" />
+    </resultMap>
+
+    <!-- 적금 상품 생성 -->
+    <insert id="insertSavings" parameterType="org.funding.financialProduct.vo.SavingsVO" useGeneratedKeys="true" keyProperty="savingsId">
+        INSERT INTO savings (
+            product_id, period_days, interest_rate, success_condition
+        ) VALUES (
+            #{productId}, #{periodDays}, #{interestRate}, #{successCondition}
+        )
+    </insert>
+
+    <!-- 적금 상품 조회 by ID -->
+    <select id="selectById" parameterType="long" resultMap="savingsMap">
+        SELECT 
+            savings_id, product_id, period_days, interest_rate, success_condition
+        FROM savings
+        WHERE savings_id = #{savingsId}
+    </select>
+
+    <!-- 금융상품 ID로 적금 상품 조회 -->
+    <select id="selectByProductId" parameterType="long" resultMap="savingsMap">
+        SELECT 
+            savings_id, product_id, period_days, interest_rate, success_condition
+        FROM savings
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 적금 상품 업데이트 -->
+    <update id="update" parameterType="org.funding.financialProduct.vo.SavingsVO">
+        UPDATE savings
+        SET 
+            period_days = #{periodDays},
+            interest_rate = #{interestRate},
+            success_condition = #{successCondition}
+        WHERE savings_id = #{savingsId}
+    </update>
+
+    <!-- 적금 상품 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM savings
+        WHERE savings_id = #{savingsId}
+    </delete>
+    
+    <!-- 금융상품 ID로 적금 상품 삭제 -->
+    <delete id="deleteByProductId" parameterType="long">
+        DELETE FROM savings
+        WHERE product_id = #{productId}
+    </delete>
+
+    <!-- 모든 적금 상품 조회 -->
+    <select id="selectAll" resultMap="savingsMap">
+        SELECT 
+            savings_id, product_id, period_days, interest_rate, success_condition
+        FROM savings
+        ORDER BY savings_id DESC
+    </select>
+
+</mapper>

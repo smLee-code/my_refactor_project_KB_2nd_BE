@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.chatting.dao.ChattingDAO">
+
+    <insert id="saveMessage" parameterType="org.funding.chatting.dto.ChattingMessage">
+        INSERT INTO chat_message (project_id, user_id, content, timestamp)
+        VALUES (#{projectId}, #{sender}, #{content}, NOW())
+    </insert>
+
+    <select id="findMessagesByRoomId" resultType="org.funding.chatting.dto.ChattingMessage">
+        SELECT id, user_id, content,project_id, DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') as timestamp
+        FROM chat_message
+        WHERE project_id = #{projectId}
+        ORDER BY timestamp ASC
+    </select>
+
+</mapper>

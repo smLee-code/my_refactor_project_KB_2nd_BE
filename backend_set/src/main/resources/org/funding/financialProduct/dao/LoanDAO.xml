@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.financialProduct.dao.LoanDAO">
+
+    <!-- 대출 상품 정보 resultMap -->
+    <resultMap id="loanMap" type="org.funding.financialProduct.vo.LoanVO">
+        <id property="installmentId" column="installment_id" />
+        <result property="productId" column="product_id" />
+        <result property="loanLimit" column="loan_limit" />
+        <result property="repaymentStartDate" column="repayment_start_date" />
+        <result property="repaymentEndDate" column="repayment_end_date" />
+        <result property="minInterestRate" column="min_interest_rate" />
+        <result property="maxInterestRate" column="max_interest_rate" />
+        <result property="reward" column="reward" />
+        <result property="rewardCondition" column="reward_condition" />
+    </resultMap>
+
+    <!-- 대출 상품 생성 -->
+    <insert id="insertLoan" parameterType="org.funding.financialProduct.vo.LoanVO" useGeneratedKeys="true" keyProperty="installmentId">
+        INSERT INTO loan (
+            product_id, loan_limit, repayment_start_date, repayment_end_date, 
+            min_interest_rate, max_interest_rate, reward, reward_condition
+        ) VALUES (
+            #{productId}, #{loanLimit}, #{repaymentStartDate}, #{repaymentEndDate},
+            #{minInterestRate}, #{maxInterestRate}, #{reward}, #{rewardCondition}
+        )
+    </insert>
+
+    <!-- 대출 상품 조회 by ID -->
+    <select id="selectById" parameterType="long" resultMap="loanMap">
+        SELECT 
+            installment_id, product_id, loan_limit, repayment_start_date, repayment_end_date,
+            min_interest_rate, max_interest_rate, reward, reward_condition
+        FROM loan
+        WHERE installment_id = #{installmentId}
+    </select>
+
+    <!-- 금융상품 ID로 대출 상품 조회 -->
+    <select id="selectByProductId" parameterType="long" resultMap="loanMap">
+        SELECT 
+            installment_id, product_id, loan_limit, repayment_start_date, repayment_end_date,
+            min_interest_rate, max_interest_rate, reward, reward_condition
+        FROM loan
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 대출 상품 업데이트 -->
+    <update id="update" parameterType="org.funding.financialProduct.vo.LoanVO">
+        UPDATE loan
+        SET 
+            loan_limit = #{loanLimit},
+            repayment_start_date = #{repaymentStartDate},
+            repayment_end_date = #{repaymentEndDate},
+            min_interest_rate = #{minInterestRate},
+            max_interest_rate = #{maxInterestRate},
+            reward = #{reward},
+            reward_condition = #{rewardCondition}
+        WHERE installment_id = #{installmentId}
+    </update>
+
+    <!-- 대출 상품 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM loan
+        WHERE installment_id = #{installmentId}
+    </delete>
+    
+    <!-- 금융상품 ID로 대출 상품 삭제 -->
+    <delete id="deleteByProductId" parameterType="long">
+        DELETE FROM loan
+        WHERE product_id = #{productId}
+    </delete>
+
+    <!-- 모든 대출 상품 조회 -->
+    <select id="selectAll" resultMap="loanMap">
+        SELECT 
+            installment_id, product_id, loan_limit, repayment_start_date, repayment_end_date,
+            min_interest_rate, max_interest_rate, reward, reward_condition
+        FROM loan
+        ORDER BY installment_id DESC
+    </select>
+
+</mapper>

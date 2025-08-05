@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.financialProduct.dao.DonationDAO">
+
+    <!-- 기부 상품 정보 resultMap -->
+    <resultMap id="donationMap" type="org.funding.financialProduct.vo.DonationVO">
+        <id property="donationId" column="donation_id" />
+        <result property="productId" column="product_id" />
+        <result property="recipient" column="recipient" />
+        <result property="usagePlan" column="usage_plan" />
+        <result property="minDonationAmount" column="min_donation_amount" />
+        <result property="maxDonationAmount" column="max_donation_amount" />
+        <result property="targetAmount" column="target_amount" />
+    </resultMap>
+
+    <!-- 기부 상품 생성 -->
+    <insert id="insertDonation" parameterType="org.funding.financialProduct.vo.DonationVO" useGeneratedKeys="true" keyProperty="donationId">
+        INSERT INTO donation (
+            product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
+        ) VALUES (
+            #{productId}, #{recipient}, #{usagePlan}, #{minDonationAmount}, #{maxDonationAmount}, #{targetAmount}
+        )
+    </insert>
+
+    <!-- 기부 상품 조회 by ID -->
+    <select id="selectById" parameterType="long" resultMap="donationMap">
+        SELECT 
+            donation_id, product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
+        FROM donation
+        WHERE donation_id = #{donationId}
+    </select>
+
+    <!-- 금융상품 ID로 기부 상품 조회 -->
+    <select id="selectByProductId" parameterType="long" resultMap="donationMap">
+        SELECT 
+            donation_id, product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
+        FROM donation
+        WHERE product_id = #{productId}
+    </select>
+
+    <!-- 기부 상품 업데이트 -->
+    <update id="update" parameterType="org.funding.financialProduct.vo.DonationVO">
+        UPDATE donation
+        SET 
+            recipient = #{recipient},
+            usage_plan = #{usagePlan},
+            min_donation_amount = #{minDonationAmount},
+            max_donation_amount = #{maxDonationAmount},
+            target_amount = #{targetAmount}
+        WHERE donation_id = #{donationId}
+    </update>
+
+    <!-- 기부 상품 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM donation
+        WHERE donation_id = #{donationId}
+    </delete>
+    
+    <!-- 금융상품 ID로 기부 상품 삭제 -->
+    <delete id="deleteByProductId" parameterType="long">
+        DELETE FROM donation
+        WHERE product_id = #{productId}
+    </delete>
+
+    <!-- 모든 기부 상품 조회 -->
+    <select id="selectAll" resultMap="donationMap">
+        SELECT 
+            donation_id, product_id, recipient, usage_plan, min_donation_amount, max_donation_amount, target_amount
+        FROM donation
+        ORDER BY donation_id DESC
+    </select>
+
+</mapper>

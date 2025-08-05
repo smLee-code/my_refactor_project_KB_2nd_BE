@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.funding.category.dao.CategoryDAO">
+
+    <select id="selectCategory" parameterType="String" resultType="org.funding.category.dto.CategoryResponseDTO">
+        select *
+        from categories
+        where name = #{name}
+    </select>
+
+    <select id="selectAllCategories" resultType="org.funding.category.vo.CategoryVO">
+        select * from categories
+    </select>
+
+
+    <insert id="insertCategory" parameterType="org.funding.category.dto.CategoryRequestDTO">
+        insert into categories (name, weight)
+        values (#{name}, #{weight})
+    </insert>
+
+    <delete id="deleteCategory" parameterType="String">
+        delete from categories
+        where name = #{name}
+    </delete>
+
+</mapper>
