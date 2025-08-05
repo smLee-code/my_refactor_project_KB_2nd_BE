@@ -6,9 +6,12 @@ import lombok.Data;
 import org.funding.project.vo.ProjectVO;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
+import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * api 요청 (create)을 보낼 때 사용하는 dto
@@ -34,8 +37,9 @@ public abstract class CreateProjectRequestDTO {
     private ProjectType projectType; // 프로젝트 타입
     private String title; // 프로젝트 제목
     private String promotion; // 프로젝트 홍보글
-//    private ProjectProgress progress; // 프로젝트 진행도
     private LocalDate deadline; // 마감일
+
+    private List<Long> keywordIds;
 
     public ProjectVO toCommonVO() {
         return ProjectVO.builder()
@@ -47,4 +51,5 @@ public abstract class CreateProjectRequestDTO {
                 .deadline(this.getDeadline().atStartOfDay())
                 .build();
     }
+
 }

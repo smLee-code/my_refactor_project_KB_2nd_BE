@@ -18,8 +18,12 @@ public class KeywordService {
         return keywordDAO.selectKeywordByName(name);
     }
 
-    public List<KeywordVO> findAllKeywords(String categoryName) {
+    public List<KeywordVO> findAllKeywordsByCategoryName(String categoryName) {
         return keywordDAO.selectKeywordsByCategoryName(categoryName);
+    }
+
+    public List<KeywordVO> findAllKeywordsByCategoryId(Long categoryId) {
+        return keywordDAO.selectKeywordsByCategoryId(categoryId);
     }
 
     public void addKeyword(KeywordRequestDTO requestDTO) {

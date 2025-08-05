@@ -16,4 +16,12 @@ public interface S3ImageDAO {
     // 타입에 따른 이미지 리스트 추출
     List<S3ImageVO> findImagesByPost(@Param("imageType") ImageType imageType, @Param("postId") Long postId);
 
+    // 썸네일 이미지 출력
+    // 이미지 한 개 출력
+    S3ImageVO findFirstImageByPost(@Param("imageType") ImageType imageType, @Param("postId") Long postId);
+
+    // 이미지 삭제
+    void deleteImagesByPost(@Param("imageType") ImageType imageType, @Param("postId") Long postId);
+
+
 }

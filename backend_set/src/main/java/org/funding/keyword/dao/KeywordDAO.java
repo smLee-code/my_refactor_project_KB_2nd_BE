@@ -15,6 +15,8 @@ public interface KeywordDAO {
 
     List<KeywordVO> selectKeywordsByCategoryName(String categoryName);
 
+    List<KeywordVO> selectKeywordsByCategoryId(Long categoryId);
+
     public void insertKeyword(KeywordRequestDTO requestDTO);
 
     void deleteKeyword(String name);

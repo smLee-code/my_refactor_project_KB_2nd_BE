@@ -6,8 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class FundProductRequestDTO {
 
@@ -21,7 +23,6 @@ public class FundProductRequestDTO {
         // 공통 필드
         private String name;
         private String detail;
-        private String thumbnail;
         private String joinCondition;
         
         // 적금 전용 필드
@@ -40,6 +41,9 @@ public class FundProductRequestDTO {
         private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
         
         private String financialInstitution;
+        
+        // 키워드 필드
+        private List<Long> keywordIds;
     }
 
     // 대출 요청 DTO
@@ -53,7 +57,7 @@ public class FundProductRequestDTO {
         private String detail;
         private String thumbnail;
         private String joinCondition;
-        
+
         // 대출 전용 필드
         private Long loanLimit;
         private Double minInterestRate;
@@ -72,6 +76,9 @@ public class FundProductRequestDTO {
         private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
         
         private String financialInstitution;
+        
+        // 키워드 필드
+        private List<Long> keywordIds;
     }
 
     // 챌린지 요청 DTO
@@ -103,6 +110,9 @@ public class FundProductRequestDTO {
         private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
         
         private String financialInstitution;
+        
+        // 키워드 필드
+        private List<Long> keywordIds;
     }
 
     // 기부 요청 DTO
@@ -135,5 +145,8 @@ public class FundProductRequestDTO {
         private LocalDate endDate; // 종료일 (시간은 23:59:59로 고정)
         
         private String financialInstitution;
+        
+        // 키워드 필드
+        private List<Long> keywordIds;
     }
 }

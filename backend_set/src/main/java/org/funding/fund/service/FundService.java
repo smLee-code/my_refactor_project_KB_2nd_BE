@@ -2,6 +2,9 @@ package org.funding.fund.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.funding.S3.service.S3ImageService;
+import org.funding.S3.vo.S3ImageVO;
+import org.funding.S3.vo.enumType.ImageType;
 import org.funding.financialProduct.dao.*;
 import org.funding.financialProduct.dto.*;
 import org.funding.financialProduct.vo.*;
@@ -13,8 +16,12 @@ import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.fund.dto.FundListResponseDTO;
 import org.funding.fund.dto.FundDetailResponseDTO;
 import org.funding.fund.dto.FundUpdateRequestDTO;
+import org.funding.fundKeyword.service.FundKeywordService;
+import org.funding.fundKeyword.dto.FundKeywordRequestDTO;
+import org.funding.keyword.vo.KeywordVO;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,6 +45,8 @@ public class FundService {
     private final LoanDAO loanDAO;
     private final ChallengeDAO challengeDAO;
     private final DonationDAO donationDAO;
+    private final S3ImageService s3ImageService;
+    private final FundKeywordService fundKeywordService;
 
     /**
      * 적금 펀딩 생성
@@ -47,16 +56,15 @@ public class FundService {
      * @param request 적금 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createSavingsFund(FundProductRequestDTO.SavingsRequest request) {
+    public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images) {
         try {
             log.info("Creating savings fund with name: {}", request.getName());
-            
+
             // 1. 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
                 .fundType(FundType.Savings)
-                .thumbnail(request.getThumbnail())
                 .joinCondition(request.getJoinCondition())
                 .build();
             
@@ -84,6 +92,24 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+
+            // 등록한 이미지에 대해서 이미지 저장
+            if (images != null && images.size() > 0) {
+                s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
+            }
+
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+            
             log.info("Savings fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Savings fund and Fund created successfully";
         } catch (Exception e) {
@@ -100,7 +126,7 @@ public class FundService {
      * @param request 대출 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createLoanFund(FundProductRequestDTO.LoanRequest request) {
+    public String createLoanFund(FundProductRequestDTO.LoanRequest request, List<MultipartFile> images) {
         try {
             log.info("Creating loan fund with name: {}", request.getName());
             
@@ -109,7 +135,6 @@ public class FundService {
                 .name(request.getName())
                 .detail(request.getDetail())
                 .fundType(FundType.Loan)
-                .thumbnail(request.getThumbnail())
                 .joinCondition(request.getJoinCondition())
                 .build();
             
@@ -141,6 +166,23 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+
+            // 등록한 이미지에 대해서 이미지 저장
+            if (images != null && images.size() > 0) {
+                s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
+            }
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+
             log.info("Loan fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Loan fund and Fund created successfully";
         } catch (Exception e) {
@@ -157,7 +199,7 @@ public class FundService {
      * @param request 챌린지 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request) {
+    public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request, List<MultipartFile> images) {
         try {
             log.info("Creating challenge fund with name: {}", request.getName());
             
@@ -166,7 +208,6 @@ public class FundService {
                 .name(request.getName())
                 .detail(request.getDetail())
                 .fundType(FundType.Challenge)
-                .thumbnail(request.getThumbnail())
                 .joinCondition(request.getJoinCondition())
                 .build();
             
@@ -195,6 +236,23 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+
+            // 등록한 이미지에 대해서 이미지 저장
+            if (images != null && images.size() > 0) {
+                s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
+            }
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+
             log.info("Challenge fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Challenge fund and Fund created successfully";
         } catch (Exception e) {
@@ -211,7 +269,7 @@ public class FundService {
      * @param request 기부 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createDonationFund(FundProductRequestDTO.DonationRequest request) {
+    public String createDonationFund(FundProductRequestDTO.DonationRequest request, List<MultipartFile> images) {
         try {
             log.info("Creating donation fund with name: {}", request.getName());
             
@@ -220,7 +278,6 @@ public class FundService {
                 .name(request.getName())
                 .detail(request.getDetail())
                 .fundType(FundType.Donation)
-                .thumbnail(request.getThumbnail())
                 .joinCondition(request.getJoinCondition())
                 .build();
             
@@ -250,6 +307,23 @@ public class FundService {
                 .build();
             
             fundDAO.insert(fund);
+
+            // 등록한 이미지에 대해서 이미지 저장
+            if (images != null && images.size() > 0) {
+                s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
+            }
+            
+            // 5. 키워드 매핑 처리
+            if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
+                for (Long keywordId : request.getKeywordIds()) {
+                    FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
+                    fundKeywordRequest.setFundId(fund.getFundId());
+                    fundKeywordRequest.setKeywordId(keywordId);
+                    fundKeywordService.mapFundKeyword(fundKeywordRequest);
+                }
+                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+            }
+            
             log.info("Donation fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Donation fund and Fund created successfully";
         } catch (Exception e) {
@@ -279,7 +353,22 @@ public class FundService {
      * @return 조건에 맞는 펀딩 목록 (상품명과 썸네일 포함)
      */
     public List<FundListResponseDTO> getFundsByProgressAndType(ProgressType progress, FundType fundType) {
-        return fundDAO.selectByProgressAndFundType(progress, fundType);
+        List<FundListResponseDTO> funds = fundDAO.selectByProgressAndFundType(progress, fundType);
+
+        for (FundListResponseDTO fund : funds) {
+            Long productId = fund.getProductId();
+            S3ImageVO thumbnailImage = s3ImageService.getFirstImageForPost(ImageType.Funding, productId);
+            fund.setThumbnailImage(thumbnailImage);
+        }
+
+        
+        // 각 펀드에 대해 키워드 정보 추가
+        for (FundListResponseDTO fund : funds) {
+            List<KeywordVO> keywords = fundKeywordService.findKeywordIdsByFundId(fund.getFundId());
+            fund.setKeywords(keywords);
+        }
+
+        return funds;
     }
     
     /**
@@ -290,10 +379,22 @@ public class FundService {
      * @return 펀딩 상세 정보 (fund + financial_product + 타입별 상세)
      */
     public FundDetailResponseDTO getFundDetail(Long fundId) {
+        FundVO fund = fundDAO.selectById(fundId);
+        Long productId = fund.getProductId();
+
+        List<S3ImageVO> imageUrls = s3ImageService.getImagesForPost(ImageType.Funding, productId);
+
+
         FundDetailResponseDTO fundDetail = fundDAO.selectDetailById(fundId);
         if (fundDetail == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 펀딩입니다. fundId: " + fundId);
         }
+        fundDetail.setImageUrls(imageUrls);
+        
+        // 키워드 정보 추가
+        List<KeywordVO> keywords = fundKeywordService.findKeywordIdsByFundId(fundId);
+        fundDetail.setKeywords(keywords);
+        
         return fundDetail;
     }
     
@@ -322,7 +423,6 @@ public class FundService {
             FinancialProductVO productVO = financialProductDAO.selectById(existingFund.getProductId());
             if (request.getName() != null) productVO.setName(request.getName());
             if (request.getDetail() != null) productVO.setDetail(request.getDetail());
-            if (request.getIconUrl() != null) productVO.setThumbnail(request.getIconUrl());
             if (request.getProductCondition() != null) productVO.setJoinCondition(request.getProductCondition());
             financialProductDAO.update(productVO);
             
@@ -457,7 +557,7 @@ public class FundService {
             // 2. fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
             fundDAO.delete(fundId);
             log.info("Fund deleted with id: {}", fundId);
-            
+
             // 3. 타입별 상세 테이블에서 삭제
             switch (fundType) {
                 case Savings:
@@ -481,7 +581,10 @@ public class FundService {
             // 4. financial_product 테이블에서 삭제 (외래키 참조가 없어진 후)
             financialProductDAO.delete(productId);
             log.info("Financial product deleted with id: {}", productId);
-            
+
+            // 해당 펀딩 이미지 삭제
+            s3ImageService.deleteImagesForPost(ImageType.Funding, productId);
+
             return "펀딩이 성공적으로 삭제되었습니다.";
             
         } catch (ResponseStatusException e) {

@@ -11,11 +11,12 @@
         <result property="challengePeriodDays" column="challenge_period_days" />
         <result property="reward" column="reward" />
         <result property="rewardCondition" column="reward_condition" />
+        <result property="verifyStandard" column="verify_standard" />
     </resultMap>
 
     <!-- 챌린지 상품 생성 -->
     <insert id="insertChallenge" parameterType="org.funding.financialProduct.vo.ChallengeVO" useGeneratedKeys="true" keyProperty="challengeId">
-        INSERT INTO fund_db.challenge (
+        INSERT INTO challenge (
             product_id, challenge_period_days, reward, reward_condition, verify_standard
         ) VALUES (
             #{productId}, #{challengePeriodDays}, #{reward}, #{rewardCondition}, #{verifyStandard}
@@ -25,7 +26,7 @@
     <!-- 챌린지 상품 조회 by ID -->
     <select id="selectById" parameterType="long" resultMap="challengeMap">
         SELECT 
-            challenge_id, product_id, challenge_period_days, reward, reward_condition
+            challenge_id, product_id, challenge_period_days, reward, reward_condition, verify_standard
         FROM challenge
         WHERE challenge_id = #{challengeId}
     </select>
@@ -33,7 +34,7 @@
     <!-- 금융상품 ID로 챌린지 상품 조회 -->
     <select id="selectByProductId" parameterType="long" resultMap="challengeMap">
         SELECT 
-            challenge_id, product_id, challenge_period_days, reward, reward_condition
+            challenge_id, product_id, challenge_period_days, reward, reward_condition, verify_standard
         FROM challenge
         WHERE product_id = #{productId}
     </select>
@@ -63,7 +64,7 @@
     <!-- 모든 챌린지 상품 조회 -->
     <select id="selectAll" resultMap="challengeMap">
         SELECT 
-            challenge_id, product_id, challenge_period_days, reward, reward_condition
+            challenge_id, product_id, challenge_period_days, reward, reward_condition, verify_standard
         FROM challenge
         ORDER BY challenge_id DESC
     </select>

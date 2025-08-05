@@ -27,4 +27,24 @@
           AND post_id = #{postId}
     </select>
 
+    <!-- 썸네일 이미지 출력 -->
+    <select id="findFirstImageByPost" resultMap="ImageVOMap">
+        SELECT image_type, post_id, image_url, create_at
+        FROM image
+        WHERE image_type = #{imageType}
+          AND post_id = #{postId}
+        ORDER BY create_at ASC
+            LIMIT 1
+    </select>
+
+
+<!--    이미지 삭제-->
+    <delete id="deleteImagesByPost">
+        DELETE FROM image
+        WHERE image_type = #{imageType}
+          AND post_id = #{postId}
+    </delete>
+
+
+
 </mapper>
