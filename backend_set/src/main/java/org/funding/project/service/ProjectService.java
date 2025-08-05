@@ -143,8 +143,10 @@ public class ProjectService {
         List<ProjectListDTO> sameTypeProjects = projectDAO.searchProjectsByType(String.valueOf(baseProject.getProjectType()));
 
         if (baseKeywords == null || baseKeywords.isEmpty()) { // baseKeywords가 null이거나 비어있으면
+
             // 같은 타입의 프로젝트 중 최대 4개만 반환
             return sameTypeProjects.stream()
+                    .filter(p -> !p.getProjectId().equals(projectId))
                     .limit(4)
                     .collect(Collectors.toList());
         }
