@@ -38,5 +38,13 @@
     </select>
 
 
+<!--    이미지 삭제-->
+    <delete id="deleteImagesByPost">
+        DELETE FROM image
+        WHERE image_type = #{imageType}
+          AND post_id = #{postId}
+    </delete>
+
+
 
 </mapper>

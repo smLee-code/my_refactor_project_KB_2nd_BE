@@ -10,6 +10,7 @@ import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -62,6 +63,27 @@ public class S3ImageService {
     // 썸네일 이미지 출력
     public S3ImageVO getFirstImageForPost(ImageType imageType, Long postId) {
         return s3ImageDAO.findFirstImageByPost(imageType, postId);
+    }
+
+    // 이미지 s3에서 삭제
+    @Transactional
+    public void deleteImagesForPost(ImageType imageType, Long postId) {
+        List<S3ImageVO> imageList = s3ImageDAO.findImagesByPost(imageType, postId);
+
+        for (S3ImageVO image : imageList) {
+            String imageUrl = image.getImageUrl();
+            String key = extractKeyFromUrl(imageUrl);
+
+            amazonS3.deleteObject(bucketName, key);
+        }
+
+        // 데이터 베이스 에서 삭제
+        s3ImageDAO.deleteImagesByPost(imageType, postId);
+    }
+
+    // s3 키 추출 메서드
+    private String extractKeyFromUrl(String imageUrl) {
+        return imageUrl.substring(imageUrl.indexOf(".com/") + 5);
     }
 
 
