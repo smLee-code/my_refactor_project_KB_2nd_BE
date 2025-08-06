@@ -134,8 +134,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/health"// 헬스체커 api 항상 열어놓을것!
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
-            .antMatchers("/api/security/member").hasRole("ROLE_NORMAL")
-            .antMatchers("/api/security/admin").hasRole("ROLE_ADMIN")
+            .antMatchers("/api/security/member").hasRole("NORMAL")
+            .antMatchers("/api/security/admin").hasRole("ADMIN")
             .antMatchers("/api/fund/**").permitAll()  // 펀딩 API 테스트용 - 추후 인증 필요시 제거
             .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
             .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용

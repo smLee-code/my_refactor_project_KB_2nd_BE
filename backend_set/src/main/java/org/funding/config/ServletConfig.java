@@ -66,8 +66,12 @@ import java.util.List;
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private AuthInterceptor authInterceptor;
+
+    private final AuthInterceptor authInterceptor;
+
+    public ServletConfig(AuthInterceptor authInterceptor) {
+        this.authInterceptor = authInterceptor;
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
