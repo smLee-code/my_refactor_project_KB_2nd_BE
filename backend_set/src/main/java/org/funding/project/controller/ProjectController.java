@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/project")
@@ -61,6 +62,18 @@ public class ProjectController {
         ProjectResponseDTO projectDetails = projectService.getProjectDetails(id);
         return ResponseEntity.ok(projectDetails);
     }
+
+
+    @GetMapping("/distribution/type")
+    public List<Map<String, Object>> getProjectTypeDistribution() {
+        return projectService.getProjectTypeDistribution();
+    }
+
+    @GetMapping("trend")
+    public Map<String, List<Integer>> getProjectTrend() {
+        return projectService.getProjectTrends();
+    }
+
 
     @GetMapping("/list")
     @ResponseBody
