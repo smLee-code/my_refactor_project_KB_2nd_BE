@@ -33,4 +33,15 @@ public interface BadgeDAO {
     List<BadgeVO> selectAutoGrantBadges();
     boolean hasUserBadge(@Param("userId") Long userId, @Param("badgeId") Long badgeId);
     void insertUserBadge(UserBadgeVO userBadgeVO);
+
+
+    // 뱃지 자동 부여 기능 (구체화)
+    boolean hasCompletedFundedProject(Long userId);
+    boolean isAdmin(Long userId);
+    boolean hasDonated(Long userId);
+    boolean hasJoinedChallenge(Long userId);
+    boolean hasSubscribedFinancialProduct(Long userId);
+    boolean hasProjectWithTenOrMoreComments(Long userId);
+    boolean hasPostedTenComments(Long userId);
+    boolean hasProjectWithTenOrMoreLikes(Long userId);
 }

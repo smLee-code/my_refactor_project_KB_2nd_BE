@@ -1,7 +1,7 @@
 package org.funding.project.vo.enumType;
 
 public enum ProjectProgress {
-    Active, Closed;
+    Active, Closed, FUNDED;
 
     public static ProjectProgress fromString(String value) {
         for (ProjectProgress p : values()) {
