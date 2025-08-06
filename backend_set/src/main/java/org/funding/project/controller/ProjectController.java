@@ -64,17 +64,22 @@ public class ProjectController {
 
     @GetMapping("/list")
     @ResponseBody
-    public List<ProjectListDTO> getProjects(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String type) {
+    public ResponseEntity<List<ProjectListDTO>> getProjects(
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) String type
+    ) {
 
-        if (keyword != null && !keyword.isEmpty()) {
-            return projectService.searchByKeyword(keyword);
-        } else if (type != null && !type.isEmpty()) {
-            return projectService.searchByType(type);
-        } else {
-            return projectService.getAllProjects();
-        }
+        List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type);
+
+        return ResponseEntity.ok(projectWithDetailList);
+
+//        if (keyword != null && !keyword.isEmpty()) {
+//            return projectService.searchByKeyword(keyword);
+//        } else if (type != null && !type.isEmpty()) {
+//            return projectService.searchByType(type);
+//        } else {
+//            return projectService.getAllProjects();
+//        }
     }
 
     @GetMapping("/related/{id}")

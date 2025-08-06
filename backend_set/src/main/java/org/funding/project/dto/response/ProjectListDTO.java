@@ -26,6 +26,8 @@ public class ProjectListDTO {
     private ProjectProgress progress;
     private String promotion;
     private S3ImageVO thumbnailImage; // 썸네일 이미지
+    private Long likes;
+    private Boolean isLiked;
 
     public static ProjectListDTO fromVO(ProjectVO vo) {
         return ProjectListDTO.builder()
