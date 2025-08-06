@@ -31,8 +31,9 @@ public interface ProjectDAO {
 
     void insertChallengeProject(ChallengeProjectVO challengeProjectVO);
 
-
     List<ProjectListDTO> getAllProjects();
+
+    List<ProjectListDTO> getAllProjectsWithDetails(Long loginUserId);
 
     List<ProjectListDTO> searchProjectsByType(String type);
 

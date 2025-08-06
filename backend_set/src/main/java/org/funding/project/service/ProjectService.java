@@ -15,7 +15,10 @@ import org.funding.project.dto.response.*;
 import org.funding.project.vo.*;
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.service.ProjectKeywordService;
+import org.funding.user.service.MyPageService;
 import org.funding.votes.dao.VotesDAO;
+import org.funding.votes.dto.VotesRequestDTO;
+import org.funding.votes.service.VotesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,8 +31,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectService {
 
-
+    private final MyPageService myPageService;
     private final ProjectKeywordService projectKeywordService;
+    private final VotesService votesService;
 
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
@@ -92,6 +96,44 @@ public class ProjectService {
         dto.setImageList(images);
 
         return dto;
+    }
+
+    public List<ProjectListDTO> getProjectWithDetailList(String keyword, String type) {
+
+        Long loginUserId = myPageService.getCurrentUserId();
+        List<ProjectListDTO> projectList;
+
+        // 프로젝트 기본 칼럼 및 좋아요 수 query
+        if (type != null && !type.isEmpty()) {
+            projectList = projectDAO.searchProjectsByType(type);
+        }
+        else if (keyword != null && !keyword.isEmpty()) {
+            projectList = projectDAO.searchProjectsByKeyword(keyword);
+        }
+        else {
+            projectList = projectDAO.getAllProjects();
+        }
+
+        // 프로젝트 썸네일 이미지 추출
+        for (ProjectListDTO project : projectList) {
+            Long projectId = project.getProjectId();
+            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
+            project.setThumbnailImage(image);
+        }
+
+        // 프로젝트 별로 로그인 된 사용자가 투표했는지 여부
+        if (loginUserId == null) {
+            // 비 로그인 시 -> 투표 여부 항상 false로 처리
+            projectList.forEach(project -> project.setIsLiked(false));
+        }
+        else {
+            projectList.forEach(project -> {
+                Boolean isLiked = votesService.hasVoted(new VotesRequestDTO(loginUserId, project.getProjectId()));
+                project.setIsLiked(isLiked);
+            });
+        }
+
+        return projectList;
     }
 
     public List<ProjectListDTO> searchByType(String type) {

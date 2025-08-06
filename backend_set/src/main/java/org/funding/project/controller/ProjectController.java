@@ -87,18 +87,22 @@ public class ProjectController {
     @Auth
     @GetMapping("/list")
     @ResponseBody
-    public List<ProjectListDTO> getProjects(
+    public ResponseEntity<List<ProjectListDTO>> getProjects(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String type,
             HttpServletRequest request) {
 
-        if (keyword != null && !keyword.isEmpty()) {
-            return projectService.searchByKeyword(keyword);
-        } else if (type != null && !type.isEmpty()) {
-            return projectService.searchByType(type);
-        } else {
-            return projectService.getAllProjects();
-        }
+        List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type);
+
+        return ResponseEntity.ok(projectWithDetailList);
+
+//        if (keyword != null && !keyword.isEmpty()) {
+//            return projectService.searchByKeyword(keyword);
+//        } else if (type != null && !type.isEmpty()) {
+//            return projectService.searchByType(type);
+//        } else {
+//            return projectService.getAllProjects();
+//        }
     }
 
     @Auth
@@ -133,25 +137,33 @@ public class ProjectController {
     /* 키워드 관련 api */
     @Auth
     @GetMapping("/keyword/{id}")
-    public ResponseEntity<List<KeywordVO>> getProjectKeywords(@PathVariable("id") Long projectId,
-                                                              HttpServletRequest request) {
+    public ResponseEntity<List<KeywordVO>> getProjectKeywords(
+            @PathVariable("id") Long projectId,
+            HttpServletRequest request
+    ) {
         List<KeywordVO> list = projectService.getProjectKeywords(projectId);
+
         return ResponseEntity.ok(list);
     }
 
     @Auth
     @PostMapping("/keyword")
-    public ResponseEntity<String> addKeywordIntoProject(@RequestBody ProjectKeywordRequestDTO requestDTO,
-                                                        HttpServletRequest request) {
-
+    public ResponseEntity<String> addKeywordIntoProject(
+            @RequestBody ProjectKeywordRequestDTO requestDTO,
+            HttpServletRequest request
+    ) {
         projectService.addKeywordIntoProject(requestDTO);
+
         return ResponseEntity.ok("키워드 추가 완료");
     }
 
     @DeleteMapping("/keyword")
-    public ResponseEntity<String> deleteKeywordFromProject(@RequestBody ProjectKeywordRequestDTO requestDTO,
-                                                           HttpServletRequest request) {
+    public ResponseEntity<String> deleteKeywordFromProject(
+            @RequestBody ProjectKeywordRequestDTO requestDTO,
+            HttpServletRequest request
+    ) {
         projectService.deleteKeywordFromProject(requestDTO);
+
         return ResponseEntity.ok("키워드 삭제 완료");
     }
 }
