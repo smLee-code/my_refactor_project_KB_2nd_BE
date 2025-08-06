@@ -8,5 +8,4 @@ import java.time.LocalDate;
 public class ChallengeRequestDTO {
     private String imageUrl;
     private LocalDate date;
-    private Long userId;
 }

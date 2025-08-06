@@ -54,12 +54,15 @@ public class MemberService {
     public String login(String email, String password) {
         MemberVO member = memberDAO.findByEmail(email);
         if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다, 회원이 없습니다"); // 임시 에러처리
+            throw new RuntimeException("비밀번호가 일치하지 않습니다, 회원이 없습니다");
         }
 
-        // 뱃지 자동 부여 검증
         badgeService.checkAndGrantBadges(member.getUserId());
 
-        return jwtProcessor.generateTokenWithRole(member.getUsername(), String.valueOf(member.getRole()));
+        return jwtProcessor.generateTokenWithUserIdAndRole(
+                member.getUsername(),
+                member.getUserId(),
+                String.valueOf(member.getRole())
+        );
     }
 }

@@ -8,6 +8,7 @@ import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
+import org.funding.user.vo.enumType.Role;
 import org.funding.userDonation.dao.UserDonationDAO;
 import org.funding.userDonation.dto.DonateRequestDTO;
 import org.funding.userDonation.dto.DonateResponseDTO;
@@ -15,6 +16,7 @@ import org.funding.userDonation.vo.UserDonationVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +27,7 @@ public class UserDonationService {
     private final FundDAO fundDAO;
 
     // 기부
-    public DonateResponseDTO donate(DonateRequestDTO donateRequestDTO) {
-        Long userId = donateRequestDTO.getUserId();
+    public DonateResponseDTO donate(DonateRequestDTO donateRequestDTO, Long userId) {
         Long fundId = donateRequestDTO.getFundId();
 
         MemberVO member = validateMember(userId);
@@ -76,7 +77,12 @@ public class UserDonationService {
     }
 
     // 기부 내역 수정
-    public String updateDonation(Long userDonationId, DonateRequestDTO donateRequestDTO) {
+    public String updateDonation(Long userDonationId, DonateRequestDTO donateRequestDTO, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new RuntimeException("관리자만 접근 가능합니다.");
+        }
+
         UserDonationVO userDonation = userDonationDAO.findById(userDonationId);
         if (userDonation == null) {
             throw new RuntimeException("해당 기부 내역이 존재하지 않습니다.");
@@ -91,10 +97,19 @@ public class UserDonationService {
     }
 
     // 기부 내역 삭제
-    public String deleteDonation(Long userDonationId) {
+    public String deleteDonation(Long userDonationId, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member == null) {
+            throw new RuntimeException("해당 유저는 존재하지 않습니다.");
+        }
+
         UserDonationVO userDonationVO = userDonationDAO.findById(userDonationId);
         if (userDonationVO == null) {
             throw new RuntimeException("해당 기부 내역이 존재하지 않습니다.");
+        }
+
+        if (!Objects.equals(userDonationVO.getUserId(), member.getUserId())) {
+            throw new RuntimeException("해당 유저는 삭제 권한이 없습니다. (본인만 삭제 가능)");
         }
 
         userDonationDAO.deleteUserDonation(userDonationId);

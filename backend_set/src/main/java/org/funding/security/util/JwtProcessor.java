@@ -19,7 +19,7 @@ public class JwtProcessor {
   static private final long TOKEN_VALID_MILLISECOND = 1000L * 60 * 5;
 
   // 개발용 고정 Secret Key
-  private String secretKey = "4중대_1소대장_김태영_28사단_병장_김태영";
+  private String secretKey = "8oP5JazHXh8E7NAS48xCgHIgdwL/7BvetKx+CfGvIqk=";
   private Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
 
@@ -43,6 +43,29 @@ public class JwtProcessor {
             .compact();
   }
 
+  public String generateTokenWithUserIdAndRole(String subject, Long userId, String role) {
+    return Jwts.builder()
+            .setSubject(subject)
+            .claim("userId", userId)
+            .claim("role", role)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALID_MILLISECOND))
+            .signWith(key)
+            .compact();
+  }
+
+
+  public String generateTokenWithUserId(String subject, Long userId) {
+    return Jwts.builder()
+            .setSubject(subject)                    // 사용자 식별자 (username 등)
+            .claim("userId", userId)                // userId 클레임 추가
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECOND))
+            .signWith(key)
+            .compact();
+  }
+
+
   public String generateTokenWithExpiry(String subject, Long tokenValidTime) {
     return Jwts.builder()
             .setSubject(subject)                    // 사용자 식별자
@@ -51,6 +74,27 @@ public class JwtProcessor {
             .signWith(key)                         // 서명
             .compact();                            // 문자열 생성
   }
+
+  public Long getUserId(String token) {
+    Claims claims = Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
+    Object userIdObj = claims.get("userId");
+    if (userIdObj == null) return null;
+
+    if (userIdObj instanceof Integer) {
+      return ((Integer) userIdObj).longValue();
+    } else if (userIdObj instanceof Long) {
+      return (Long) userIdObj;
+    } else if (userIdObj instanceof String) {
+      return Long.parseLong((String) userIdObj);
+    }
+    return null;  // 타입이 예상과 다르면 null 반환
+  }
+
 
   public String getUsername(String token) {
     return Jwts.parserBuilder()

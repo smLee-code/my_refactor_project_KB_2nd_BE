@@ -19,7 +19,10 @@ public class VotesService {
     private final VotesDAO votesDAO;
 
     @Transactional
-    public VotesResponseDTO toggleVote(VotesRequestDTO requestDTO) {
+    public VotesResponseDTO toggleVote(Long projectId, Long userId) {
+        VotesRequestDTO requestDTO = new VotesRequestDTO();
+        requestDTO.setProjectId(projectId);
+        requestDTO.setUserId(userId);
         VotesVO existingVote = votesDAO.selectVotes(requestDTO);
 
         if (existingVote != null) {
@@ -54,7 +57,10 @@ public class VotesService {
     }
 
     @Transactional
-    public void deleteVotes(VotesRequestDTO requestDTO) {
+    public void deleteVotes(Long projectId, Long userId) {
+        VotesRequestDTO requestDTO = new VotesRequestDTO();
+        requestDTO.setProjectId(projectId);
+        requestDTO.setUserId(userId);
         VotesVO votesVO = votesDAO.selectVotes(requestDTO);
 
         if(votesVO == null) {
@@ -85,7 +91,7 @@ public class VotesService {
     }
 
 
-    public Boolean hasVoted(VotesRequestDTO requestDTO) {
+    public Boolean hasVoted(VotesRequestDTO requestDTO, Long userId) {
         VotesVO votesVO = votesDAO.selectVotes(requestDTO);
 
         if(votesVO == null) {
