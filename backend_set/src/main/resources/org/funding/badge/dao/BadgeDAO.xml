@@ -6,7 +6,7 @@
 
     <!--뱃지 생성 -->
     <insert id="insertBadge" parameterType="org.funding.badge.vo.BadgeVO">
-        INSERT INTO badge (name, description, autoGrantCondition)
+        INSERT INTO badge (name, description, auto_grant_condition)
         VALUES (#{name}, #{description}, #{autoGrantCondition})
     </insert>
 
@@ -15,7 +15,7 @@
         UPDATE badge
         SET name = #{name},
             description = #{description},
-            autoGrantCondition = #{autoGrantCondition}
+            auto_grant_condition = #{autoGrantCondition}
         WHERE badgeId = #{badgeId}
     </update>
 
@@ -27,14 +27,14 @@
 
     <!--단일 뱃지 조회 -->
     <select id="selectBadgeById" resultType="org.funding.badge.dto.BadgeResponseDTO" parameterType="long">
-        SELECT badgeId, name, description, autoGrantCondition
+        SELECT badgeId, name, description, auto_grant_condition
         FROM badge
         WHERE badgeId = #{badgeId}
     </select>
 
     <!--모든 뱃지 조회 -->
     <select id="selectAllBadges" resultType="org.funding.badge.dto.BadgeResponseDTO">
-        SELECT badgeId, name, description, autoGrantCondition
+        SELECT badgeId, name, description, auto_grant_condition
         FROM badge
     </select>
 
@@ -42,7 +42,7 @@
 
     <!-- 자동 부여 가능한 모든 뱃지를 조회 -->
     <select id="selectAutoGrantBadges" resultType="org.funding.badge.vo.BadgeVO">
-        SELECT * FROM badge WHERE autoGrantCondition IS NOT NULL
+        SELECT * FROM badge WHERE auto_grant_condition IS NOT NULL
     </select>
 
     <!-- 유저가 이미 보유한 뱃지인지 확인 -->
@@ -58,6 +58,99 @@
         INSERT INTO user_badge (user_id, badge_id, granted_at)
         VALUES (#{userId}, #{badgeId}, NOW())
     </insert>
+
+    <!-- 1. 업체 인증: 유저가 참여한 프로젝트 중 펀딩 완료된 프로젝트가 있는지 확인 -->
+    <select id="hasCompletedFundedProject" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM project
+            WHERE user_id = #{userId}
+              AND progress = 'FUNDED' -- 펀딩 완료 상태
+        )
+    </select>
+
+    <!-- 2. 전문가: 유저의 역할이 관리자(ADMIN)인지 확인 -->
+    <select id="isAdmin" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM member
+            WHERE user_id = #{userId}
+              AND role = 'ROLE_ADMIN'
+        )
+    </select>
+
+    <!-- 3. 기부너: 유저가 기부 참여한 기록이 있는지 확인 -->
+    <select id="hasDonated" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM user_donation
+            WHERE user_donation_id = #{userId}
+        )
+    </select>
+
+    <!-- 4. 챌린저: 유저가 챌린지 참여한 기록이 있는지 확인 -->
+    <select id="hasJoinedChallenge" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM user_challenge
+            WHERE user_challenge_id = #{userId}
+        )
+    </select>
+
+    <!-- 5. 금융러: 유저가 금융상품 가입했는지 확인 -->
+    <select id="hasSubscribedFinancialProduct" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM user_saving
+            WHERE user_saving_id = #{userId}
+
+            UNION ALL
+
+            SELECT 1
+            FROM user_loan
+            WHERE user_loan_id = #{userId}
+        )
+    </select>
+
+
+    <!-- 6. 인플루언서: 유저가 작성한 프로젝트에 댓글이 10개 이상 있는지 확인 -->
+    <select id="hasProjectWithTenOrMoreComments" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM project p
+                     JOIN comment c
+                          ON c.target_type = 'Project'
+                              AND c.target_id = p.project_id
+            WHERE p.user_id = #{userId}
+            GROUP BY p.project_id
+            HAVING COUNT(c.comment_id) >= 10
+        )
+    </select>
+
+
+    <!-- 7. 댓글왕: 유저가 단 댓글이 10개 이상인지 확인 -->
+    <select id="hasPostedTenComments" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM comment
+            WHERE user_id = #{userId}
+            GROUP BY user_id
+            HAVING COUNT(comment_id) >= 10
+        )
+    </select>
+
+    <!-- 8. 히트메이커: 유저가 작성한 프로젝트에 좋아요 10개 이상 -->
+    <select id="hasProjectWithTenOrMoreLikes" resultType="boolean" parameterType="long">
+        SELECT EXISTS(
+            SELECT 1
+            FROM project p
+                     JOIN votes v ON v.project_id = p.project_id
+            WHERE p.user_Id = #{userId}
+            GROUP BY p.project_id
+            HAVING COUNT(v.vote_id) >= 10
+        )
+    </select>
+
 
 
 </mapper>

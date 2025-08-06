@@ -11,3 +11,4 @@ public class UserBadgeVO {
     private Long badgeId; // 뱃지 id
     private LocalDateTime grantedAt; // 획득 날짜
 }
+

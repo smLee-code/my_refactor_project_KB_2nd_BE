@@ -1,6 +1,7 @@
 package org.funding.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.badge.service.BadgeService;
 import org.funding.security.util.JwtProcessor;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.dto.MemberSignupDTO;
@@ -22,6 +23,7 @@ public class MemberService {
     private final MemberDAO memberDAO;
     private final PasswordEncoder passwordEncoder;
     private final JwtProcessor jwtProcessor;
+    private final BadgeService badgeService;
 
     public void signup(MemberSignupDTO signupDTO) {
 
@@ -54,6 +56,9 @@ public class MemberService {
         if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다, 회원이 없습니다"); // 임시 에러처리
         }
+
+        // 뱃지 자동 부여 검증
+        badgeService.checkAndGrantBadges(member.getUserId());
 
         return jwtProcessor.generateTokenWithRole(member.getUsername(), String.valueOf(member.getRole()));
     }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.funding.S3.vo.enumType.ImageType;
-
 import java.time.LocalDateTime;
 
 @Data
