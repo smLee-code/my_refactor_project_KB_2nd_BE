@@ -17,8 +17,8 @@ public class RetryVotesService {
     private final FundDAO fundDAO;
 
     // 투표 등록
-    public String doVote(DoVoteRequestDTO voteRequestDTO) {
-        boolean alreadyVoted = retryVotesDAO.existsVoteByUserIdAndFundingId(voteRequestDTO.getUserId(), voteRequestDTO.getFundId());
+    public String doVote(DoVoteRequestDTO voteRequestDTO, Long userId) {
+        boolean alreadyVoted = retryVotesDAO.existsVoteByUserIdAndFundingId(userId, voteRequestDTO.getFundId());
         // 중복 검사
         if (alreadyVoted) {
             throw new IllegalStateException("이미 투표하신 펀딩입니다.");
@@ -32,7 +32,7 @@ public class RetryVotesService {
         }
 
         RetryVotesVO retryVotesVO = new RetryVotesVO();
-        retryVotesVO.setUserId(voteRequestDTO.getUserId());
+        retryVotesVO.setUserId(userId);
         retryVotesVO.setFundingId(voteRequestDTO.getFundId());
         retryVotesDAO.addRetryVotes(retryVotesVO);
 
@@ -46,8 +46,8 @@ public class RetryVotesService {
     }
 
     // 투표 취소
-    public String deleteVote(DoVoteRequestDTO voteRequestDTO) {
-        boolean alreadyVoted = retryVotesDAO.existsVoteByUserIdAndFundingId(voteRequestDTO.getUserId(), voteRequestDTO.getFundId());
+    public String deleteVote(DoVoteRequestDTO voteRequestDTO, Long userId) {
+        boolean alreadyVoted = retryVotesDAO.existsVoteByUserIdAndFundingId(userId, voteRequestDTO.getFundId());
         // 투표 취소방지
         if (!alreadyVoted) {
             throw new IllegalStateException("투표를 안하셨기에 투표를 취소 할 수 없습니다.");

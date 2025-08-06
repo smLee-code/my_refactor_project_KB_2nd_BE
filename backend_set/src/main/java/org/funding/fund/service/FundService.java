@@ -23,6 +23,9 @@ import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.vo.ProjectVO;
 import org.funding.project.vo.enumType.ProjectProgress;
+import org.funding.user.dao.MemberDAO;
+import org.funding.user.vo.MemberVO;
+import org.funding.user.vo.enumType.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +56,7 @@ public class FundService {
     private final FundKeywordService fundKeywordService;
     private final ProjectDAO projectDAO;
     private final BadgeService badgeService;
+    private final MemberDAO memberDAO;
 
     /**
      * 적금 펀딩 생성
@@ -62,7 +66,7 @@ public class FundService {
      * @param request 적금 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images) {
+    public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating savings fund with name: {}", request.getName());
 
@@ -95,6 +99,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -140,7 +145,7 @@ public class FundService {
      * @param request 대출 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createLoanFund(FundProductRequestDTO.LoanRequest request, List<MultipartFile> images) {
+    public String createLoanFund(FundProductRequestDTO.LoanRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating loan fund with name: {}", request.getName());
             
@@ -177,6 +182,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -220,7 +226,7 @@ public class FundService {
      * @param request 챌린지 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request, List<MultipartFile> images) {
+    public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating challenge fund with name: {}", request.getName());
             
@@ -254,6 +260,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -297,7 +304,7 @@ public class FundService {
      * @param request 기부 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createDonationFund(FundProductRequestDTO.DonationRequest request, List<MultipartFile> images) {
+    public String createDonationFund(FundProductRequestDTO.DonationRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating donation fund with name: {}", request.getName());
             
@@ -332,6 +339,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -582,12 +590,22 @@ public class FundService {
      * @param fundId 삭제할 펀딩 ID
      * @return 성공 메시지
      */
-    public String deleteFund(Long fundId) {
+    public String deleteFund(Long fundId, Long userId) {
         try {
             // 1. 펀딩 존재 여부 확인
             FundDetailResponseDTO existingFund = getFundDetail(fundId);
             Long productId = existingFund.getProductId();
             FundType fundType = existingFund.getFundType();
+
+            // 유저 관리자 인지 검증
+            MemberVO member = memberDAO.findById(userId);
+            if (fundType == null) {
+                throw new RuntimeException("해당 유저는 존재하지 않습니다.");
+            }
+
+            if (member.getRole() != Role.ROLE_ADMIN) {
+                throw new RuntimeException("해당 유저는 관리자가 아닙니다.");
+            }
             
             // 2. fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
             fundDAO.delete(fundId);

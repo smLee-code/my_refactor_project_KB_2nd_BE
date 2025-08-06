@@ -7,7 +7,6 @@ import org.funding.comment.vo.enumType.TargetType;
 @Data
 public class InsertCommentRequestDTO {
 
-    private Long userId;
     private String content;
 
     private TargetType targetType;
@@ -17,7 +16,6 @@ public class InsertCommentRequestDTO {
     public CommentVO toVO() {
         CommentVO commentVO = new CommentVO();
 
-        commentVO.setUserId(userId);
         commentVO.setContent(content);
         commentVO.setTargetType(targetType);
         commentVO.setTargetId(targetId);

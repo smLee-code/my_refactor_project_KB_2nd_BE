@@ -18,8 +18,9 @@ public class CommentService {
 
     private final CommentDAO commentDAO;
 
-    public CommentResponseDTO addComment(InsertCommentRequestDTO requestDTO) {
+    public CommentResponseDTO addComment(InsertCommentRequestDTO requestDTO, Long userId) {
         CommentVO commentVO = requestDTO.toVO();
+        commentVO.setUserId(userId);
         commentDAO.insertComment(commentVO);
         Long commentId = commentVO.getCommentId();
 

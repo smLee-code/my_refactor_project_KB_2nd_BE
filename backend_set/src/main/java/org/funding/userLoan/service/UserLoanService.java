@@ -9,6 +9,7 @@ import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
+import org.funding.user.vo.enumType.Role;
 import org.funding.userLoan.dao.UserLoanDAO;
 import org.funding.userLoan.dto.ApproveUserLoanRequestDTO;
 import org.funding.userLoan.dto.CancelLoanRequestDTO;
@@ -28,9 +29,9 @@ public class UserLoanService {
     private final LoanDAO loanDAO;
 
     // 대출 승인 신청
-    public ResponseEntity<UserLoanResponseDTO> applyLoan(Long fundId, UserLoanRequestDTO loanRequestDTO) {
+    public ResponseEntity<UserLoanResponseDTO> applyLoan(Long fundId, UserLoanRequestDTO loanRequestDTO, Long userId) {
         // 멤버 예외처리
-        MemberVO member = memberDAO.findById(loanRequestDTO.getUserId());
+        MemberVO member = memberDAO.findById(userId);
         if (member == null) {
             throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
         }
@@ -54,7 +55,7 @@ public class UserLoanService {
         }
 
         UserLoanVO userLoan = new UserLoanVO();
-        userLoan.setUserId(loanRequestDTO.getUserId());
+        userLoan.setUserId(userId);
         userLoan.setFundId(fundId);
         userLoan.setLoanAmount(loanRequestDTO.getLoanAmount());
         userLoan.setLoanAccess(SuccessType.PENDING);
@@ -69,9 +70,9 @@ public class UserLoanService {
     }
 
     // 대출 승인 취소
-    public void cancelLoan(Long userLoanId, CancelLoanRequestDTO cancelLoanRequestDTO) {
+    public void cancelLoan(Long userLoanId, Long userId) {
         // 회원 예외처리
-        MemberVO member = memberDAO.findById(cancelLoanRequestDTO.getUserId());
+        MemberVO member = memberDAO.findById(userId);
         if (member == null) {
             throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
         }
@@ -91,8 +92,12 @@ public class UserLoanService {
     }
 
     // 대출 승인 (관리자용)
-    public String approveLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO) {
-        Long userId = approveUserLoanRequestDTO.getUserId();
+    public String approveLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new RuntimeException("관리자만 접근 가능합니다.");
+        }
+
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
 
         validateMember(userId);
@@ -109,8 +114,11 @@ public class UserLoanService {
     }
 
     // 대출 반려
-    public String rejectLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO) {
-        Long userId = approveUserLoanRequestDTO.getUserId();
+    public String rejectLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new RuntimeException("관리자만 접근 가능합니다.");
+        }
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
 
         validateMember(userId);
@@ -126,8 +134,11 @@ public class UserLoanService {
     }
 
     // 대출 지급
-    public String processLoanPayment(ApproveUserLoanRequestDTO approveUserLoanRequestDTO) {
-        Long userId = approveUserLoanRequestDTO.getUserId();
+    public String processLoanPayment(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new RuntimeException("관리자만 접근 가능합니다.");
+        }
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
 
         validateMember(userId);

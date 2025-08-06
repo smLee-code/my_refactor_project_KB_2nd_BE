@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.emailAuth.dao.EmailDAO;
 import org.funding.emailAuth.vo.EmailAuthVO;
 import org.funding.emailAuth.service.EmailService;
+import org.funding.security.util.Auth;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ public class EmailAuthController {
 
     private final EmailService emailService;
     private final EmailDAO emailDAO;
+
 
     @PostMapping(value="/send", produces = "application/json; charset=UTF-8")
     public ResponseEntity<Map<String, String>> sendCode(@RequestParam String email) {
