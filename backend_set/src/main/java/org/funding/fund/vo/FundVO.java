@@ -21,4 +21,5 @@ public class FundVO {
     private LocalDateTime endAt; // 종료 날짜
     private String financialInstitution; // 금융사
     private Integer retryVotesCount; // 재출시 투표 갯수
+    private Long uploadUserId; // 작성한 유저 id
 }

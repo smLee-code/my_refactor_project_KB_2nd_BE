@@ -7,5 +7,4 @@ import org.funding.userLoan.vo.enumType.SuccessType;
 public class ApproveUserLoanRequestDTO {
     private SuccessType type;
     private Long userLoanId;
-    private Long userId;
 }
