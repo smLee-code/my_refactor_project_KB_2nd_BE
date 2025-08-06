@@ -91,7 +91,7 @@ public class VotesService {
     }
 
 
-    public Boolean hasVoted(VotesRequestDTO requestDTO, Long userId) {
+    public Boolean hasVoted(VotesRequestDTO requestDTO) {
         VotesVO votesVO = votesDAO.selectVotes(requestDTO);
 
         if(votesVO == null) {
