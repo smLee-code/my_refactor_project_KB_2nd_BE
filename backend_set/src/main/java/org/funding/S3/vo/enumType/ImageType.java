@@ -2,6 +2,7 @@ package org.funding.S3.vo.enumType;
 
 public enum ImageType {
     Funding, Project;
+
     public static ImageType fromString(String value) {
         for (ImageType type : ImageType.values()) {
             if (type.name().equals(value)) {

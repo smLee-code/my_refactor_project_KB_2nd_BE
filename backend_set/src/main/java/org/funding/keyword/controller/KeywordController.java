@@ -25,11 +25,19 @@ public class KeywordController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<KeywordVO>> getAllKeywords(@RequestParam("categoryName") String categoryName) {
-        List<KeywordVO> allKeywords = keywordService.findAllKeywordsByCategoryName(categoryName);
+    public ResponseEntity<List<KeywordVO>> getAllKeywords() {
+        List<KeywordVO> allKeywords = keywordService.findAllKeywords();
 
         return new ResponseEntity<>(allKeywords, HttpStatus.OK);
     }
+
+    @GetMapping("/category")
+    public ResponseEntity<List<KeywordVO>> getAllKeywordsByCategoryName(@RequestParam("categoryName") String categoryName) {
+        List<KeywordVO> allKeywordsByCategory = keywordService.findAllKeywordsByCategoryName(categoryName);
+
+        return new ResponseEntity<>(allKeywordsByCategory, HttpStatus.OK);
+    }
+
 
     @PostMapping("")
     public ResponseEntity<String> createKeyword(@RequestBody KeywordRequestDTO requestDTO) {

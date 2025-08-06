@@ -10,6 +10,10 @@
         where keyword_id = #{keywordId}
     </select>
 
+    <select id="selectAllKeywords" resultType="org.funding.keyword.vo.KeywordVO">
+        select *
+        from keywords
+    </select>
 
     <select id="selectKeywordByName" parameterType="String" resultType="org.funding.keyword.vo.KeywordVO">
         select *

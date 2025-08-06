@@ -4,7 +4,7 @@
 
     <mapper namespace="org.funding.user.dao.MemberDAO">
 
-        <insert id="insertMember" parameterType="org.funding.user.vo.MemberVO">
+        <insert id="insertMember" parameterType="org.funding.user.vo.MemberVO" useGeneratedKeys="true" keyProperty="userId">
             INSERT INTO member (
                 username, password, email, nickname, phone_number, role, create_at, update_at
             ) VALUES (
