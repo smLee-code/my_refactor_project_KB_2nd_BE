@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.funding.S3.service.S3ImageService;
 import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
+import org.funding.badge.service.BadgeService;
 import org.funding.financialProduct.dao.*;
 import org.funding.financialProduct.dto.*;
 import org.funding.financialProduct.vo.*;
@@ -19,6 +20,12 @@ import org.funding.fund.dto.FundUpdateRequestDTO;
 import org.funding.fundKeyword.service.FundKeywordService;
 import org.funding.fundKeyword.dto.FundKeywordRequestDTO;
 import org.funding.keyword.vo.KeywordVO;
+import org.funding.project.dao.ProjectDAO;
+import org.funding.project.vo.ProjectVO;
+import org.funding.project.vo.enumType.ProjectProgress;
+import org.funding.user.dao.MemberDAO;
+import org.funding.user.vo.MemberVO;
+import org.funding.user.vo.enumType.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +54,9 @@ public class FundService {
     private final DonationDAO donationDAO;
     private final S3ImageService s3ImageService;
     private final FundKeywordService fundKeywordService;
+    private final ProjectDAO projectDAO;
+    private final BadgeService badgeService;
+    private final MemberDAO memberDAO;
 
     /**
      * 적금 펀딩 생성
@@ -56,7 +66,7 @@ public class FundService {
      * @param request 적금 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images) {
+    public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating savings fund with name: {}", request.getName());
 
@@ -89,6 +99,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -98,7 +109,15 @@ public class FundService {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
 
-            
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
+
+            // 뱃지 권한 검증 (추후에 토큰 으로 유저 추출로 바꿔야댐)
+            badgeService.checkAndGrantBadges(project.getUserId());
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
@@ -126,7 +145,7 @@ public class FundService {
      * @param request 대출 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createLoanFund(FundProductRequestDTO.LoanRequest request, List<MultipartFile> images) {
+    public String createLoanFund(FundProductRequestDTO.LoanRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating loan fund with name: {}", request.getName());
             
@@ -163,6 +182,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -171,6 +191,13 @@ public class FundService {
             if (images != null && images.size() > 0) {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
+
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
             
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -199,7 +226,7 @@ public class FundService {
      * @param request 챌린지 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request, List<MultipartFile> images) {
+    public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating challenge fund with name: {}", request.getName());
             
@@ -233,6 +260,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -241,6 +269,13 @@ public class FundService {
             if (images != null && images.size() > 0) {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
+
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
             
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -269,7 +304,7 @@ public class FundService {
      * @param request 기부 생성 요청 데이터
      * @return 성공 메시지
      */
-    public String createDonationFund(FundProductRequestDTO.DonationRequest request, List<MultipartFile> images) {
+    public String createDonationFund(FundProductRequestDTO.DonationRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("Creating donation fund with name: {}", request.getName());
             
@@ -304,6 +339,7 @@ public class FundService {
                 .launchAt(request.getLaunchDate().atStartOfDay()) // 00:00:00
                 .endAt(request.getEndDate().atTime(23, 59, 59)) // 23:59:59
                 .financialInstitution(request.getFinancialInstitution())
+                    .uploadUserId(userId)
                 .build();
             
             fundDAO.insert(fund);
@@ -312,6 +348,13 @@ public class FundService {
             if (images != null && images.size() > 0) {
                 s3ImageService.uploadImagesForPost(ImageType.Funding, product.getProductId(), images);
             }
+
+            // 펀딩시 프로젝트 상태 변경
+            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
+            if (project != null) {
+                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+            }
+            project.setProgress(ProjectProgress.FUNDED);
             
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -547,12 +590,22 @@ public class FundService {
      * @param fundId 삭제할 펀딩 ID
      * @return 성공 메시지
      */
-    public String deleteFund(Long fundId) {
+    public String deleteFund(Long fundId, Long userId) {
         try {
             // 1. 펀딩 존재 여부 확인
             FundDetailResponseDTO existingFund = getFundDetail(fundId);
             Long productId = existingFund.getProductId();
             FundType fundType = existingFund.getFundType();
+
+            // 유저 관리자 인지 검증
+            MemberVO member = memberDAO.findById(userId);
+            if (fundType == null) {
+                throw new RuntimeException("해당 유저는 존재하지 않습니다.");
+            }
+
+            if (member.getRole() != Role.ROLE_ADMIN) {
+                throw new RuntimeException("해당 유저는 관리자가 아닙니다.");
+            }
             
             // 2. fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
             fundDAO.delete(fundId);

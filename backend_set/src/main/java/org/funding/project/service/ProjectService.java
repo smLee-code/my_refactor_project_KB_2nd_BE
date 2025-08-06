@@ -187,10 +187,11 @@ public class ProjectService {
 
     @Transactional
 
-    public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO, List<MultipartFile> images) throws IOException {
+    public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO, List<MultipartFile> images, Long userId) throws IOException {
         // 1. 공통 프로젝트 정보 매핑 및 삽입
 
         ProjectVO projectVO = createRequestDTO.toCommonVO();
+        projectVO.setUserId(userId);
         projectDAO.insertProject(projectVO); // 이 호출 후 projectVO에 projectId가 채워질 것으로 예상
         Long projectId = projectVO.getProjectId(); // 삽입된 프로젝트의 ID
 
@@ -260,9 +261,11 @@ public class ProjectService {
         return responseDTO;
     }
 
-    public void deleteProject(Long projectId) {
+    public void deleteProject(Long projectId, Long userId) {
         ProjectVO projectVO = projectDAO.selectProjectById(projectId);
-
+        if (!Objects.equals(projectVO.getUserId(), userId)) {
+            throw new RuntimeException("해당 프로젝트의 작성자가 아닙니다.");
+        }
         switch (projectVO.getProjectType()) {
             case Savings:
                 projectDAO.deleteSavingsProjectById(projectId);

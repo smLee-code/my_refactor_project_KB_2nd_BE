@@ -18,9 +18,9 @@
     <!-- 펀딩 생성 -->
     <insert id="insert" parameterType="org.funding.fund.vo.FundVO" useGeneratedKeys="true" keyProperty="fundId">
         INSERT INTO fund (
-            product_id, project_id, progress, launch_at, end_at, financial_institution
+            product_id, project_id, progress, launch_at, end_at, financial_institution, upload_user_id
         ) VALUES (
-            #{productId}, #{projectId}, #{progress}, #{launchAt}, #{endAt}, #{financialInstitution}
+            #{productId}, #{projectId}, #{progress}, #{launchAt}, #{endAt}, #{financialInstitution}, #{uploadUserId}
         )
     </insert>
 

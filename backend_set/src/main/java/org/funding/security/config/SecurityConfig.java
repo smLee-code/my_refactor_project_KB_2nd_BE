@@ -102,8 +102,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 필터 등록 순서
             .addFilterBefore(encodingFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
             .addFilterBefore(authenticationErrorFilter, UsernamePasswordAuthenticationFilter.class)
-            //            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//            .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+           // .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
             // 예외 처리 핸들러
             .exceptionHandling()
@@ -129,49 +130,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/webjars/**",
                             "/mail/send",
                             "mail/verify",
-                            "/ai/ask",
-                            "/ai/fund",
-                            "/badge/create",
-                            "/badge/{id}",
-                            "/ai/{fundId}/ai-recommend",
-                            "/badge/all/badge",
-                            "/retryVotes/do",
-                            "/retryVotes/cancel",
-                            "/ai/analyze-image",
-                            "/api/project/**",
-                            "/api/category/**",
-                            "/api/keyword/**",
-                            "/api/mypage/**",
-//                            "/chat-app/**",
-//                            "/topic/**",
-                            "/api/chat/history/**",
-                            "/api/app/chat/history/**", "/api/votes/**",
-                            "/health", // 헬스체커 api 항상 열어놓을것!
-                            "/s3/images",
-                            "/userChallenge/{id}/verify",
-                            "/userChallenge/{id}",
-                            "/user-saving/saving",
-                            "/user-saving/donation/{id}",
-                            "/user-saving/donation-history/{id}",
-                            "/user-saving/{id}",
-                            "/user-saving/{id}",
-                            "/user-loan/{id}",
-                            "/user-loan/{id}",
-                            "/user-loan/approve",
-                            "/user-loan/reject",
-                            "/user-loan/payment",
-                            "/userSaving/apply",
-                            "/userSaving/cancel/{id}",
-                            "/userSaving/{id}",
-                            "/userSaving/user/{id}"
+                            "/api/member/**",
+                            "/health"// 헬스체커 api 항상 열어놓을것!
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
-            .antMatchers("/api/security/member").hasRole("MEMBER")
-            .antMatchers("/api/security/admin").hasRole("ADMIN")
+            .antMatchers("/api/security/member").hasRole("ROLE_NORMAL")
+            .antMatchers("/api/security/admin").hasRole("ROLE_ADMIN")
             .antMatchers("/api/fund/**").permitAll()  // 펀딩 API 테스트용 - 추후 인증 필요시 제거
-           //.antMatchers("/api/fund/create/**").hasRole("FINANCE")
-           //.antMatchers("/api/fund/list").permitAll()
-           //..antMatchers("/api/fund/admin").hasRole("ADMIN")
             .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
             .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
             .anyRequest().authenticated();
@@ -198,48 +163,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) throws Exception {
     web.ignoring().antMatchers(
             "/assets/**",
-            "/*",
             "/api/member/**",
-            "/api/project/**",
-            "/api/comment/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v2/api-docs",
             "/v3/api-docs",
-            "/mail/send",
-            "/mail/verify",
-            "/ai/ask",
-            "/ai/fund",
-            "/badge/create",
-            "/badge/{id}",
-            "/chat-app/**",
-            "/websocket/**",
-            "/ws/**",      // 혹시 사용하는 경로가 다를 경우 대비
-            "/topic/**",
-            "/api/chat/history/**",
-
-            "/badge/all/badge",
-            "/ai/{fundId}/ai-recommend",
-
-            "/api/votes/**",
-            "/health", // 헬스체커 api 항상 열어놓을것!
-            "/s3/images",
-            "/userChallenge/{id}/verify",
-            "/userChallenge/{id}",
-            "/user-saving/saving",
-            "/user-saving/donation/{id}",
-            "/user-saving/donation-history/{id}",
-            "/user-saving/{id}",
-            "/user-saving/{id}",
-            "/user-loan/{id}",
-            "/user-loan/{id}",
-            "/user-loan/approve",
-            "/user-loan/reject",
-            "/user-loan/payment",
-            "/userSaving/apply",
-            "/userSaving/cancel/{id}",
-            "/userSaving/{id}",
-            "/userSaving/user/{id}"
+            "/health" // 헬스체커 api 항상 열어놓을것
     );
   }
 }

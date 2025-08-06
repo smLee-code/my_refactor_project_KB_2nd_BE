@@ -18,7 +18,6 @@ import java.util.List;
 public class BadgeService {
 
     private final BadgeDAO badgeDAO;
-    private final VotesDAO votesDAO;
 
     // 뱃지 생성
     public void createBadge(CreateBadgeDTO createBadgeDTO) {
@@ -64,11 +63,15 @@ public class BadgeService {
             }
 
             boolean isEligible = switch (badge.getAutoGrantCondition()) {
-                // 예시: 투표를 3회 이상할시 뱃지 부여 (아직 기획 구체화 더 필요)
-                case "VOTE_3_AND_POST_2" -> {
-                    int voteCount = votesDAO.countVotesByUserId(userId);
-                    yield voteCount >= 3;
-                }
+
+                case "COMPLETED_FUNDED_PROJECT" -> badgeDAO.hasCompletedFundedProject(userId);
+                case "ROLE_ADMIN" -> badgeDAO.isAdmin(userId);
+                case "DONATED" -> badgeDAO.hasDonated(userId);
+                case "CHALLENGE_PARTICIPANT" -> badgeDAO.hasJoinedChallenge(userId);
+                case "FINANCIAL_SUBSCRIBER" -> badgeDAO.hasSubscribedFinancialProduct(userId);
+                case "INFLUENCER" -> badgeDAO.hasProjectWithTenOrMoreComments(userId);
+                case "COMMENT_MASTER" -> badgeDAO.hasPostedTenComments(userId);
+                case "HIT_PROJECT_MAKER" -> badgeDAO.hasProjectWithTenOrMoreLikes(userId);
                 default -> false;
             };
 

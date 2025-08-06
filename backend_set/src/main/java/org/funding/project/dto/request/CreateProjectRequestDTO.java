@@ -33,7 +33,6 @@ import java.util.List;
 public abstract class CreateProjectRequestDTO {
 
     // Project 공통 칼럼
-    private Long userId; // 제안자 id
     private ProjectType projectType; // 프로젝트 타입
     private String title; // 프로젝트 제목
     private String promotion; // 프로젝트 홍보글
@@ -43,7 +42,6 @@ public abstract class CreateProjectRequestDTO {
 
     public ProjectVO toCommonVO() {
         return ProjectVO.builder()
-                .userId(this.getUserId())
                 .projectType(this.getProjectType())
                 .title(this.getTitle())
                 .promotion(this.getPromotion())

@@ -13,6 +13,8 @@ public interface KeywordDAO {
 
     KeywordVO selectKeywordByName(String name);
 
+    List<KeywordVO> selectAllKeywords();
+
     List<KeywordVO> selectKeywordsByCategoryName(String categoryName);
 
     List<KeywordVO> selectKeywordsByCategoryId(Long categoryId);
@@ -20,6 +22,7 @@ public interface KeywordDAO {
     public void insertKeyword(KeywordRequestDTO requestDTO);
 
     void deleteKeyword(String name);
+
 
 
 }
