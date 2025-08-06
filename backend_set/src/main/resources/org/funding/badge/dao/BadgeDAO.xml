@@ -119,11 +119,11 @@
             SELECT 1
             FROM project p
                      JOIN comment c
-                          ON c.targetType = 'Project'
-                              AND c.targetId = p.projectId
-            WHERE p.userId = #{userId}
-            GROUP BY p.projectId
-            HAVING COUNT(c.commentId) >= 10
+                          ON c.target_type = 'Project'
+                              AND c.target_id = p.project_id
+            WHERE p.user_id = #{userId}
+            GROUP BY p.project_id
+            HAVING COUNT(c.comment_id) >= 10
         )
     </select>
 
@@ -132,7 +132,7 @@
     <select id="hasPostedTenComments" resultType="boolean" parameterType="long">
         SELECT EXISTS(
             SELECT 1
-            FROM project_comment
+            FROM comment
             WHERE user_id = #{userId}
             GROUP BY user_id
             HAVING COUNT(comment_id) >= 10
@@ -143,11 +143,11 @@
     <select id="hasProjectWithTenOrMoreLikes" resultType="boolean" parameterType="long">
         SELECT EXISTS(
             SELECT 1
-            FROM donation_project dp
-                     JOIN project_like pl ON dp.project_id = pl.project_id
-            WHERE dp.user_id = #{userId}
-            GROUP BY dp.project_id
-            HAVING COUNT(pl.like_id) >= 10
+            FROM project p
+                     JOIN votes v ON v.project_id = p.project_id
+            WHERE p.user_Id = #{userId}
+            GROUP BY p.project_id
+            HAVING COUNT(v.vote_id) >= 10
         )
     </select>
 
