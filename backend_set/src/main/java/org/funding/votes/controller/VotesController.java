@@ -44,7 +44,7 @@ public class VotesController {
         requestDTO.setProjectId(projectId);
         requestDTO.setUserId(userId);
 
-        Boolean voted = votesService.hasVoted(requestDTO, userId);
+        Boolean voted = votesService.hasVoted(requestDTO);
 
         return ResponseEntity.ok(voted);
     }
