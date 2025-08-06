@@ -35,7 +35,7 @@ public class MyPageService {
     private final VotesService votesService;
 
     // 현재 로그인한 사용자의 ID를 가져옴
-    private Long getCurrentUserId() {
+    public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
         // 임시 테스트용: 인증이 없어도 테스트 사용자 ID 반환
