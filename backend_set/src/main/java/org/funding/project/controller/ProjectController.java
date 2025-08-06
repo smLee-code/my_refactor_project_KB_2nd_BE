@@ -70,13 +70,16 @@ public class ProjectController {
         return ResponseEntity.ok(projectDetails);
     }
 
+
+    @Auth
     @GetMapping("/distribution/type")
-    public List<Map<String, Object>> getProjectTypeDistribution() {
+    public List<Map<String, Object>> getProjectTypeDistribution(HttpServletRequest request) {
         return projectService.getProjectTypeDistribution();
     }
 
+    @Auth
     @GetMapping("trend")
-    public Map<String, List<Integer>> getProjectTrend() {
+    public Map<String, List<Integer>> getProjectTrend(HttpServletRequest request) {
         return projectService.getProjectTrends();
     }
 
