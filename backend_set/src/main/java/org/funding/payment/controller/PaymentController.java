@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.funding.payment.dto.PaymentCompleteRequestDTO;
 import org.funding.payment.dto.PaymentCreateRequestDTO;
+import org.funding.security.util.Auth;
 import org.springframework.security.core.Authentication;
 import org.funding.payment.service.PaymentService;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
@@ -22,22 +24,18 @@ import java.util.Map;
 public class PaymentController {
     
     private final PaymentService paymentService;
-    
+
+    @Auth
     @PostMapping("/create")
     @ApiOperation(value = "결제 생성", notes = "결제를 위한 merchant_uid와 금액을 생성합니다.")
     public ResponseEntity<Map<String, Object>> createPayment(
             @RequestBody PaymentCreateRequestDTO request,
-            Authentication authentication) {
+            HttpServletRequest requestHeaders) {
         try {
             log.info("결제 정보 생성 요청 - fundId: {}", 
                 request.getFundId());
-            
-            // 사용자 ID 추출
-            // TODO: 인증 구현 후 주석 해제
-            // Long userId = paymentService.getUserIdFromAuthentication(authentication);
-            
-            // 임시로 userId 하드코딩 (테스트용)
-            Long userId = 1L;
+
+            Long userId = (Long) requestHeaders.getAttribute("userId");
             
             // 결제 정보 생성
             Map<String, Object> result = paymentService.createPaymentOrder(request, userId);
@@ -50,10 +48,12 @@ public class PaymentController {
                 .body(Map.of("success", false, "message", e.getMessage()));
         }
     }
-    
+
+    @Auth
     @PostMapping("/complete")
     @ApiOperation(value = "결제 완료", notes = "포트원 결제 완료 후 검증 및 펀딩 가입 처리를 합니다.")
-    public ResponseEntity<Map<String, Object>> completePayment(@RequestBody PaymentCompleteRequestDTO request) {
+    public ResponseEntity<Map<String, Object>> completePayment(@RequestBody PaymentCompleteRequestDTO request,
+                                                               HttpServletRequest requestHeaders) {
         log.info("===== 결제 완료 API 호출됨 =====");
         try {
             log.info("결제 완료 요청 - imp_uid: {}, merchant_uid: {}", 
@@ -70,6 +70,4 @@ public class PaymentController {
                 .body(Map.of("success", false, "message", "결제 처리 중 오류가 발생했습니다."));
         }
     }
-    
-    
 }

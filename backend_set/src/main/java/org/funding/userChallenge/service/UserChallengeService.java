@@ -35,7 +35,7 @@ public class UserChallengeService {
     private final ChallengeDAO challengeDAO;
 
     // 첼린지 가입 로직 (가입 전에 결제 로직 추가해줘야함)
-    public void applyChallenge(Long fundId, ApplyChallengeRequestDTO challengeRequestDTO) {
+    public void applyChallenge(Long fundId, Long userId) {
         FundVO fund = fundDAO.selectById(fundId);
 
         // 상품 예외처리
@@ -50,21 +50,21 @@ public class UserChallengeService {
         }
 
         // 유저 예외처리
-        MemberVO memberVO = memberDAO.findById(challengeRequestDTO.getUserId());
+        MemberVO memberVO = memberDAO.findById(userId);
         if (memberVO == null) {
             throw new RuntimeException("존재하지 않는 유저입니다.");
         }
 
 
         // 중복가입 예외처리
-        boolean isVerify = userChallengeDAO.existsByIdAndUserId(fundId, challengeRequestDTO.getUserId());
+        boolean isVerify = userChallengeDAO.existsByIdAndUserId(fundId, userId);
         if (isVerify) {
             throw new RuntimeException("이미 첼린지에 가입된 회원입니다");
         }
 
 
         UserChallengeVO userChallengeVO = new UserChallengeVO();
-        userChallengeVO.setUserId(challengeRequestDTO.getUserId());
+        userChallengeVO.setUserId(userId);
         userChallengeVO.setFundId(fundId);
         userChallengeDAO.insertUserChallenge(userChallengeVO);
     }
@@ -133,8 +133,8 @@ public class UserChallengeService {
     }
 
     // 챌린지 취소 로직
-    public void deleteChallenge(Long userChallengeId, DeleteChallengeRequestDTO deleteChallengeRequestDTO) {
-        MemberVO member = memberDAO.findById(deleteChallengeRequestDTO.getUserId());
+    public void deleteChallenge(Long userChallengeId, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
         if (member == null) {
             throw new RuntimeException("해당 유저는 존재하지 않는 유저입니다.");
         }

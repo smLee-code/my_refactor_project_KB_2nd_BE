@@ -9,11 +9,14 @@ import org.funding.fund.service.FundService;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.security.util.Auth;
+import org.funding.user.vo.MemberVO;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,35 +30,47 @@ public class FundController {
 
     //summary = "펀딩 상품 개설",
     //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다."
+    @Auth
     @PostMapping(value = "/create/savings", consumes = "multipart/form-data")
     public ResponseEntity<?> createSavingsFund(
             @RequestPart("savingInfo") FundProductRequestDTO.SavingsRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
-        fundService.createSavingsFund(request, images);
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest servletRequest) {
+        Long userId = (Long) servletRequest.getAttribute("userId");
+        fundService.createSavingsFund(request, images, userId);
         return ResponseEntity.ok("Savings fund successfully created.");
     }
 
+    @Auth
     @PostMapping(value = "/create/loan", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createLoanFund(
             @RequestPart("loanInfo") FundProductRequestDTO.LoanRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
-        fundService.createLoanFund(request, images);
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest servletRequest) {
+        Long userId = (Long) servletRequest.getAttribute("userId");
+        fundService.createLoanFund(request, images, userId);
         return ResponseEntity.ok("Loan fund successfully created.");
     }
 
+    @Auth
     @PostMapping(value = "/create/challenge", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createChallengeFund(
             @RequestPart("challengeInfo") FundProductRequestDTO.ChallengeRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
-        fundService.createChallengeFund(request, images);
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest servletRequest) {
+        Long userId = (Long) servletRequest.getAttribute("userId");
+        fundService.createChallengeFund(request, images, userId);
         return ResponseEntity.ok("Challenge fund successfully created.");
     }
 
+    @Auth
     @PostMapping(value = "/create/donation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createDonationFund(
             @RequestPart("donationInfo") FundProductRequestDTO.DonationRequest request,
-            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
-        fundService.createDonationFund(request, images);
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
+            HttpServletRequest servletRequest) {
+        Long userId = (Long) servletRequest.getAttribute("userId");
+        fundService.createDonationFund(request, images, userId);
         return ResponseEntity.ok("Donation fund successfully created.");
     }
 
@@ -147,10 +162,12 @@ public class FundController {
      * GET /api/fund/list?progress=Launch&fundType=Savings       (진행중인 적금 펀딩)
      * GET /api/fund/list?progress=End&fundType=Donation         (종료된 기부 펀딩)
      */
+    @Auth
     @GetMapping("/list")
     public ResponseEntity<List<FundListResponseDTO>> getFundsList(
             @RequestParam ProgressType progress,
-            @RequestParam(required = false) FundType fundType) {
+            @RequestParam(required = false) FundType fundType,
+            HttpServletRequest request) {
         List<FundListResponseDTO> funds = fundService.getFundsByProgressAndType(progress, fundType);
         return ResponseEntity.ok(funds);
     }
@@ -161,8 +178,10 @@ public class FundController {
      * fund_id로 펀딩 정보와 연관된 모든 상세 정보를 조회
      * (fund + financial_product + 타입별 상세 테이블)
      */
+    @Auth
     @GetMapping("/{fundId}")
-    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId) {
+    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId,
+                                                               HttpServletRequest request) {
         FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId);
         return ResponseEntity.ok(fundDetail);
     }
@@ -173,10 +192,12 @@ public class FundController {
      * fund_id로 펀딩과 연관된 모든 정보를 수정
      * 요청 바디에 수정하고자 하는 필드만 포함시키면 해당 필드만 업데이트됨
      */
+    @Auth
     @PutMapping("/{fundId}")
     public ResponseEntity<?> updateFund(
             @PathVariable Long fundId, 
-            @RequestBody FundUpdateRequestDTO request) {
+            @RequestBody FundUpdateRequestDTO request,
+            HttpServletRequest servletRequest) {
         String result = fundService.updateFund(fundId, request);
         return ResponseEntity.ok(Map.of("message", result));
     }
@@ -187,9 +208,12 @@ public class FundController {
      * fund_id로 펀딩과 관련된 모든 데이터를 삭제
      * (fund -> 타입별 테이블 -> financial_product 순서로 삭제)
      */
+    @Auth
     @DeleteMapping("/{fundId}")
-    public ResponseEntity<?> deleteFund(@PathVariable Long fundId) {
-        String result = fundService.deleteFund(fundId);
+    public ResponseEntity<?> deleteFund(@PathVariable Long fundId,
+                                        HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        String result = fundService.deleteFund(fundId, userId);
         return ResponseEntity.ok(Map.of("message", result));
     }
 }

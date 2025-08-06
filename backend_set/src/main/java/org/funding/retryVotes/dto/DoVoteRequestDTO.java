@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DoVoteRequestDTO {
-    private Long userId; // 재출시 희망자 id
     private Long fundId; // 펀딩 id
 }

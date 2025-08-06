@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.funding.keyword.dto.KeywordResponseDTO;
 import org.funding.project.dto.response.ProjectListDTO;
+import org.funding.security.util.Auth;
 import org.funding.user.dto.*;
 import org.funding.user.service.MyPageService;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.funding.votes.dto.VotesResponseDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -29,8 +31,9 @@ public class MyPageController {
         @ApiResponse(code = 401, message = "인증 실패"),
         @ApiResponse(code = 500, message = "서버 오류")
     })
+    @Auth
     @GetMapping("")
-    public ResponseEntity<?> getMyPageInfo() {
+    public ResponseEntity<?> getMyPageInfo(HttpServletRequest request) {
         try {
             MyPageResponseDTO myPageInfo = myPageService.getMyPageInfo();
             return ResponseEntity.ok(myPageInfo);

@@ -8,6 +8,7 @@ import org.funding.userSaving.dto.UserSavingRequestDTO;
 import org.funding.userSaving.vo.UserSavingVO;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -17,15 +18,15 @@ public class UserSavingService {
     private final UserSavingDAO userSavingDAO;
 
     // 저축 가입
-    public String applySaving(UserSavingRequestDTO userSavingRequestDTO) {
-        MemberVO member = memberDAO.findById(userSavingRequestDTO.getUserId());
+    public String applySaving(UserSavingRequestDTO userSavingRequestDTO, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
         if (member == null) {
             throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
         }
 
         UserSavingVO userSaving = new UserSavingVO();
-        userSaving.setUserId(userSaving.getUserId());
-        userSaving.setFundId(userSaving.getFundId());
+        userSaving.setUserId(userId);
+        userSaving.setFundId(userSavingRequestDTO.getFundId());
         userSaving.setSavingAmount(userSaving.getSavingAmount());
 
         userSavingDAO.insertUserSaving(userSaving);
@@ -33,10 +34,13 @@ public class UserSavingService {
     }
 
     // 저축 상품 해지
-    public String cancelSaving(Long userSavingId) {
+    public String cancelSaving(Long userSavingId, Long userId) {
         UserSavingVO userSaving = userSavingDAO.findById(userSavingId);
         if (userSaving == null) {
             throw new RuntimeException("해당 저축에 신청되어있지 않습니다.");
+        }
+        if (!Objects.equals(userSaving.getUserId(), userId)) {
+            throw new RuntimeException("해지 권한이 없습니다. (본인만 가능)");
         }
 
         userSavingDAO.deleteUserSaving(userSavingId);
