@@ -131,7 +131,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/mail/send",
                             "mail/verify",
                             "/api/member/**",
-                            "/health"// 헬스체커 api 항상 열어놓을것!
+                            "/health",// 헬스체커 api 항상 열어놓을것!
+                            // 프로젝트 펀딩 조회 api
+                            "/api/fund/{fundId}",
+                            "/api/fund/list",
+                            "/api/fund/template",
+                            "/api/project/list",
+                            "/api/project/list/detail/{id}",
+                            "/api/project/list/detail/{id}/full",
+                            "/api/project/related/{id}",
+                            "/api/project/top"
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("NORMAL")
@@ -168,7 +177,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**",
             "/v2/api-docs",
             "/v3/api-docs",
-            "/health" // 헬스체커 api 항상 열어놓을것
+            "/health", // 헬스체커 api 항상 열어놓을것
+            "/api/fund/{fundId}",
+            "/api/fund/list",
+            "/api/fund/template",
+            "/api/project/list",
+            "/api/project/list/detail/{id}",
+            "/api/project/list/detail/{id}/full",
+            "/api/project/related/{id}",
+            "/api/project/top"
     );
   }
 }
