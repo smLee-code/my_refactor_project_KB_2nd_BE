@@ -102,8 +102,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 필터 등록 순서
             .addFilterBefore(encodingFilter(), org.springframework.security.web.csrf.CsrfFilter.class)
             .addFilterBefore(authenticationErrorFilter, UsernamePasswordAuthenticationFilter.class)
-            //            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-//            .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+           // .addFilterBefore(jwtUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
             // 예외 처리 핸들러
             .exceptionHandling()
@@ -164,9 +165,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/userSaving/cancel/{id}",
                             "/userSaving/{id}",
                             "/userSaving/user/{id}",
-                            "/badge/create",
-                            "/badge/all/badge",
-                            "/badge/{id}"
+//                            "/badge/create",
+                            "/badge/all/badge"
+//                            "/badge/{id}"
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("MEMBER")
@@ -243,9 +244,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/userSaving/cancel/{id}",
             "/userSaving/{id}",
             "/userSaving/user/{id}",
-            "/badge/create",
-            "/badge/all/badge",
-            "/badge/{id}"
+//            "/badge/create",
+            "/badge/all/badge"
+//            "/badge/{id}"
     );
   }
 }

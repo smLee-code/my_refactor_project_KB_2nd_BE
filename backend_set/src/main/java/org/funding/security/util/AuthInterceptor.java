@@ -38,8 +38,13 @@ public class AuthInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-            String username = jwtProcessor.getUsername(token);
-            request.setAttribute("username", username);
+            Long userId = jwtProcessor.getUserId(token);
+            if (userId == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "토큰에서 userId를 찾을 수 없습니다.");
+                return false;
+            }
+
+            request.setAttribute("userId", userId);
 
             return true;
         }
