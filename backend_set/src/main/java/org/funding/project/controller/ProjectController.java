@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/project")
@@ -68,6 +69,20 @@ public class ProjectController {
         ProjectResponseDTO projectDetails = projectService.getProjectDetails(id);
         return ResponseEntity.ok(projectDetails);
     }
+
+
+    @Auth
+    @GetMapping("/distribution/type")
+    public List<Map<String, Object>> getProjectTypeDistribution(HttpServletRequest request) {
+        return projectService.getProjectTypeDistribution();
+    }
+
+    @Auth
+    @GetMapping("trend")
+    public Map<String, List<Integer>> getProjectTrend(HttpServletRequest request) {
+        return projectService.getProjectTrends();
+    }
+
 
     @Auth
     @GetMapping("/list")
