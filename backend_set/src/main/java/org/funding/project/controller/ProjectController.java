@@ -109,7 +109,8 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDTO> createProject(
             @RequestPart("projectInfo") CreateProjectRequestDTO createRequestDTO,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
-            HttpServletRequest request) throws IOException {
+            HttpServletRequest request
+    ) throws IOException {
         Long userId = (Long) request.getAttribute("userId");
         ProjectResponseDTO responseDTO = projectService.createProject(createRequestDTO, images, userId);
         return ResponseEntity.ok(responseDTO);
