@@ -116,7 +116,6 @@
             f.financial_institution as financialInstitution,
             f.retry_votes_count as retryVotesCount,
             fp.name as name,
-            fp.thumbnail as thumbnail,
             fp.fund_type as fundType
         FROM fund f
         INNER JOIN financial_product fp ON f.product_id = fp.product_id
