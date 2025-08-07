@@ -51,6 +51,7 @@ public class MyPageController {
         @ApiResponse(code = 200, message = "조회 성공"),
         @ApiResponse(code = 401, message = "인증 실패")
     })
+    @Auth
     @GetMapping("/keywords")
     public ResponseEntity<?> getMyKeywords() {
         try {
@@ -71,6 +72,7 @@ public class MyPageController {
         @ApiResponse(code = 401, message = "인증 실패"),
         @ApiResponse(code = 400, message = "잘못된 요청")
     })
+    @Auth
     @PutMapping("/keywords")
     public ResponseEntity<?> updateMyKeywords(@RequestBody List<String> keywords) {
         try {
@@ -91,6 +93,7 @@ public class MyPageController {
         @ApiResponse(code = 401, message = "인증 실패"),
         @ApiResponse(code = 400, message = "잘못된 요청")
     })
+    @Auth
     @PutMapping("/account")
     public ResponseEntity<?> updateAccountInfo(@RequestBody UpdateAccountRequestDTO request) {
         try {
@@ -110,6 +113,7 @@ public class MyPageController {
         @ApiResponse(code = 200, message = "조회 성공"),
         @ApiResponse(code = 401, message = "인증 실패")
     })
+    @Auth
     @GetMapping("/votes")
     public ResponseEntity<?> getMyVotes() {
         try {
@@ -129,6 +133,7 @@ public class MyPageController {
         @ApiResponse(code = 200, message = "조회 성공"),
         @ApiResponse(code = 401, message = "인증 실패")
     })
+    @Auth
     @GetMapping("/projects")
     public ResponseEntity<?> getMyProjects() {
         try {

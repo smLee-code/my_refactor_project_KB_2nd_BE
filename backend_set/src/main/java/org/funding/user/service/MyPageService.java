@@ -20,6 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,36 +40,25 @@ public class MyPageService {
 
     // 현재 로그인한 사용자의 ID를 가져옴
     public Long getCurrentUserId() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            Object userIdObj = request.getAttribute("userId");
+            if (userIdObj != null) {
+                return (Long) userIdObj;
+            }
+        }
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
-        // 임시 테스트용: 인증이 없어도 테스트 사용자 ID 반환
-        if (authentication == null || authentication.getName() == null || "anonymousUser".equals(authentication.getName())) {
-            System.out.println("DEBUG: No authentication found, using test user ID: 1");
-//            return 1L; // 테스트용 사용자 ID // 추후 삭제
-            return null;
-        }
-
-        
-        String username = authentication.getName();
-        System.out.println("DEBUG: Authentication username = " + username);
-        
-        // username으로 먼저 시도
-        MemberVO member = memberDAO.findByUsername(username);
-        
-        // username으로 찾지 못하면 email로 시도 // 추후 삭제
-        if (member == null) {
-            member = memberDAO.findByEmail(username);
-            System.out.println("DEBUG: Trying email lookup, found member = " + (member != null ? member.getUsername() : "null"));
-        } else {
-            System.out.println("DEBUG: Found member by username = " + member.getUsername());
+        if (authentication != null && authentication.getName() != null && !"anonymousUser".equals(authentication.getName())) {
+            String username = authentication.getName();
+            MemberVO member = memberDAO.findByUsername(username);
+            if (member != null) {
+                return member.getUserId();
+            }
         }
         
-        if (member == null) {
-            System.out.println("DEBUG: Member not found, using test user ID: 1");
-            return 1L; // 테스트용 사용자 ID
-        }
-        
-        return member.getUserId();
+        throw new IllegalStateException("인증된 사용자 정보를 찾을 수 없습니다.");
     }
 
     // 4.1 마이페이지 조회
