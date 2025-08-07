@@ -44,7 +44,7 @@ public class VotesController {
         requestDTO.setProjectId(projectId);
         requestDTO.setUserId(userId);
 
-        Boolean voted = votesService.hasVoted(requestDTO, userId);
+        Boolean voted = votesService.hasVoted(requestDTO);
 
         return ResponseEntity.ok(voted);
     }
@@ -68,10 +68,8 @@ public class VotesController {
         return ResponseEntity.ok(votedProjects);
     }
 
-    @Auth
     @GetMapping("/count")
-    public ResponseEntity<Long> countVotes(@RequestParam("projectId") Long projectId,
-                                           HttpServletRequest request) {
+    public ResponseEntity<Long> countVotes(@RequestParam("projectId") Long projectId) {
 
         Long voteCount = votesService.countVotes(projectId);
 

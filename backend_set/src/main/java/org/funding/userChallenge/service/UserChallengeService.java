@@ -1,6 +1,7 @@
 package org.funding.userChallenge.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.badge.service.BadgeService;
 import org.funding.challengeLog.dao.ChallengeLogDAO;
 import org.funding.challengeLog.vo.ChallengeLogVO;
 import org.funding.financialProduct.dao.ChallengeDAO;
@@ -33,6 +34,7 @@ public class UserChallengeService {
     private final FundDAO fundDAO;
     private final FinancialProductDAO financialProductDAO;
     private final ChallengeDAO challengeDAO;
+    private final BadgeService badgeService;
 
     // 첼린지 가입 로직 (가입 전에 결제 로직 추가해줘야함)
     public void applyChallenge(Long fundId, Long userId) {
@@ -67,6 +69,9 @@ public class UserChallengeService {
         userChallengeVO.setUserId(userId);
         userChallengeVO.setFundId(fundId);
         userChallengeDAO.insertUserChallenge(userChallengeVO);
+
+        // 뱃지 권한 부여 검증
+        badgeService.checkAndGrantBadges(userId);
     }
 
 
