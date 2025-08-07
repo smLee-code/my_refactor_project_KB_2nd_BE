@@ -252,6 +252,8 @@ public class FundService {
                 .reward(request.getReward())
                 .rewardCondition(request.getRewardCondition())
                     .verifyStandard(request.getVerifyStandard()) // 검증 기준 추가
+                    .challengeStartDate(request.getChallengeStartDate())
+                    .challengeEndDate(request.getChallengeEndDate())
                 .build();
             
             challengeDAO.insertChallenge(challenge);
