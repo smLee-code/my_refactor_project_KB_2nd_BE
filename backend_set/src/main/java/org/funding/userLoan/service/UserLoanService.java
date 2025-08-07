@@ -1,6 +1,7 @@
 package org.funding.userLoan.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.badge.service.BadgeService;
 import org.funding.financialProduct.dao.FinancialProductDAO;
 import org.funding.financialProduct.dao.LoanDAO;
 import org.funding.financialProduct.vo.LoanVO;
@@ -27,6 +28,7 @@ public class UserLoanService {
     private final FundDAO fundDAO;
     private final UserLoanDAO userLoanDAO;
     private final LoanDAO loanDAO;
+    private final BadgeService badgeService;
 
     // 대출 승인 신청
     public ResponseEntity<UserLoanResponseDTO> applyLoan(Long fundId, UserLoanRequestDTO loanRequestDTO, Long userId) {
@@ -61,6 +63,9 @@ public class UserLoanService {
         userLoan.setLoanAccess(SuccessType.PENDING);
         userLoan.setFullPayment(false);
         userLoanDAO.insertUserLoan(userLoan);
+
+        // 뱃지 권한 부여
+        badgeService.checkAndGrantBadges(userId);
 
         UserLoanResponseDTO userLoanResponseDTO = new UserLoanResponseDTO();
         userLoanResponseDTO.setUserName(member.getUsername());

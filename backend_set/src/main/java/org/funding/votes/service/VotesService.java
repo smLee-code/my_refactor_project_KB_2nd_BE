@@ -1,8 +1,11 @@
 package org.funding.votes.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.badge.service.BadgeService;
 import org.funding.exception.DuplicateVoteException;
+import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectResponseDTO;
+import org.funding.project.vo.ProjectVO;
 import org.funding.votes.dao.VotesDAO;
 import org.funding.votes.dto.VotesRequestDTO;
 import org.funding.votes.dto.VotesResponseDTO;
@@ -17,6 +20,8 @@ import java.util.List;
 public class VotesService {
 
     private final VotesDAO votesDAO;
+    private BadgeService badgeService;
+    private ProjectDAO projectDAO;
 
     @Transactional
     public VotesResponseDTO toggleVote(Long projectId, Long userId) {
@@ -34,6 +39,11 @@ public class VotesService {
         // 투표하지 않은 상태 → 추가
         VotesVO votesVO = requestDTO.toVO();
         votesDAO.insertVotes(votesVO);
+
+        // 뱃지 권한 부여
+        ProjectVO project = projectDAO.selectProjectById(projectId);
+        Long projectUserId = project.getUserId();
+        badgeService.checkAndGrantBadges(projectUserId);
 
         VotesVO selectedVotesVO = votesDAO.selectVotesById(votesVO.getVoteId());
         return VotesResponseDTO.fromVO(selectedVotesVO);

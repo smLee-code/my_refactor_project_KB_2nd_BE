@@ -1,6 +1,7 @@
 package org.funding.userDonation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.badge.service.BadgeService;
 import org.funding.financialProduct.dao.DonationDAO;
 import org.funding.financialProduct.vo.DonationVO;
 import org.funding.fund.dao.FundDAO;
@@ -25,6 +26,7 @@ public class UserDonationService {
     private final UserDonationDAO userDonationDAO;
     private final DonationDAO donationDAO;
     private final FundDAO fundDAO;
+    private final BadgeService badgeService;
 
     // 기부
     public DonateResponseDTO donate(DonateRequestDTO donateRequestDTO, Long userId) {
@@ -49,6 +51,9 @@ public class UserDonationService {
         userDonationVO.setDonationAmount(donateRequestDTO.getDonateAmount());
         userDonationVO.setAnonymous(donateRequestDTO.isAnonymous());
         userDonationDAO.insertUserDonation(userDonationVO);
+
+        // 뱃지 권한 검증 (기부 참여)
+        badgeService.checkAndGrantBadges(userId);
 
         DonateResponseDTO donateResponseDTO = new DonateResponseDTO();
         donateResponseDTO.setUserName(member.getUsername());
