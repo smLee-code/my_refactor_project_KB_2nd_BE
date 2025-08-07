@@ -3,6 +3,7 @@ package org.funding.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.funding.security.util.JwtProcessor;
 import org.funding.user.dto.MemberLoginDTO;
+import org.funding.user.dto.MemberLoginResponseDTO;
 import org.funding.user.dto.MemberSignupDTO;
 import org.funding.user.service.MemberService;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,9 @@ public class MemberController {
     }
 
     @PostMapping(value = "/login", produces = "application/json; charset=UTF-8")
-    public ResponseEntity<String> login(@RequestBody MemberLoginDTO loginDTO) {
-        String jwt = memberService.login(loginDTO.getEmail(), loginDTO.getPassword());
-        return ResponseEntity.ok(jwt);
+    public ResponseEntity<MemberLoginResponseDTO> login(@RequestBody MemberLoginDTO loginDTO) {
+        MemberLoginResponseDTO response = memberService.login(loginDTO.getEmail(), loginDTO.getPassword());
+        return ResponseEntity.ok(response);
     }
 
     // 테스트용 토큰 생성

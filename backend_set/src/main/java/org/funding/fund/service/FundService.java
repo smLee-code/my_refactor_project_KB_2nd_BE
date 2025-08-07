@@ -110,8 +110,8 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
-            if (project != null) {
+            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
+            if (project == null) {
                 throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
             }
             project.setProgress(ProjectProgress.FUNDED);
@@ -194,8 +194,8 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
-            if (project != null) {
+            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
+            if (project == null) {
                 throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
             }
             project.setProgress(ProjectProgress.FUNDED);
@@ -277,8 +277,8 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
-            if (project != null) {
+            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
+            if (project == null) {
                 throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
             }
             project.setProgress(ProjectProgress.FUNDED);
@@ -359,8 +359,8 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectProjectById(request.getProjectId());
-            if (project != null) {
+            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
+            if (project == null) {
                 throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
             }
             project.setProgress(ProjectProgress.FUNDED);

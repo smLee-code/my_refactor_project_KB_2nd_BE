@@ -92,8 +92,7 @@ public class MyPageService {
     }
 
     // 4.2.2 키워드 조회
-    public List<KeywordResponseDTO> getMyKeywords() {
-        Long userId = getCurrentUserId();
+    public List<KeywordResponseDTO> getMyKeywords(Long userId) {
 
         List<Long> keywordIds = userKeywordDAO.selectKeywordIdsByUserId(userId);
 

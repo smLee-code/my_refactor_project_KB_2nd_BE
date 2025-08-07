@@ -5,6 +5,7 @@ import org.funding.badge.service.BadgeService;
 import org.funding.security.util.JwtProcessor;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.dto.MemberSignupDTO;
+import org.funding.user.dto.MemberLoginResponseDTO;
 import org.funding.user.vo.MemberVO;
 import org.funding.user.vo.enumType.Role;
 import org.funding.userKeyword.dto.UserKeywordRequestDTO;
@@ -51,7 +52,7 @@ public class MemberService {
                 });
     }
 
-    public String login(String email, String password) {
+    public MemberLoginResponseDTO login(String email, String password) {
         MemberVO member = memberDAO.findByEmail(email);
         if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다, 회원이 없습니다");
@@ -60,10 +61,12 @@ public class MemberService {
         // 뱃지 검증
         badgeService.checkAndGrantBadges(member.getUserId());
 
-        return jwtProcessor.generateTokenWithUserIdAndRole(
+        String token = jwtProcessor.generateTokenWithUserIdAndRole(
                 member.getUsername(),
                 member.getUserId(),
                 String.valueOf(member.getRole())
         );
+        
+        return new MemberLoginResponseDTO(token, member.getRole());
     }
 }

@@ -53,9 +53,11 @@ public class MyPageController {
     })
     @Auth
     @GetMapping("/keywords")
-    public ResponseEntity<?> getMyKeywords() {
+    public ResponseEntity<?> getMyKeywords(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+
         try {
-            List<KeywordResponseDTO> keywords = myPageService.getMyKeywords();
+            List<KeywordResponseDTO> keywords = myPageService.getMyKeywords(userId);
             return ResponseEntity.ok(keywords);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

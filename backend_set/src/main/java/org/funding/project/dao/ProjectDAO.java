@@ -60,4 +60,6 @@ public interface ProjectDAO {
     ProjectVO findById(Long projectId); // 프로젝트 조회
 
     List<Map<String, Object>> getProjectTrends();
+
+    ProjectVO selectSimpleProjectById(Long projectId);
 }
