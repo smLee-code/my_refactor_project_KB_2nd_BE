@@ -34,7 +34,7 @@
 
     <!--모든 뱃지 조회 -->
     <select id="selectAllBadges" resultType="org.funding.badge.dto.BadgeResponseDTO">
-        SELECT badgeId, name, description, auto_grant_condition
+        SELECT badge_id, name, description, auto_grant_condition
         FROM badge
     </select>
 
