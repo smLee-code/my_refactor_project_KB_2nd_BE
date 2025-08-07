@@ -65,6 +65,7 @@ public class ProjectController {
         return ResponseEntity.ok(projectDetails);
     }
 
+
     @GetMapping("/distribution/type")
     public List<Map<String, Object>> getProjectTypeDistribution() {
         return projectService.getProjectTypeDistribution();

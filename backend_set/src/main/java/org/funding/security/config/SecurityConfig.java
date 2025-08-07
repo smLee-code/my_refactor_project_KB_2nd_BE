@@ -141,7 +141,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/project/list/detail/{id}/full",
                             "/api/project/related/{id}",
                             "/api/project/top",
-                            "/api/project/trend"
+                            "/api/project/trend",
+                            "/api/project/distribution/type"
                     ).permitAll()
             .antMatchers("/api/security/all").permitAll()
             .antMatchers("/api/security/member").hasRole("NORMAL")
@@ -187,7 +188,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/project/list/detail/{id}/full",
             "/api/project/related/{id}",
             "/api/project/top",
-            "/api/project/trend"
+            "/api/project/trend",
+            "/api/project/distribution/type"
     );
   }
 }
