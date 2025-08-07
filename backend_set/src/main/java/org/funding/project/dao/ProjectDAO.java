@@ -62,4 +62,6 @@ public interface ProjectDAO {
     List<Map<String, Object>> getProjectTrends();
 
     List<ProjectListDTO> getProjectsByKeyword(Long userId);
+
+    ProjectVO selectSimpleProjectById(Long projectId);
 }

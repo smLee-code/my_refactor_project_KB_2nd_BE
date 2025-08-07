@@ -329,4 +329,20 @@
         WHERE project_id = #{projectId}
     </select>
 
+        <select id="selectSimpleProjectById" parameterType="long" resultType="org.funding.project.vo.ProjectVO">
+            SELECT
+                project_id,
+                user_id,
+                project_type,
+                title,
+                promotion,
+                progress,
+                deadline,
+                create_at
+            FROM project
+            WHERE project_id = #{projectId}
+        </select>
+
+
+
 </mapper>
