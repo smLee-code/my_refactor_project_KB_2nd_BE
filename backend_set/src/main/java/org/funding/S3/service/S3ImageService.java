@@ -86,5 +86,21 @@ public class S3ImageService {
         return imageUrl.substring(imageUrl.indexOf(".com/") + 5);
     }
 
+    // 이미지 업로드 후 url 추출
+    public String uploadSingleImageAndGetUrl(MultipartFile file) throws IOException {
+        String folder = "challenge/";  // 필요하면 경로 지정
+        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+        String key = folder + fileName;
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+
+        amazonS3.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), metadata));
+
+
+        return amazonS3.getUrl(bucketName, key).toString();
+    }
+
 
 }
