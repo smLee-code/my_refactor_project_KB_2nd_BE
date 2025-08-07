@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/mail")
+@RequestMapping("/api/mail")
 @RequiredArgsConstructor
 public class EmailAuthController {
 
@@ -26,10 +26,15 @@ public class EmailAuthController {
 
     @PostMapping(value="/send", produces = "application/json; charset=UTF-8")
     public ResponseEntity<Map<String, String>> sendCode(@RequestParam String email) {
-        String code = emailService.sendVerificationEmail(email);
-        emailDAO.insertAuthCode(email, code);
-        Map<String, String> response = Map.of("message", "인증 코드가 이메일로 전송되었습니다.");
-        return ResponseEntity.ok(response);
+        try {
+            String code = emailService.sendVerificationEmail(email);
+            emailDAO.insertAuthCode(email, code);
+            Map<String, String> response = Map.of("message", "인증 코드가 이메일로 전송되었습니다.");
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, String> response = Map.of("message", "이메일 전송 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     @PostMapping("/verify")
