@@ -68,10 +68,8 @@ public class VotesController {
         return ResponseEntity.ok(votedProjects);
     }
 
-    @Auth
     @GetMapping("/count")
-    public ResponseEntity<Long> countVotes(@RequestParam("projectId") Long projectId,
-                                           HttpServletRequest request) {
+    public ResponseEntity<Long> countVotes(@RequestParam("projectId") Long projectId) {
 
         Long voteCount = votesService.countVotes(projectId);
 

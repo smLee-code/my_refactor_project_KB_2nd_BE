@@ -57,6 +57,7 @@ public class MemberService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다, 회원이 없습니다");
         }
 
+        // 뱃지 검증
         badgeService.checkAndGrantBadges(member.getUserId());
 
         return jwtProcessor.generateTokenWithUserIdAndRole(
