@@ -194,7 +194,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/project/related/{id}",
             "/api/project/top",
             "/api/project/trend",
-            "/api/project/distribution/type"
+            "/api/project/distribution/type",
             "api/mail/**"
     );
   }
