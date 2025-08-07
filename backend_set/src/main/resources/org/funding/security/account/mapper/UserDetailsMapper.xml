@@ -22,12 +22,13 @@
         <collection property="authList" resultMap="authMap" />
     </resultMap>
 
+
     <!-- 사용자 정보 조회 쿼리 -->
     <select id="get" resultMap="memberMap">
-        select m.username, password, email, reg_date, update_date, auth
-        from tbl_member m
-                 left outer join tbl_member_auth a on m.username = a.username
-        where m.username = #{username}
+        SELECT username, password, email, update_at, role
+        FROM member
+        WHERE username = #{username}
     </select>
+
 
 </mapper>
