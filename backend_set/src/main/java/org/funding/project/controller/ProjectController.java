@@ -55,6 +55,18 @@ public class ProjectController {
         return ResponseEntity.ok(project);
     }
 
+    @Auth
+    @GetMapping("/list/keyword")
+    public ResponseEntity<List<ProjectListDTO>> getProjectsByUserKeywords(HttpServletRequest request) {
+        // JWT 필터 또는 인터셉터에서 userId를 Attribute로 설정했다고 가정
+        Long userId = (Long) request.getAttribute("userId");
+
+        List<ProjectListDTO> list = projectService.getProjectsByUserKeywords(userId);
+        return ResponseEntity.ok(list);
+    }
+
+
+
     /**
      * 새로 추가: [GET] /api/projects/list/detail/{id}/full
      * 프로젝트 + 타입별 상세 정보까지 조회
@@ -86,14 +98,6 @@ public class ProjectController {
         List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type);
 
         return ResponseEntity.ok(projectWithDetailList);
-
-//        if (keyword != null && !keyword.isEmpty()) {
-//            return projectService.searchByKeyword(keyword);
-//        } else if (type != null && !type.isEmpty()) {
-//            return projectService.searchByType(type);
-//        } else {
-//            return projectService.getAllProjects();
-//        }
     }
 
     @GetMapping("/related/{id}")
