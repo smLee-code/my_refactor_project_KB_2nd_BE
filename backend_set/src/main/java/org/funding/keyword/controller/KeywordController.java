@@ -27,9 +27,9 @@ public class KeywordController {
         return new ResponseEntity<>(keyword, HttpStatus.OK);
     }
 
-    @Auth
+
     @GetMapping("")
-    public ResponseEntity<List<KeywordVO>> getAllKeywords(HttpServletRequest request) {
+    public ResponseEntity<List<KeywordVO>> getAllKeywords() {
         List<KeywordVO> allKeywords = keywordService.findAllKeywords();
 
         return new ResponseEntity<>(allKeywords, HttpStatus.OK);
