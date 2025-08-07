@@ -50,8 +50,13 @@ public class S3ImageService {
 
             String imageUrl = amazonS3.getUrl(bucketName, key).toString();
 
-            S3ImageVO imageVO = new S3ImageVO(imageType, postId, imageUrl, LocalDateTime.now());
-            s3ImageDAO.insertImage(imageVO);
+            S3ImageVO s3ImageVO = new S3ImageVO();
+            s3ImageVO.setPostId(postId);
+            s3ImageVO.setImageType(imageType);
+            s3ImageVO.setImageUrl(imageUrl);
+            s3ImageVO.setCreatedAt(LocalDateTime.now());
+
+            s3ImageDAO.insertImage(s3ImageVO);
         }
     }
 
