@@ -25,4 +25,5 @@ public interface UserChallengeDAO {
 
     // 유저 챌린지 참여 취소
     void deleteUserChallenge(@Param("userChallengeId") Long id);
+
 }

@@ -27,6 +27,13 @@
         SELECT log_date FROM challenge_log WHERE user_challenge_id = #{userChallengeId} AND verified = true
     </select>
 
+    <select id="selectAllLogsByUserChallengeId" resultType="org.funding.challengeLog.vo.ChallengeLogVO">
+        SELECT *
+        FROM challenge_log
+        WHERE user_challenge_id = #{userChallengeId}
+        ORDER BY log_date ASC
+    </select>
+
     <select id="existsByUserChallengeIdAndLogDate" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
