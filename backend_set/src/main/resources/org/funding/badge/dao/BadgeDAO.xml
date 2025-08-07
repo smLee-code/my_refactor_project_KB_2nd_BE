@@ -16,20 +16,20 @@
         SET name = #{name},
             description = #{description},
             auto_grant_condition = #{autoGrantCondition}
-        WHERE badgeId = #{badgeId}
+        WHERE badge_id = #{badgeId}
     </update>
 
     <!--뱃지 삭제 -->
     <delete id="deleteBadge" parameterType="long">
         DELETE FROM badge
-        WHERE badgeId = #{badgeId}
+        WHERE badge_id = #{badgeId}
     </delete>
 
     <!--단일 뱃지 조회 -->
     <select id="selectBadgeById" resultType="org.funding.badge.dto.BadgeResponseDTO" parameterType="long">
-        SELECT badgeId, name, description, auto_grant_condition
+        SELECT badge_id, name, description, auto_grant_condition
         FROM badge
-        WHERE badgeId = #{badgeId}
+        WHERE badge_id = #{badgeId}
     </select>
 
     <!--모든 뱃지 조회 -->
