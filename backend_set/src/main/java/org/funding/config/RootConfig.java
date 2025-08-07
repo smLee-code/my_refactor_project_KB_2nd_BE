@@ -50,6 +50,7 @@ import javax.sql.DataSource;
         "org.funding.userDonation.service",
         "org.funding.userLoan.service",
         "org.funding.userSaving.service",
+        "org.funding.challengeLog.service",
 })
 @MapperScan({
         "org.funding.user.dao",

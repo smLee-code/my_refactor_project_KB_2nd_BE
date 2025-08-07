@@ -61,7 +61,7 @@ import java.util.List;
         "org.funding.userDonation.controller",
         "org.funding.userLoan.controller",
         "org.funding.userSaving.controller",
-        
+        "org.funding.challengeLog.controller"
 
 }) // Spring MVC용 컴포넌트 등록을 위한 스캔 패키지
 public class ServletConfig implements WebMvcConfigurer {
