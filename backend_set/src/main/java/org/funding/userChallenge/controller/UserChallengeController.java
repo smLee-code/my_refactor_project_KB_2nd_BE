@@ -49,12 +49,13 @@ public class UserChallengeController {
     @Auth
     @PostMapping(value = "/{id}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> verifyChallenge(@PathVariable("id") Long id,
-                                             @RequestPart("file") MultipartFile file,
-                                             @RequestPart("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                             @RequestParam("file") MultipartFile file,
+                                             @RequestParam("date") String date,
                                              HttpServletRequest request) throws IOException {
         Long userId = (Long) request.getAttribute("userId");
+        LocalDate localDate = LocalDate.parse(date);
         String imageUrl = s3ImageService.uploadSingleImageAndGetUrl(file);
-        userChallengeService.verifyDailyChallenge(id, userId, imageUrl, date);
+        userChallengeService.verifyDailyChallenge(id, userId, imageUrl, localDate);
         return ResponseEntity.ok("인증 완료");
     }
 }

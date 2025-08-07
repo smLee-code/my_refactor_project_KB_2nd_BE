@@ -90,7 +90,6 @@ public class FundProductRequestDTO {
         // 공통 필드
         private String name;
         private String detail;
-        private String thumbnail;
         private String joinCondition;
         
         // 챌린지 전용 필드

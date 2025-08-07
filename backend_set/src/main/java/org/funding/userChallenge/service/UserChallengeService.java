@@ -88,6 +88,8 @@ public class UserChallengeService {
         FundVO fund = fundDAO.selectById(userChallenge.getFundId());
         ChallengeVO challenge = challengeDAO.selectByProductId(fund.getProductId());
 
+        System.out.println("sdsds" + challenge);
+
         LocalDate startDate = challenge.getChallengeStartDate();
         LocalDate endDate = challenge.getChallengeEndDate();
 
@@ -102,6 +104,8 @@ public class UserChallengeService {
             throw new RuntimeException("해당 날짜는 이미 인증되었습니다.");
         }
 
+        System.out.println("유저유저" + userId);
+        System.out.println("유저 챌린지" + userChallengeId);
         // 4. 챌린지 가입 여부 확인
         boolean isVerify = userChallengeDAO.existsByIdAndUserId(userChallengeId, userId);
         if (!isVerify) {
