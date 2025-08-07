@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -143,12 +144,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/project/top",
                             "/api/project/trend"
                     ).permitAll()
-            .antMatchers("/api/security/all").permitAll()
-            .antMatchers("/api/security/member").hasRole("NORMAL")
-            .antMatchers("/api/security/admin").hasRole("ADMIN")
-            .antMatchers("/api/fund/**").permitAll()  // 펀딩 API 테스트용 - 추후 인증 필요시 제거
-            .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
-            .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
+                    .antMatchers("/api/security/all").permitAll()
+                    .antMatchers("/api/security/member").hasRole("NORMAL")
+                    .antMatchers("/api/security/admin").hasRole("ADMIN")
+                    .antMatchers("/api/fund/**").permitAll()  // 펀딩 API 테스트용 - 추후 인증 필요시 제거
+                    .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
+                    .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
+                    .antMatchers(HttpMethod.GET, "/api/keyword").permitAll()
+                    .antMatchers("/api/keyword").authenticated()
             .anyRequest().authenticated();
   }
 
