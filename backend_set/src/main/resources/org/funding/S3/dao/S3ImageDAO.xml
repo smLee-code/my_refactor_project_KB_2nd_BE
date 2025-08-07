@@ -6,7 +6,7 @@
 
 <!--    이미지 저장-->
     <insert id="insertImage" parameterType="org.funding.S3.vo.S3ImageVO">
-        INSERT INTO image (image_type, post_id, image_url, create_at)
+        INSERT INTO s3_image (image_type, post_id, image_url, created_at)
         VALUES (#{imageType}, #{postId}, #{imageUrl}, #{createdAt})
     </insert>
 

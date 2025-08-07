@@ -17,9 +17,9 @@
     <!-- 챌린지 상품 생성 -->
     <insert id="insertChallenge" parameterType="org.funding.financialProduct.vo.ChallengeVO" useGeneratedKeys="true" keyProperty="challengeId">
         INSERT INTO challenge (
-            product_id, challenge_period_days, reward, reward_condition, verify_standard
+            product_id, challenge_period_days, reward, reward_condition, verify_standard, challenge_start_date, challenge_end_date
         ) VALUES (
-            #{productId}, #{challengePeriodDays}, #{reward}, #{rewardCondition}, #{verifyStandard}
+            #{productId}, #{challengePeriodDays}, #{reward}, #{rewardCondition}, #{verifyStandard}, #{challengeStartDate}, #{challengeEndDate}
         )
     </insert>
 
@@ -34,7 +34,7 @@
     <!-- 금융상품 ID로 챌린지 상품 조회 -->
     <select id="selectByProductId" parameterType="long" resultMap="challengeMap">
         SELECT 
-            challenge_id, product_id, challenge_period_days, reward, reward_condition, verify_standard
+            challenge_id, product_id, challenge_period_days, reward, reward_condition, verify_standard, challenge_start_date, challenge_end_date
         FROM challenge
         WHERE product_id = #{productId}
     </select>
