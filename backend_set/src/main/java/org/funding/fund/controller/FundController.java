@@ -162,12 +162,10 @@ public class FundController {
      * GET /api/fund/list?progress=Launch&fundType=Savings       (진행중인 적금 펀딩)
      * GET /api/fund/list?progress=End&fundType=Donation         (종료된 기부 펀딩)
      */
-    @Auth
     @GetMapping("/list")
     public ResponseEntity<List<FundListResponseDTO>> getFundsList(
             @RequestParam ProgressType progress,
-            @RequestParam(required = false) FundType fundType,
-            HttpServletRequest request) {
+            @RequestParam(required = false) FundType fundType) {
         List<FundListResponseDTO> funds = fundService.getFundsByProgressAndType(progress, fundType);
         return ResponseEntity.ok(funds);
     }
@@ -178,10 +176,8 @@ public class FundController {
      * fund_id로 펀딩 정보와 연관된 모든 상세 정보를 조회
      * (fund + financial_product + 타입별 상세 테이블)
      */
-    @Auth
     @GetMapping("/{fundId}")
-    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId,
-                                                               HttpServletRequest request) {
+    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId) {
         FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId);
         return ResponseEntity.ok(fundDetail);
     }

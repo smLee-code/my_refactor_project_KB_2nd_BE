@@ -15,7 +15,10 @@ import org.funding.project.dto.response.*;
 import org.funding.project.vo.*;
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.service.ProjectKeywordService;
+import org.funding.user.service.MyPageService;
 import org.funding.votes.dao.VotesDAO;
+import org.funding.votes.dto.VotesRequestDTO;
+import org.funding.votes.service.VotesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,8 +31,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectService {
 
-
+    private final MyPageService myPageService;
     private final ProjectKeywordService projectKeywordService;
+    private final VotesService votesService;
 
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
@@ -58,7 +62,6 @@ public class ProjectService {
         Object detailInfo = null;
 
 
-
         switch (project.getProjectType()) {
             case Loan:
                 detailInfo = projectDAO.selectLoanByProjectId(projectId);
@@ -81,7 +84,6 @@ public class ProjectService {
         }
 
 
-
         ProjectResponseDTO dto = new ProjectResponseDTO();
         dto.setBasicInfo(project);
         dto.setDetailInfo(detailInfo);
@@ -94,6 +96,44 @@ public class ProjectService {
         dto.setImageList(images);
 
         return dto;
+    }
+
+    public List<ProjectListDTO> getProjectWithDetailList(String keyword, String type) {
+
+        Long loginUserId = myPageService.getCurrentUserId();
+        List<ProjectListDTO> projectList;
+
+        // 프로젝트 기본 칼럼 및 좋아요 수 query
+        if (type != null && !type.isEmpty()) {
+            projectList = projectDAO.searchProjectsByType(type);
+        }
+        else if (keyword != null && !keyword.isEmpty()) {
+            projectList = projectDAO.searchProjectsByKeyword(keyword);
+        }
+        else {
+            projectList = projectDAO.getAllProjects();
+        }
+
+        // 프로젝트 썸네일 이미지 추출
+        for (ProjectListDTO project : projectList) {
+            Long projectId = project.getProjectId();
+            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
+            project.setThumbnailImage(image);
+        }
+
+        // 프로젝트 별로 로그인 된 사용자가 투표했는지 여부
+        if (loginUserId == null) {
+            // 비 로그인 시 -> 투표 여부 항상 false로 처리
+            projectList.forEach(project -> project.setIsLiked(false));
+        }
+        else {
+            projectList.forEach(project -> {
+                Boolean isLiked = votesService.hasVoted(new VotesRequestDTO(loginUserId, project.getProjectId()));
+                project.setIsLiked(isLiked);
+            });
+        }
+
+        return projectList;
     }
 
     public List<ProjectListDTO> searchByType(String type) {
@@ -137,7 +177,7 @@ public class ProjectService {
 
     public List<ProjectListDTO> getRelatedProjects(Long projectId) {
 
-        ProjectListDTO baseProject =  ProjectListDTO.fromVO(projectDAO.selectProjectById(projectId));
+        ProjectListDTO baseProject = ProjectListDTO.fromVO(projectDAO.selectProjectById(projectId));
         List<KeywordVO> baseKeywords = projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId());
 
         List<ProjectListDTO> sameTypeProjects = projectDAO.searchProjectsByType(String.valueOf(baseProject.getProjectType()));
@@ -250,7 +290,7 @@ public class ProjectService {
                         .map(keywordId -> new ProjectKeywordRequestDTO(projectId, keywordId))
                         .toList();
 
-        for(ProjectKeywordRequestDTO projectKeywordRequest : projectKeywordRequestList) {
+        for (ProjectKeywordRequestDTO projectKeywordRequest : projectKeywordRequestList) {
             projectKeywordService.mapProjectKeyword(projectKeywordRequest);
         }
 
@@ -309,6 +349,91 @@ public class ProjectService {
     public void deleteKeywordFromProject(ProjectKeywordRequestDTO requestDTO) {
 
         projectKeywordService.unmapProjectKeyword(requestDTO);
+    }
+
+
+//    public List<Map<String, Object>> getProjectTypeDistribution() {
+//        List<Map<String, Object>> rawData = projectDAO.getProjectTypeDistribution();
+//
+//        int total = rawData.stream()
+//                .mapToInt(row -> ((Number) row.get("count")).intValue())
+//                .sum();
+//
+//        // 퍼센트 계산
+//        return rawData.stream().map(row -> {
+//            Map<String, Object> result = new HashMap<>();
+//            result.put("label", row.get("type"));
+//            if (total == 0){
+//                result.put("value", 0);
+//            }
+//            result.put("value", Math.round(((Number) row.get("count")).doubleValue() / total * 100));
+//            return result;
+//        }).toList();
+//    }
+
+    public List<Map<String, Object>> getProjectTypeDistribution() {
+        List<Map<String, Object>> rawData = projectDAO.getProjectTypeDistribution();
+
+        // 총합 계산
+        int total = rawData.stream()
+                .mapToInt(row -> ((Number) row.get("count")).intValue())
+                .sum();
+
+        // 순서가 유지되는 타입 목록 (한글명)
+        Map<String, String> typeNameMap = new LinkedHashMap<>();
+        typeNameMap.put("Savings", "적금");
+        typeNameMap.put("Loan", "대출");
+        typeNameMap.put("Challenge", "챌린지");
+        typeNameMap.put("Donation", "기부");
+
+        // 타입별 색상 매핑
+        Map<String, String> typeColorMap = Map.of(
+                "Savings", "#3B82F6",   // 파란색
+                "Loan", "#10B981",      // 초록색
+                "Challenge", "#F59E0B", // 주황색
+                "Donation", "#8B5CF6"   // 보라색
+        );
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+
+        typeNameMap.forEach((typeKey, typeName) -> {
+            int count = rawData.stream()
+                    .filter(row -> typeKey.equals(row.get("type")))
+                    .mapToInt(row -> ((Number) row.get("count")).intValue())
+                    .findFirst()
+                    .orElse(0);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("label", typeName); // 한글명
+            result.put("color", typeColorMap.get(typeKey)); // 색상
+            result.put("value", total == 0 ? 0 : Math.round((double) count / total * 100));
+            resultList.add(result);
+        });
+
+        return resultList;
+    }
+
+    public Map<String, List<Integer>> getProjectTrends() {
+        List<Map<String, Object>> rawData = projectDAO.getProjectTrends();
+
+        List<String> types = Arrays.asList("Savings", "Loan", "Donation", "Challenge");
+        List<String> weeks = Arrays.asList("Week1", "Week2", "Week3", "Week4", "Week5");
+
+        Map<String, List<Integer>> trends = new LinkedHashMap<>();
+        types.forEach(type -> trends.put(type, new ArrayList<>(Collections.nCopies(5, 0))));
+
+        for (Map<String, Object> row : rawData) {
+            String type = (String) row.get("project_type");
+            String week = (String) row.get("week_group");
+            int count = ((Number) row.get("count")).intValue();
+
+            int weekIndex = weeks.indexOf(week);
+            if (weekIndex >= 0 && trends.containsKey(type)) {
+                trends.get(type).set(weekIndex, count);
+            }
+        }
+
+        return trends;
     }
 
 }

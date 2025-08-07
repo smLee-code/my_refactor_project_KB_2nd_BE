@@ -98,6 +98,8 @@ public class FundProductRequestDTO {
         private String reward;
         private String rewardCondition;
         private String verifyStandard; // 첼린지 검증 기준
+        private LocalDate challengeStartDate;
+        private LocalDate challengeEndDate;
         
         // Fund 생성 필드
         private Long projectId;

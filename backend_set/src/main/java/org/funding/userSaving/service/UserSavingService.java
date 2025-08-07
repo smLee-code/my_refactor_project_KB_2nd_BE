@@ -1,6 +1,7 @@
 package org.funding.userSaving.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.badge.service.BadgeService;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userSaving.dao.UserSavingDAO;
@@ -16,6 +17,7 @@ public class UserSavingService {
 
     private final MemberDAO memberDAO;
     private final UserSavingDAO userSavingDAO;
+    private final BadgeService badgeService;
 
     // 저축 가입
     public String applySaving(UserSavingRequestDTO userSavingRequestDTO, Long userId) {
@@ -30,6 +32,10 @@ public class UserSavingService {
         userSaving.setSavingAmount(userSaving.getSavingAmount());
 
         userSavingDAO.insertUserSaving(userSaving);
+
+        // 뱃지 권한 부여
+        badgeService.checkAndGrantBadges(userId);
+
         return "정상적으로 저축에 가입하셨습니다.";
     }
 

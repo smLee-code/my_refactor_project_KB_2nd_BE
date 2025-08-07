@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,4 +18,6 @@ public class ChallengeVO {
     private String reward; // 리워드
     private String rewardCondition; // 리워드 조건
     private String verifyStandard; // 첼린지 검증 기준
+    private LocalDate challengeStartDate; // 시작일
+    private LocalDate challengeEndDate; // 종료일
 }

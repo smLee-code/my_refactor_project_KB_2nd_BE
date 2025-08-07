@@ -4,6 +4,26 @@
 
 <mapper namespace="org.funding.project.dao.ProjectDAO">
 
+    <resultMap id="projectListResultMap" type="org.funding.project.dto.response.ProjectListDTO">
+        <id property="projectId" column="project_id"/>
+        <result property="title" column="title"/>
+        <result property="deadline" column="deadline"/>
+        <result property="createAt" column="create_at"/>
+        <result property="userId" column="user_id"/>
+        <result property="projectType" column="project_type" javaType="org.funding.project.vo.enumType.ProjectType"/>
+        <result property="progress" column="progress" javaType="org.funding.project.vo.enumType.ProjectProgress"/>
+        <result property="promotion" column="promotion"/>
+        <result property="likes" column="likes"/>
+        <result property="isLiked" column="isLiked"/>
+
+        <association property="thumbnailImage" javaType="org.funding.S3.vo.S3ImageVO">
+            <result property="imageType" column="image_type"/>
+            <result property="postId" column="post_id"/>
+            <result property="imageUrl" column="image_url"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+    </resultMap>
+
     <insert id="insertProject" parameterType="org.funding.project.vo.ProjectVO" useGeneratedKeys="true" keyProperty="projectId">
         INSERT INTO project (title, promotion, project_type, progress, deadline, create_at, user_id)
         VALUES (#{title}, #{promotion}, #{projectType}, #{progress}, #{deadline}, NOW(), #{userId})
@@ -68,9 +88,61 @@
 --                  , p.title, p.deadline, p.create_at,
 --                  p.user_id, p.project_type, p.progress, p.promotion
         ORDER BY vote_count DESC, p.create_at DESC
-        LIMIT 5
 
     </select>
+
+    <select id="getProjectTypeDistribution" resultType="map">
+        SELECT
+            project_type AS type,
+            COUNT(*) AS count
+        FROM project
+        GROUP BY project_type
+    </select>
+
+<!--    <select id="getProjectTrends" resultType="map">-->
+<!--        SELECT-->
+<!--            project_type,-->
+<!--            CASE-->
+<!--                WHEN create_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 'Week5'-->
+<!--                WHEN create_at >= DATE_SUB(CURDATE(), INTERVAL 14 DAY) THEN 'Week4'-->
+<!--                WHEN create_at >= DATE_SUB(CURDATE(), INTERVAL 21 DAY) THEN 'Week3'-->
+<!--                WHEN create_at >= DATE_SUB(CURDATE(), INTERVAL 28 DAY) THEN 'Week2'-->
+<!--                WHEN create_at >= DATE_SUB(CURDATE(), INTERVAL 35 DAY) THEN 'Week1'-->
+<!--                END AS week_group,-->
+<!--            COUNT(*) AS count-->
+<!--        FROM project-->
+<!--        WHERE create_at >= DATE_SUB(CURDATE(), INTERVAL 35 DAY)-->
+<!--        GROUP BY week_group, project_type-->
+<!--        ORDER BY week_group ASC-->
+<!--    </select>-->
+
+    <select id="getProjectTrends" resultType="map">
+        SELECT
+            project_type,
+            CASE
+                WHEN create_at &gt;= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                    AND create_at &lt; CURDATE() THEN 'Week1'
+                WHEN create_at &gt;= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
+                    AND create_at &lt; DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 'Week2'
+                WHEN create_at &gt;= DATE_SUB(CURDATE(), INTERVAL 21 DAY)
+                    AND create_at &lt; DATE_SUB(CURDATE(), INTERVAL 14 DAY) THEN 'Week3'
+                WHEN create_at &gt;= DATE_SUB(CURDATE(), INTERVAL 28 DAY)
+                    AND create_at &lt; DATE_SUB(CURDATE(), INTERVAL 21 DAY) THEN 'Week4'
+                WHEN create_at &gt;= DATE_SUB(CURDATE(), INTERVAL 35 DAY)
+                    AND create_at &lt; DATE_SUB(CURDATE(), INTERVAL 28 DAY) THEN 'Week5'
+                END AS week_group,
+            COUNT(*) AS count
+        FROM project
+        WHERE create_at &gt;= DATE_SUB(CURDATE(), INTERVAL 35 DAY)
+        GROUP BY week_group, project_type
+        ORDER BY week_group ASC
+    </select>
+
+
+
+
+
+
 
     <select id="getTopProjects222" resultType="org.funding.project.dto.response.TopProjectDTO">
         select *
@@ -109,15 +181,78 @@
     </select>
 
     <select id="getAllProjects" resultType="org.funding.project.dto.response.ProjectListDTO">
-        SELECT project_id,title, project_type, create_at, user_id, deadline, progress, promotion FROM project
+        SELECT
+            p.project_id,
+            p.title,
+            p.deadline,
+            p.create_at,
+            p.user_id,
+            p.project_type,
+            p.progress,
+            p.promotion,
+            (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.project_id) AS likes
+        FROM project p
+    </select>
+
+    <select id="getAllProjectsWithDetails" parameterType="Long" resultMap="projectListResultMap">
+        SELECT
+            p.project_id,
+            p.title,
+            p.deadline,
+            p.create_at,
+            p.user_id,
+            p.project_type,
+            p.progress,
+            p.promotion,
+
+            # 파라미터로 현재 로그인된 사용자 ID를 가져와서 써야함.
+            # 비 로그인 상태일 경우 is_liked를 항상 false로 처리해야 함
+            (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.id) AS likes,
+            (SELECT CASE
+                WHEN #{loginUserId} IS NOT NULL
+                    AND EXISTS (SELECT 1
+                                FROM votes pv
+                                WHERE pv.project_id = p.project_id AND pv.user_id = #{loginUserId})
+                THEN TRUE ELSE FALSE
+            END) AS is_liked,
+
+            i.image_type,
+            i.post_id,
+            i.image_url,
+            i.created_at
+
+        FROM project p
+        LEFT JOIN s3_image i ON i.image_type = 'Project' AND i.post_id = p.project_id
     </select>
 
     <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
-        SELECT project_id,title, project_type, create_at, user_id, deadline FROM project WHERE title LIKE CONCAT('%', #{keyword}, '%')
+        SELECT
+            p.project_id,
+            p.title,
+            p.deadline,
+            p.create_at,
+            p.user_id,
+            p.project_type,
+            p.progress,
+            p.promotion,
+            (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.project_id) AS likes
+        FROM project p
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
     <select id="searchProjectsByType" resultType="org.funding.project.dto.response.ProjectListDTO">
-        SELECT project_id, title, project_type, create_at, user_id, deadline FROM project WHERE project_type = #{type}
+        SELECT
+            p.project_id,
+            p.title,
+            p.deadline,
+            p.create_at,
+            p.user_id,
+            p.project_type,
+            p.progress,
+            p.promotion,
+            (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.project_id) AS likes
+        FROM project p
+        WHERE project_type = #{type}
     </select>
 
     <delete id="deleteProjectById" parameterType="Long">
@@ -175,4 +310,5 @@
         FROM project
         WHERE project_id = #{projectId}
     </select>
+
 </mapper>

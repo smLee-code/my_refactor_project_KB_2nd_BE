@@ -6,6 +6,7 @@ import org.funding.project.vo.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ProjectDAO {
@@ -30,14 +31,17 @@ public interface ProjectDAO {
 
     void insertChallengeProject(ChallengeProjectVO challengeProjectVO);
 
-
     List<ProjectListDTO> getAllProjects();
+
+    List<ProjectListDTO> getAllProjectsWithDetails(Long loginUserId);
 
     List<ProjectListDTO> searchProjectsByType(String type);
 
     List<ProjectListDTO> searchProjectsByKeyword(String keyword);
 
     List<TopProjectDTO> getTopProjects();
+
+    List<Map<String, Object>> getProjectTypeDistribution();
 
     void deleteProjectById(Long projectId);
 
@@ -55,4 +59,5 @@ public interface ProjectDAO {
 
     ProjectVO findById(Long projectId); // 프로젝트 조회
 
+    List<Map<String, Object>> getProjectTrends();
 }

@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/project")
@@ -41,18 +42,15 @@ public class ProjectController {
 //        return new ResponseEntity<>(topProjects, HttpStatus.OK);
 //    }
 
-    @Auth
     @GetMapping("/top")
-    public ResponseEntity<List<TopProjectDTO>> getTopProject(HttpServletRequest request) {
+    public ResponseEntity<List<TopProjectDTO>> getTopProject() {
         List<TopProjectDTO> list = projectService.getTopProjects();
 
         return ResponseEntity.ok(list);
     }
 
-    @Auth
     @GetMapping("/list/detail/{id}")
-    public ResponseEntity<ProjectVO> getProjectDetail(@PathVariable("id") Long id,
-                                                      HttpServletRequest request) {
+    public ResponseEntity<ProjectVO> getProjectDetail(@PathVariable("id") Long id) {
         ProjectVO project = projectService.selectProjectById(id);
         return ResponseEntity.ok(project);
     }
@@ -61,35 +59,45 @@ public class ProjectController {
      * 새로 추가: [GET] /api/projects/list/detail/{id}/full
      * 프로젝트 + 타입별 상세 정보까지 조회
      */
-    @Auth
     @GetMapping("/list/detail/{id}/full")
-    public ResponseEntity<ProjectResponseDTO> getProjectFullDetail(@PathVariable("id") Long id,
-                                                                   HttpServletRequest request) {
+    public ResponseEntity<ProjectResponseDTO> getProjectFullDetail(@PathVariable("id") Long id) {
         ProjectResponseDTO projectDetails = projectService.getProjectDetails(id);
         return ResponseEntity.ok(projectDetails);
     }
 
-    @Auth
-    @GetMapping("/list")
-    @ResponseBody
-    public List<ProjectListDTO> getProjects(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String type,
-            HttpServletRequest request) {
 
-        if (keyword != null && !keyword.isEmpty()) {
-            return projectService.searchByKeyword(keyword);
-        } else if (type != null && !type.isEmpty()) {
-            return projectService.searchByType(type);
-        } else {
-            return projectService.getAllProjects();
-        }
+    @GetMapping("/distribution/type")
+    public List<Map<String, Object>> getProjectTypeDistribution() {
+        return projectService.getProjectTypeDistribution();
     }
 
-    @Auth
+    @GetMapping("trend")
+    public Map<String, List<Integer>> getProjectTrend() {
+        return projectService.getProjectTrends();
+    }
+
+
+    @GetMapping("/list")
+    @ResponseBody
+    public ResponseEntity<List<ProjectListDTO>> getProjects(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String type) {
+
+        List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type);
+
+        return ResponseEntity.ok(projectWithDetailList);
+
+//        if (keyword != null && !keyword.isEmpty()) {
+//            return projectService.searchByKeyword(keyword);
+//        } else if (type != null && !type.isEmpty()) {
+//            return projectService.searchByType(type);
+//        } else {
+//            return projectService.getAllProjects();
+//        }
+    }
+
     @GetMapping("/related/{id}")
-    public ResponseEntity<List<ProjectListDTO>> getRelatedProjects(@PathVariable("id") Long projectId,
-                                                                   HttpServletRequest request) {
+    public ResponseEntity<List<ProjectListDTO>> getRelatedProjects(@PathVariable("id") Long projectId) {
         List<ProjectListDTO> projectList = projectService.getRelatedProjects(projectId);
 
         return ResponseEntity.ok(projectList);
@@ -118,25 +126,33 @@ public class ProjectController {
     /* 키워드 관련 api */
     @Auth
     @GetMapping("/keyword/{id}")
-    public ResponseEntity<List<KeywordVO>> getProjectKeywords(@PathVariable("id") Long projectId,
-                                                              HttpServletRequest request) {
+    public ResponseEntity<List<KeywordVO>> getProjectKeywords(
+            @PathVariable("id") Long projectId,
+            HttpServletRequest request
+    ) {
         List<KeywordVO> list = projectService.getProjectKeywords(projectId);
+
         return ResponseEntity.ok(list);
     }
 
     @Auth
     @PostMapping("/keyword")
-    public ResponseEntity<String> addKeywordIntoProject(@RequestBody ProjectKeywordRequestDTO requestDTO,
-                                                        HttpServletRequest request) {
-
+    public ResponseEntity<String> addKeywordIntoProject(
+            @RequestBody ProjectKeywordRequestDTO requestDTO,
+            HttpServletRequest request
+    ) {
         projectService.addKeywordIntoProject(requestDTO);
+
         return ResponseEntity.ok("키워드 추가 완료");
     }
 
     @DeleteMapping("/keyword")
-    public ResponseEntity<String> deleteKeywordFromProject(@RequestBody ProjectKeywordRequestDTO requestDTO,
-                                                           HttpServletRequest request) {
+    public ResponseEntity<String> deleteKeywordFromProject(
+            @RequestBody ProjectKeywordRequestDTO requestDTO,
+            HttpServletRequest request
+    ) {
         projectService.deleteKeywordFromProject(requestDTO);
+
         return ResponseEntity.ok("키워드 삭제 완료");
     }
 }

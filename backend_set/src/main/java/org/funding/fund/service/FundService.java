@@ -116,8 +116,9 @@ public class FundService {
             }
             project.setProgress(ProjectProgress.FUNDED);
 
-            // 뱃지 권한 검증 (추후에 토큰 으로 유저 추출로 바꿔야댐)
+            // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
             badgeService.checkAndGrantBadges(project.getUserId());
+
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
@@ -198,7 +199,10 @@ public class FundService {
                 throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
             }
             project.setProgress(ProjectProgress.FUNDED);
-            
+
+            // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
+            badgeService.checkAndGrantBadges(project.getUserId());
+
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
@@ -248,6 +252,8 @@ public class FundService {
                 .reward(request.getReward())
                 .rewardCondition(request.getRewardCondition())
                     .verifyStandard(request.getVerifyStandard()) // 검증 기준 추가
+                    .challengeStartDate(request.getChallengeStartDate())
+                    .challengeEndDate(request.getChallengeEndDate())
                 .build();
             
             challengeDAO.insertChallenge(challenge);
@@ -276,7 +282,10 @@ public class FundService {
                 throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
             }
             project.setProgress(ProjectProgress.FUNDED);
-            
+
+            // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
+            badgeService.checkAndGrantBadges(project.getUserId());
+
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
@@ -355,7 +364,10 @@ public class FundService {
                 throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
             }
             project.setProgress(ProjectProgress.FUNDED);
-            
+
+            // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
+            badgeService.checkAndGrantBadges(project.getUserId());
+
             // 5. 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {

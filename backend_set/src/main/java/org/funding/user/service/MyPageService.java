@@ -41,8 +41,10 @@ public class MyPageService {
         // 임시 테스트용: 인증이 없어도 테스트 사용자 ID 반환
         if (authentication == null || authentication.getName() == null || "anonymousUser".equals(authentication.getName())) {
             System.out.println("DEBUG: No authentication found, using test user ID: 1");
-            return 1L; // 테스트용 사용자 ID // 추후 삭제
+//            return 1L; // 테스트용 사용자 ID // 추후 삭제
+            return null;
         }
+
         
         String username = authentication.getName();
         System.out.println("DEBUG: Authentication username = " + username);
