@@ -51,10 +51,13 @@ public class MyPageController {
         @ApiResponse(code = 200, message = "조회 성공"),
         @ApiResponse(code = 401, message = "인증 실패")
     })
+    @Auth
     @GetMapping("/keywords")
-    public ResponseEntity<?> getMyKeywords() {
+    public ResponseEntity<?> getMyKeywords(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+
         try {
-            List<KeywordResponseDTO> keywords = myPageService.getMyKeywords();
+            List<KeywordResponseDTO> keywords = myPageService.getMyKeywords(userId);
             return ResponseEntity.ok(keywords);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
