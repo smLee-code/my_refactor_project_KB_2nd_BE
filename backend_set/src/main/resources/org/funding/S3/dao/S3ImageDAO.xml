@@ -21,15 +21,15 @@
 
 <!--    이미지 출력-->
     <select id="findImagesByPost" resultMap="ImageVOMap">
-        SELECT image_type, post_id, image_url, create_at
-        FROM image
+        SELECT image_type, post_id, image_url, created_at
+        FROM s3_image
         WHERE image_type = #{imageType}
           AND post_id = #{postId}
     </select>
 
     <!-- 썸네일 이미지 출력 -->
     <select id="findFirstImageByPost" resultMap="ImageVOMap">
-        SELECT image_type, post_id, image_url, create_at
+        SELECT image_type, post_id, image_url, created_at
         FROM s3_image
         WHERE image_type = #{imageType}
           AND post_id = #{postId}
@@ -40,7 +40,7 @@
 
 <!--    이미지 삭제-->
     <delete id="deleteImagesByPost">
-        DELETE FROM image
+        DELETE FROM s3_image
         WHERE image_type = #{imageType}
           AND post_id = #{postId}
     </delete>
