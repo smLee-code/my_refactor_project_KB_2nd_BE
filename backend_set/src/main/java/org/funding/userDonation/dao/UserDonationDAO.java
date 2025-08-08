@@ -22,4 +22,7 @@ public interface UserDonationDAO {
 
     // 기부 내역 삭제
     void deleteUserDonation(@Param("userDonationId") Long userDonationId);
+
+    // 유저 참여했는지 판별
+    boolean existsByUserIdAndFundId(@Param("userId") Long userId, @Param("fundId") Long fundId);
 }
