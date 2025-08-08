@@ -76,21 +76,38 @@ public class VotesController {
         return ResponseEntity.ok(voteCount);
     }
 
+//    @Auth
+//    @PostMapping("")
+//    public ResponseEntity<VotesResponseDTO> toggleVote(@RequestBody Long projectId,
+//                                                       HttpServletRequest request) {
+//        Long userId = (Long) request.getAttribute("userId");
+//        VotesResponseDTO responseDTO = votesService.toggleVote(projectId, userId);
+//
+//        if (responseDTO == null) {
+//            // 삭제된 경우
+//            return ResponseEntity.noContent().build();
+//        }
+//
+//        // 추가된 경우
+//        return ResponseEntity.ok(responseDTO);
+//    }
+
     @Auth
     @PostMapping("")
-    public ResponseEntity<VotesResponseDTO> toggleVote(@RequestBody Long projectId,
+    public ResponseEntity<VotesResponseDTO> toggleVote(@RequestBody VotesRequestDTO requestDTO,
                                                        HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
+        Long userId = requestDTO.getUserId();
+        Long projectId = requestDTO.getProjectId();
+
         VotesResponseDTO responseDTO = votesService.toggleVote(projectId, userId);
 
         if (responseDTO == null) {
-            // 삭제된 경우
             return ResponseEntity.noContent().build();
         }
 
-        // 추가된 경우
         return ResponseEntity.ok(responseDTO);
     }
+
 
 
 }
