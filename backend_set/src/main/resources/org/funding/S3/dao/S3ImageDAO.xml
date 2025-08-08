@@ -33,7 +33,7 @@
         FROM s3_image
         WHERE image_type = #{imageType}
           AND post_id = #{postId}
-        ORDER BY create_at ASC
+        ORDER BY created_at ASC
             LIMIT 1
     </select>
 
