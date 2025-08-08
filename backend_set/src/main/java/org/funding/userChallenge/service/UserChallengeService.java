@@ -17,6 +17,7 @@ import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userChallenge.dao.UserChallengeDAO;
 import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
+import org.funding.userChallenge.dto.ChallengeDetailResponseDTO;
 import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
 import org.funding.userChallenge.dto.UserChallengeDetailDTO;
 import org.funding.userChallenge.vo.UserChallengeVO;
@@ -197,5 +198,26 @@ public class UserChallengeService {
     public List<UserChallengeDetailDTO> findMyChallenges(Long userId) {
         // 특별한 비즈니스 로직 없이 DAO를 호출하여 결과를 바로 반환
         return userChallengeDAO.findAllChallengesByUserId(userId);
+    }
+
+    // 챌린지 상세보기
+    public ChallengeDetailResponseDTO getChallengeDetails(Long userChallengeId) {
+        // 1. 챌린지 기본 정보 조회
+        UserChallengeDetailDTO challengeInfo = userChallengeDAO.findChallengeDetailById(userChallengeId);
+
+        // 만약 존재하지 않는 챌린지라면 null 반환 (컨트롤러에서 예외 처리)
+        if (challengeInfo == null) {
+            return null;
+        }
+
+        // 2. 해당 챌린지의 모든 인증 기록 조회
+        List<ChallengeLogVO> dailyLogs = challengeLogDAO.selectAllLogsByUserChallengeId(userChallengeId);
+
+        // 3. 두 종류의 데이터를 하나의 응답 DTO에 담아서 반환
+        ChallengeDetailResponseDTO responseDTO = new ChallengeDetailResponseDTO();
+        responseDTO.setChallengeInfo(challengeInfo);
+        responseDTO.setDailyLogs(dailyLogs);
+
+        return responseDTO;
     }
 }

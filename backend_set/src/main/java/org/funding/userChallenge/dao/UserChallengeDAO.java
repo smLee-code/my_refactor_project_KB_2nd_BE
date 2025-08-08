@@ -30,4 +30,7 @@ public interface UserChallengeDAO {
 
     List<UserChallengeDetailDTO> findAllChallengesByUserId(@Param("userId") Long userId);
 
+    // 챌린지 상세보기
+    UserChallengeDetailDTO findChallengeDetailById(@Param("userChallengeId") Long userChallengeId);
+
 }

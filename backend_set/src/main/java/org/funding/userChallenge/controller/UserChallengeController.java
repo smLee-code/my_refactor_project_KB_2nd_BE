@@ -3,10 +3,7 @@ package org.funding.userChallenge.controller;
 import lombok.RequiredArgsConstructor;
 import org.funding.S3.service.S3ImageService;
 import org.funding.security.util.Auth;
-import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
-import org.funding.userChallenge.dto.ChallengeRequestDTO;
-import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
-import org.funding.userChallenge.dto.UserChallengeDetailDTO;
+import org.funding.userChallenge.dto.*;
 import org.funding.userChallenge.service.UserChallengeService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -72,5 +69,18 @@ public class UserChallengeController {
         }
         List<UserChallengeDetailDTO> myChallenges = userChallengeService.findMyChallenges(userId);
         return ResponseEntity.ok(myChallenges);
+    }
+
+    // 챌린지 상세보기
+    @Auth
+    @GetMapping("/{userChallengeId}")
+    public ResponseEntity<?> getChallengeDetail(@PathVariable Long userChallengeId, HttpServletRequest request) {
+        // 서비스를 통해 챌린지 상세 정보 조회
+        ChallengeDetailResponseDTO responseDTO = userChallengeService.getChallengeDetails(userChallengeId);
+
+        if (responseDTO == null) {
+            return ResponseEntity.status(404).body("해당 챌린지를 찾을 수 없습니다.");
+        }
+        return ResponseEntity.ok(responseDTO);
     }
 }
