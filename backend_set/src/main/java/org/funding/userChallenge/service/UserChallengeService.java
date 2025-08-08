@@ -142,6 +142,7 @@ public class UserChallengeService {
                 if (!exists) {
                     ChallengeLogVO log = new ChallengeLogVO();
                     log.setUserChallengeId(userChallengeId);
+                    log.setUserId(userId);
                     log.setLogDate(date);
                     log.setVerified(false);
                     log.setVerifiedResult("미인증");
@@ -163,6 +164,7 @@ public class UserChallengeService {
         // 8. 인증 성공 로그 저장
         ChallengeLogVO log = new ChallengeLogVO();
         log.setUserChallengeId(userChallengeId);
+        log.setUserId(userId);
         log.setLogDate(logDate);
         log.setImageUrl(imageUrl);
         log.setVerified(true);
