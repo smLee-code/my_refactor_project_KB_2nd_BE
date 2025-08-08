@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.security.util.Auth;
 import org.funding.userDonation.dto.DonateRequestDTO;
 import org.funding.userDonation.dto.DonateResponseDTO;
+import org.funding.userDonation.dto.UserDonationDetailDTO;
 import org.funding.userDonation.service.UserDonationService;
 import org.funding.userDonation.vo.UserDonationVO;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-saving")
+@RequestMapping("/user-donation")
 @RequiredArgsConstructor
 public class UserDonationController {
 
@@ -61,5 +62,19 @@ public class UserDonationController {
                                                  HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         return ResponseEntity.ok(userDonationService.deleteDonation(id, userId));
+    }
+
+    // 내가 참여한 기부 내역 조회
+    @Auth
+    @GetMapping("/user/all/v2")
+    public ResponseEntity<?> getMyAllDonations(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+        }
+
+        List<UserDonationDetailDTO> myDonations = userDonationService.findMyDonations(userId);
+
+        return ResponseEntity.ok(myDonations);
     }
 }

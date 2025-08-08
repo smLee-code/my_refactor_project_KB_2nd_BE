@@ -12,14 +12,13 @@ import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.user.vo.enumType.Role;
 import org.funding.userLoan.dao.UserLoanDAO;
-import org.funding.userLoan.dto.ApproveUserLoanRequestDTO;
-import org.funding.userLoan.dto.CancelLoanRequestDTO;
-import org.funding.userLoan.dto.UserLoanRequestDTO;
-import org.funding.userLoan.dto.UserLoanResponseDTO;
+import org.funding.userLoan.dto.*;
 import org.funding.userLoan.vo.UserLoanVO;
 import org.funding.userLoan.vo.enumType.SuccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -156,6 +155,11 @@ public class UserLoanService {
         userLoan.setLoanAccess(SuccessType.DONE);
         userLoanDAO.updateUserLoan(userLoan);
         return "지급 완료";
+    }
+
+    // 유저가 가입한 대출 모아보기
+    public List<UserLoanDetailDTO> getAllUserLoans(Long userId) {
+        return userLoanDAO.findAllLoanDetailsByUserId(userId);
     }
 
     // 공통 검증 메서드

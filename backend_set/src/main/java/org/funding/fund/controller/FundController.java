@@ -203,6 +203,7 @@ public class FundController {
     }
     
     /**
+     *
      * 펀딩 삭제
      * DELETE /api/fund/{fundId}
      * fund_id로 펀딩과 관련된 모든 데이터를 삭제
@@ -216,4 +217,7 @@ public class FundController {
         String result = fundService.deleteFund(fundId, userId);
         return ResponseEntity.ok(Map.of("message", result));
     }
+
+
+
 }

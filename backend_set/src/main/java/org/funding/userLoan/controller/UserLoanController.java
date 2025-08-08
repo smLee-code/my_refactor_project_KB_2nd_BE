@@ -2,15 +2,13 @@ package org.funding.userLoan.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.security.util.Auth;
-import org.funding.userLoan.dto.ApproveUserLoanRequestDTO;
-import org.funding.userLoan.dto.CancelLoanRequestDTO;
-import org.funding.userLoan.dto.UserLoanRequestDTO;
-import org.funding.userLoan.dto.UserLoanResponseDTO;
+import org.funding.userLoan.dto.*;
 import org.funding.userLoan.service.UserLoanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user-loan")
@@ -66,5 +64,16 @@ public class UserLoanController {
         return ResponseEntity.ok(userLoanService.processLoanPayment(approveUserLoanRequestDTO, userId));
     }
 
+    // 유저가 가입한 모든 대출 조회
+    @Auth
+    @GetMapping("/user/all/v2")
+    public ResponseEntity<?> getMyAllLoans(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+        }
+        List<UserLoanDetailDTO> myLoans = userLoanService.getAllUserLoans(userId);
+        return ResponseEntity.ok(myLoans);
+    }
 
 }
