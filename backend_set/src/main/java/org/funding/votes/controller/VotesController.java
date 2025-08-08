@@ -21,19 +21,6 @@ public class VotesController {
     private final VotesService votesService;
 
 
-    //맨 아래 toggleLike 랑 mapping 겹쳐서 일단 주석처리
-//    @PostMapping("")
-//    public ResponseEntity<VotesResponseDTO> castVote(@RequestBody VotesRequestDTO requestDTO) {
-//
-//        try {
-//            VotesResponseDTO responseDTO = votesService.toggleVote(requestDTO);
-//            return ResponseEntity.ok(responseDTO);
-//        } catch (DuplicateVoteException e) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-//        }
-//
-//    }
-
     @Auth
     @GetMapping("")
     public ResponseEntity<Boolean> hasVoted(@RequestParam("projectId") Long projectId,
@@ -76,21 +63,25 @@ public class VotesController {
         return ResponseEntity.ok(voteCount);
     }
 
+
     @Auth
-    @PostMapping("")
-    public ResponseEntity<VotesResponseDTO> toggleVote(@RequestBody Long projectId,
-                                                       HttpServletRequest request) {
+    @PostMapping("/{projectId}")
+    public ResponseEntity<VotesResponseDTO> toggleVote(
+            @PathVariable Long projectId,
+            HttpServletRequest request
+    ) {
+
         Long userId = (Long) request.getAttribute("userId");
+
         VotesResponseDTO responseDTO = votesService.toggleVote(projectId, userId);
 
         if (responseDTO == null) {
-            // 삭제된 경우
             return ResponseEntity.noContent().build();
         }
 
-        // 추가된 경우
         return ResponseEntity.ok(responseDTO);
     }
+
 
 
 }

@@ -98,9 +98,8 @@ public class ProjectService {
         return dto;
     }
 
-    public List<ProjectListDTO> getProjectWithDetailList(String keyword, String type) {
+    public List<ProjectListDTO> getProjectWithDetailList(String keyword, String type, Long loginUserId) {
 
-        Long loginUserId = myPageService.getCurrentUserId();
         List<ProjectListDTO> projectList;
 
         // 프로젝트 기본 칼럼 및 좋아요 수 query
