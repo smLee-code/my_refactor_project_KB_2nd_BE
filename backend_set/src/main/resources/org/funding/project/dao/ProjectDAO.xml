@@ -99,7 +99,25 @@
         GROUP BY project_type
     </select>
 
-<!--    <select id="getProjectTrends" resultType="map">-->
+    <select id="selectRecommendedProjectsByKeywords" parameterType="Long" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT DISTINCT p.project_id,
+                        p.title,
+                        p.promotion,
+                        p.project_type,
+                        p.progress,
+                        p.create_at,
+                        p.deadline,
+                        p.user_id
+        FROM project p
+                 JOIN project_keywords pk ON p.project_id = pk.project_id
+                 JOIN user_keywords uk ON pk.keyword_id = uk.keyword_id
+        WHERE uk.user_id = #{userId}
+        ORDER BY p.create_at DESC
+    </select>
+
+
+
+    <!--    <select id="getProjectTrends" resultType="map">-->
 <!--        SELECT-->
 <!--            project_type,-->
 <!--            CASE-->
@@ -115,6 +133,8 @@
 <!--        GROUP BY week_group, project_type-->
 <!--        ORDER BY week_group ASC-->
 <!--    </select>-->
+
+
 
     <select id="getProjectTrends" resultType="map">
         SELECT
@@ -225,7 +245,7 @@
         LEFT JOIN s3_image i ON i.image_type = 'Project' AND i.post_id = p.project_id
     </select>
 
-    <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
+    <select id="getProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
         SELECT
             p.project_id,
             p.title,
@@ -239,6 +259,16 @@
         FROM project p
         WHERE title LIKE CONCAT('%', #{keyword}, '%')
     </select>
+
+    <select id="selectProjectsByIds" parameterType="list" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id, title, promotion, project_type, progress, create_at, deadline, user_id
+        FROM project
+        WHERE project_id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
 
     <select id="searchProjectsByType" resultType="org.funding.project.dto.response.ProjectListDTO">
         SELECT
