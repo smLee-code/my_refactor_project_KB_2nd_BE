@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FundProductRequestDTO {
 
-    // 적금 요청 DTO
+    // 저축 요청 DTO
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -25,7 +25,7 @@ public class FundProductRequestDTO {
         private String detail;
         private String joinCondition;
         
-        // 적금 전용 필드
+        // 저축 전용 필드
         private Double interestRate;
         private Integer periodDays;
         private String successCondition;

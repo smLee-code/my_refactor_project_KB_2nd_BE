@@ -381,7 +381,7 @@ public class ProjectService {
 
         // 순서가 유지되는 타입 목록 (한글명)
         Map<String, String> typeNameMap = new LinkedHashMap<>();
-        typeNameMap.put("Savings", "적금");
+        typeNameMap.put("Savings", "저축");
         typeNameMap.put("Loan", "대출");
         typeNameMap.put("Challenge", "챌린지");
         typeNameMap.put("Donation", "기부");

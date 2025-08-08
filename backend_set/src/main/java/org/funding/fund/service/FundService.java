@@ -59,11 +59,11 @@ public class FundService {
     private final MemberDAO memberDAO;
 
     /**
-     * 적금 펀딩 생성
+     * 저축 펀딩 생성
      * 1. FinancialProduct 생성 (fund_type=Savings)
      * 2. 생성된 product_id를 사용하여 Savings 엔티티 생성
      * 
-     * @param request 적금 생성 요청 데이터
+     * @param request 저축 생성 요청 데이터
      * @return 성공 메시지
      */
     public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images, Long userId) {
@@ -81,7 +81,7 @@ public class FundService {
             // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
-            // 3. 생성된 product_id를 외래키로 사용하여 적금 정보 생성
+            // 3. 생성된 product_id를 외래키로 사용하여 저축 정보 생성
             SavingsVO savings = SavingsVO.builder()
                 .productId(product.getProductId())
                 .interestRate(request.getInterestRate())

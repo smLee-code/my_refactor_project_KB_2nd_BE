@@ -4,7 +4,7 @@
 
 <mapper namespace="org.funding.financialProduct.dao.SavingsDAO">
 
-    <!-- 적금 상품 정보 resultMap -->
+    <!-- 저축 상품 정보 resultMap -->
     <resultMap id="savingsMap" type="org.funding.financialProduct.vo.SavingsVO">
         <id property="savingsId" column="savings_id" />
         <result property="productId" column="product_id" />
@@ -13,7 +13,7 @@
         <result property="successCondition" column="success_condition" />
     </resultMap>
 
-    <!-- 적금 상품 생성 -->
+    <!-- 저축 상품 생성 -->
     <insert id="insertSavings" parameterType="org.funding.financialProduct.vo.SavingsVO" useGeneratedKeys="true" keyProperty="savingsId">
         INSERT INTO savings (
             product_id, period_days, interest_rate, success_condition
@@ -22,7 +22,7 @@
         )
     </insert>
 
-    <!-- 적금 상품 조회 by ID -->
+    <!-- 저축 상품 조회 by ID -->
     <select id="selectById" parameterType="long" resultMap="savingsMap">
         SELECT 
             savings_id, product_id, period_days, interest_rate, success_condition
@@ -30,7 +30,7 @@
         WHERE savings_id = #{savingsId}
     </select>
 
-    <!-- 금융상품 ID로 적금 상품 조회 -->
+    <!-- 금융상품 ID로 저축 상품 조회 -->
     <select id="selectByProductId" parameterType="long" resultMap="savingsMap">
         SELECT 
             savings_id, product_id, period_days, interest_rate, success_condition
@@ -38,7 +38,7 @@
         WHERE product_id = #{productId}
     </select>
 
-    <!-- 적금 상품 업데이트 -->
+    <!-- 저축 상품 업데이트 -->
     <update id="update" parameterType="org.funding.financialProduct.vo.SavingsVO">
         UPDATE savings
         SET 
@@ -48,19 +48,19 @@
         WHERE savings_id = #{savingsId}
     </update>
 
-    <!-- 적금 상품 삭제 -->
+    <!-- 저축 상품 삭제 -->
     <delete id="delete" parameterType="long">
         DELETE FROM savings
         WHERE savings_id = #{savingsId}
     </delete>
     
-    <!-- 금융상품 ID로 적금 상품 삭제 -->
+    <!-- 금융상품 ID로 저축 상품 삭제 -->
     <delete id="deleteByProductId" parameterType="long">
         DELETE FROM savings
         WHERE product_id = #{productId}
     </delete>
 
-    <!-- 모든 적금 상품 조회 -->
+    <!-- 모든 저축 상품 조회 -->
     <select id="selectAll" resultMap="savingsMap">
         SELECT 
             savings_id, product_id, period_days, interest_rate, success_condition
