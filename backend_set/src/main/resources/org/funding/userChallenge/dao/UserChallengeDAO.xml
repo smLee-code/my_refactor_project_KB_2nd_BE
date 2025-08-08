@@ -18,7 +18,7 @@
     <!-- 인증 성공 시 성공 카운트 증가 -->
     <update id="updateUserChallengeSuccess">
         UPDATE user_challenge
-        SET success_count = success_count + 1
+        SET current_count = current_count + 1
         WHERE user_challenge_id = #{userChallengeId}
     </update>
 

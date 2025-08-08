@@ -17,7 +17,7 @@ public interface ChallengeLogDAO {
     List<LocalDate> selectAllLogDatesByUserChallengeId(Long userChallengeId);
 
     // 중복 방지
-    boolean existsByUserChallengeIdAndLogDate(Long userChallengeId, LocalDate logDate);
+    boolean existsByUserChallengeIdAndLogDate(@Param("userChallengeId") Long userChallengeId, @Param("logDate") LocalDate logDate);
 
     List<ChallengeLogVO> selectAllLogsByUserChallengeId(Long userChallengeId);
 
