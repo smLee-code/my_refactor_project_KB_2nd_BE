@@ -260,6 +260,16 @@
         WHERE title LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
+    <select id="selectProjectsByIds" parameterType="list" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT project_id, title, promotion, project_type, progress, create_at, deadline, user_id
+        FROM project
+        WHERE project_id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
     <select id="searchProjectsByType" resultType="org.funding.project.dto.response.ProjectListDTO">
         SELECT
             p.project_id,

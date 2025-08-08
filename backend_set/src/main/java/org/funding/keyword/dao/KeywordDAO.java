@@ -24,5 +24,5 @@ public interface KeywordDAO {
     void deleteKeyword(String name);
 
 
-
+    List<Long> selectKeywordIdsByUserId(Long userId);
 }

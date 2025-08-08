@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.keyword.dao.KeywordDAO;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
+import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.projectKeyword.dao.ProjectKeywordDAO;
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.vo.ProjectKeywordVO;
@@ -50,4 +51,22 @@ public class ProjectKeywordService {
 
         projectKeywordDAO.deleteProjectKeyword(requestDTO);
     }
+
+    public List<ProjectListDTO> recommendProjectsByUserKeywords(Long userId) {
+        // 1. 사용자 관심 키워드 목록 조회
+        List<Long> keywordIds = keywordDAO.selectKeywordIdsByUserId(userId);
+        if (keywordIds == null || keywordIds.isEmpty()) {
+            return List.of(); // 관심 키워드가 없다면 빈 리스트 반환
+        }
+
+        // 2. 관심 키워드에 연결된 프로젝트 ID 목록 조회
+        List<Long> projectIds = projectKeywordDAO.selectProjectIdsByKeywordIds(keywordIds);
+        if (projectIds == null || projectIds.isEmpty()) {
+            return List.of(); // 매칭되는 프로젝트 없음
+        }
+
+        // 3. 프로젝트 정보 조회 및 반환
+        return projectDAO.selectProjectsByIds(projectIds); // resultType: ProjectListDTO
+    }
+
 }

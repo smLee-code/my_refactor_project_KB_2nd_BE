@@ -11,10 +11,27 @@
         where project_id = #{projectId} and keyword_id = #{keywordId}
     </select>
 
-    <select id="selectKeywordIdsByProjectId" parameterType="Long" resultType="Long">
+    <select id="selectKeywordIdsByProjectId" parameterType="org.funding.projectKeyword.dto.ProjectKeywordRequestDTO" resultType="Long">
         select keyword_id
         from project_keywords
         where project_id = #{project_id}
+    </select>
+
+    <select id="selectProjectIdsByKeywordIds" parameterType="list" resultType="Long">
+        SELECT DISTINCT project_id
+        FROM project_keywords
+        WHERE keyword_id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <!-- 👇 문제된 SQL 추가 -->
+    <select id="selectKeywordIdsByUserId" parameterType="Long" resultType="Long">
+        SELECT keyword_id
+        FROM user_keywords
+        WHERE user_id = #{userId}
     </select>
 
 

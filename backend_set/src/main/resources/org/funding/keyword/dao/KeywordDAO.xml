@@ -44,4 +44,11 @@
         delete from keywords
         where name = #{name}
     </delete>
+
+    <select id="selectKeywordIdsByUserId" parameterType="long" resultType="long">
+        SELECT keyword_id
+        FROM user_keywords
+        WHERE user_id = #{userId}
+    </select>
+
 </mapper>
