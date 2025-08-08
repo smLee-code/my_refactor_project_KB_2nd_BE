@@ -51,22 +51,19 @@
 <!--    사용자가 가입한 저축 내용 조회-->
     <select id="findAllSavingDetailsByUserId" resultType="org.funding.userSaving.dto.UserSavingDetailDTO">
         SELECT
-            us.user_saving_id AS userSavingId,
-            us.saving_amount AS savingAmount,
-            p.name AS savingName,
-            s.period_days AS periodDays,
-            s.interest_rate AS interestRate,
-            (SELECT image_url FROM image
-             WHERE post_id = p.product_id
-               AND image_type = 'Funding'
-             ORDER BY image_id ASC LIMIT 1) AS savingImageUrl
+        us.user_saving_id AS userSavingId,
+        us.saving_amount AS savingAmount,
+        p.name AS savingName,
+        s.period_days AS periodDays,
+        s.interest_rate AS interestRate,
+        p.product_id AS productId
         FROM
             user_saving us
-            JOIN
+                JOIN
             fund f ON us.fund_id = f.fund_id
-            JOIN
+                JOIN
             savings s ON f.product_id = s.product_id
-            JOIN
+                JOIN
             financial_product p ON s.product_id = p.product_id
         WHERE
             us.user_id = #{userId}

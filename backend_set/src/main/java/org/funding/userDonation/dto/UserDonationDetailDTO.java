@@ -1,6 +1,9 @@
 package org.funding.userDonation.dto;
 
 import lombok.Data;
+import org.funding.S3.vo.S3ImageVO;
+
+import java.util.List;
 
 @Data
 public class UserDonationDetailDTO {
@@ -11,5 +14,7 @@ public class UserDonationDetailDTO {
     private String donationName;
     private String recipient;
     private Long targetAmount;
-    private String donationImageUrl;
+
+    private Long productId;
+    private List<S3ImageVO> images;
 }

@@ -1,6 +1,9 @@
 package org.funding.userDonation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.S3.dao.S3ImageDAO;
+import org.funding.S3.vo.S3ImageVO;
+import org.funding.S3.vo.enumType.ImageType;
 import org.funding.badge.service.BadgeService;
 import org.funding.financialProduct.dao.DonationDAO;
 import org.funding.financialProduct.vo.DonationVO;
@@ -17,8 +20,11 @@ import org.funding.userDonation.dto.UserDonationDetailDTO;
 import org.funding.userDonation.vo.UserDonationVO;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +34,7 @@ public class UserDonationService {
     private final DonationDAO donationDAO;
     private final FundDAO fundDAO;
     private final BadgeService badgeService;
+    private final S3ImageDAO s3ImageDAO;
 
     // 기부
     public DonateResponseDTO donate(DonateRequestDTO donateRequestDTO, Long userId) {
@@ -142,8 +149,28 @@ public class UserDonationService {
         return fund;
     }
 
+    // 유저가 참여한 기부 전체 조회하기
     public List<UserDonationDetailDTO> findMyDonations(Long userId) {
-        return userDonationDAO.findAllDonationDetailsByUserId(userId);
+
+        List<UserDonationDetailDTO> myDonations = userDonationDAO.findAllDonationDetailsByUserId(userId);
+
+        if (myDonations == null || myDonations.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Long> productIds = myDonations.stream()
+                .map(UserDonationDetailDTO::getProductId)
+                .collect(Collectors.toList());
+
+        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Funding, productIds);
+
+        Map<Long, List<S3ImageVO>> imagesByProductId = allImages.stream()
+                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
+        myDonations.forEach(donation ->
+                donation.setImages(imagesByProductId.getOrDefault(donation.getProductId(), Collections.emptyList()))
+        );
+
+        return myDonations;
     }
 
 }

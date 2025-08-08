@@ -47,7 +47,6 @@ public class ProjectController {
     @GetMapping("/top")
     public ResponseEntity<List<TopProjectDTO>> getTopProject() {
         List<TopProjectDTO> list = projectService.getTopProjects();
-
         return ResponseEntity.ok(list);
     }
 
