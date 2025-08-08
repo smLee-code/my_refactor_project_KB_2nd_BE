@@ -66,5 +66,13 @@ public class UserLoanController {
         return ResponseEntity.ok(userLoanService.processLoanPayment(approveUserLoanRequestDTO, userId));
     }
 
+    // 유저가 신청한 대출 내역
+    @Auth
+    @GetMapping("/users/loan")
+    public ResponseEntity<?> getUserLoan(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+
+    }
+
 
 }

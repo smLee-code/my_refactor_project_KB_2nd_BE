@@ -21,6 +21,8 @@ import org.funding.userLoan.vo.enumType.SuccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserLoanService {
@@ -156,6 +158,11 @@ public class UserLoanService {
         userLoan.setLoanAccess(SuccessType.DONE);
         userLoanDAO.updateUserLoan(userLoan);
         return "지급 완료";
+    }
+
+    // 유저가 가입한 대출 모아보기
+    public List<UserLoanVO> getAllUserLoans(Long userId) {
+        return loanDAO.selectByUserId(userId);
     }
 
     // 공통 검증 메서드
