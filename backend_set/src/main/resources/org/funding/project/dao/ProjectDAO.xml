@@ -134,6 +134,8 @@
 <!--        ORDER BY week_group ASC-->
 <!--    </select>-->
 
+
+
     <select id="getProjectTrends" resultType="map">
         SELECT
             project_type,
@@ -243,7 +245,7 @@
         LEFT JOIN s3_image i ON i.image_type = 'Project' AND i.post_id = p.project_id
     </select>
 
-    <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
+    <select id="getProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
         SELECT
             p.project_id,
             p.title,
