@@ -205,6 +205,30 @@
     </select>
 
 
+    <select id="findAllByUploaderId" resultType="org.funding.fund.dto.MyFundDetailDTO">
+        SELECT
+            f.fund_id AS fundId,
+            f.progress AS progress,
+            f.launch_at AS launchAt,
+            f.end_at AS endAt,
+            f.financial_institution AS financialInstitution,
+            p.name AS productName,
+            p.fund_type AS fundType,
+            (SELECT image_url FROM image
+             WHERE post_id = p.product_id
+               AND image_type = 'Funding'
+             ORDER BY image_id ASC
+                LIMIT 1) AS productImageUrl
+        FROM
+            fund f
+            JOIN
+            financial_product p ON f.product_id = p.product_id
+        WHERE
+            f.upload_user_id = #{uploaderId}
+        ORDER BY
+            f.fund_id DESC
+    </select>
+
 
 
 </mapper>

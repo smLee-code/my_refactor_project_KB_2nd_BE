@@ -2,6 +2,7 @@ package org.funding.fund.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.funding.fund.dto.MyFundDetailDTO;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.fund.vo.enumType.FundType;
@@ -33,5 +34,8 @@ public interface FundDAO {
     
     // 펀딩 상세 조회 by ID
     FundDetailResponseDTO selectDetailById(Long fundId);
+
+    // 유저가 업로드한 펀딩 보기
+    List<MyFundDetailDTO> findAllByUploaderId(@Param("uploaderId") Long uploaderId);
   
 }
