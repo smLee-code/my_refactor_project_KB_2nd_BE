@@ -15,7 +15,7 @@
             <arg column="image_type" javaType="String"/>
             <arg column="post_id" javaType="Long"/>
             <arg column="image_url" javaType="String"/>
-            <arg column="create_at" javaType="java.time.LocalDateTime"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime"/>
         </constructor>
     </resultMap>
 
