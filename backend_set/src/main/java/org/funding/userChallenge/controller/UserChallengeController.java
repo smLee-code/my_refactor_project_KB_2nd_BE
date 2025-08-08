@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/userChallenge")
+@RequestMapping("/user-challenge")
 @RequiredArgsConstructor
 public class UserChallengeController {
 
@@ -60,7 +60,7 @@ public class UserChallengeController {
 
     // 유저가 참여한 모든 챌린지 조회
     @Auth
-    @GetMapping("/all")
+    @GetMapping("/user/all/v2")
     public ResponseEntity<?> getAllMyChallenges(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         // userId가 없는 경우 예외 처리 (필요 시)

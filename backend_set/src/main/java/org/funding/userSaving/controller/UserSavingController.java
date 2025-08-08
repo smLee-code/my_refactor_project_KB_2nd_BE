@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/userSaving")
+@RequestMapping("/user-saving")
 @RequiredArgsConstructor
 public class UserSavingController {
 
@@ -55,7 +55,7 @@ public class UserSavingController {
 
     // 유저가 가입한 저축 상품 모아보기
     @Auth
-    @GetMapping
+    @GetMapping("/user/all/v2")
     public ResponseEntity<?> getMyAllSavings(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {

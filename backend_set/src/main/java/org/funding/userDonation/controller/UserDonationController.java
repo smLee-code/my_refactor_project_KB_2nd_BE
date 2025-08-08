@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-saving")
+@RequestMapping("/user-donation")
 @RequiredArgsConstructor
 public class UserDonationController {
 
@@ -66,7 +66,7 @@ public class UserDonationController {
 
     // 내가 참여한 기부 내역 조회
     @Auth
-    @GetMapping
+    @GetMapping("/user/all/v2")
     public ResponseEntity<?> getMyAllDonations(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {

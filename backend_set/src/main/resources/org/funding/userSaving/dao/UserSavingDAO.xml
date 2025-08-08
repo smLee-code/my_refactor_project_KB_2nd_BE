@@ -57,7 +57,7 @@
             s.period_days AS periodDays,
             s.interest_rate AS interestRate,
             (SELECT image_url FROM image
-             WHERE postId = p.product_id
+             WHERE post_id = p.product_id
                AND image_type = 'Funding'
              ORDER BY image_id ASC LIMIT 1) AS savingImageUrl
         FROM

@@ -64,9 +64,9 @@ public class UserLoanController {
         return ResponseEntity.ok(userLoanService.processLoanPayment(approveUserLoanRequestDTO, userId));
     }
 
-    // 유저가 가입한 모든 대출
+    // 유저가 가입한 모든 대출 조회
     @Auth
-    @GetMapping
+    @GetMapping("/user/all/v2")
     public ResponseEntity<?> getMyAllLoans(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
