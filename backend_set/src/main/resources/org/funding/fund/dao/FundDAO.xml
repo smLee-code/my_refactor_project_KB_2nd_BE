@@ -138,7 +138,6 @@
         <result property="name" column="name"/>
         <result property="detail" column="detail"/>
         <result property="fundType" column="fundType" javaType="org.funding.fund.vo.enumType.FundType"/>
-        <result property="iconUrl" column="iconUrl"/>
         <result property="finalUrl" column="finalUrl"/>
         <result property="startDate" column="startDate"/>
         <result property="endDate" column="endDate"/>
@@ -177,7 +176,6 @@
             fp.name as name,
             fp.detail as detail,
             fp.fund_type as fundType,
-            fp.thumbnail as iconUrl,
             fp.join_condition as productCondition,
             s.period_days as periodDays,
             s.interest_rate as interestRate,
