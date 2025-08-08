@@ -17,7 +17,9 @@ import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userChallenge.dao.UserChallengeDAO;
 import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
+import org.funding.userChallenge.dto.ChallengeDetailResponseDTO;
 import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
+import org.funding.userChallenge.dto.UserChallengeDetailDTO;
 import org.funding.userChallenge.vo.UserChallengeVO;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +90,8 @@ public class UserChallengeService {
         FundVO fund = fundDAO.selectById(userChallenge.getFundId());
         ChallengeVO challenge = challengeDAO.selectByProductId(fund.getProductId());
 
+        System.out.println("sdsds" + challenge);
+
         LocalDate startDate = challenge.getChallengeStartDate();
         LocalDate endDate = challenge.getChallengeEndDate();
 
@@ -102,6 +106,8 @@ public class UserChallengeService {
             throw new RuntimeException("해당 날짜는 이미 인증되었습니다.");
         }
 
+        System.out.println("유저유저" + userId);
+        System.out.println("유저 챌린지" + userChallengeId);
         // 4. 챌린지 가입 여부 확인
         boolean isVerify = userChallengeDAO.existsByIdAndUserId(userChallengeId, userId);
         if (!isVerify) {
@@ -128,16 +134,17 @@ public class UserChallengeService {
         LocalDate today = LocalDate.now();
         LocalDate lastDate = today.isBefore(endDate) ? today : endDate;
 
-        List<LocalDate> allDates = startDate.datesUntil(lastDate.plusDays(1)).collect(Collectors.toList());
+        List<LocalDate> datesToBackfill = startDate.datesUntil(logDate).collect(Collectors.toList());
         List<LocalDate> verifyDates = challengeLogDAO.selectAllLogDatesByUserChallengeId(userChallengeId);
         Set<LocalDate> verifiedSet = new HashSet<>(verifyDates);
 
-        for (LocalDate date : allDates) {
+        for (LocalDate date : datesToBackfill) {
             if (!verifiedSet.contains(date)) {
                 boolean exists = challengeLogDAO.existsByUserChallengeIdAndLogDate(userChallengeId, date);
                 if (!exists) {
                     ChallengeLogVO log = new ChallengeLogVO();
                     log.setUserChallengeId(userChallengeId);
+                    log.setUserId(userId);
                     log.setLogDate(date);
                     log.setVerified(false);
                     log.setVerifiedResult("미인증");
@@ -159,6 +166,7 @@ public class UserChallengeService {
         // 8. 인증 성공 로그 저장
         ChallengeLogVO log = new ChallengeLogVO();
         log.setUserChallengeId(userChallengeId);
+        log.setUserId(userId);
         log.setLogDate(logDate);
         log.setImageUrl(imageUrl);
         log.setVerified(true);
@@ -184,5 +192,32 @@ public class UserChallengeService {
         }
 
         userChallengeDAO.deleteUserChallenge(userChallengeId);
+    }
+
+    // 유저가 참여한 모든 챌린지 조회
+    public List<UserChallengeDetailDTO> findMyChallenges(Long userId) {
+        // 특별한 비즈니스 로직 없이 DAO를 호출하여 결과를 바로 반환
+        return userChallengeDAO.findAllChallengesByUserId(userId);
+    }
+
+    // 챌린지 상세보기
+    public ChallengeDetailResponseDTO getChallengeDetails(Long userChallengeId) {
+        // 1. 챌린지 기본 정보 조회
+        UserChallengeDetailDTO challengeInfo = userChallengeDAO.findChallengeDetailById(userChallengeId);
+
+        // 만약 존재하지 않는 챌린지라면 null 반환 (컨트롤러에서 예외 처리)
+        if (challengeInfo == null) {
+            return null;
+        }
+
+        // 2. 해당 챌린지의 모든 인증 기록 조회
+        List<ChallengeLogVO> dailyLogs = challengeLogDAO.selectAllLogsByUserChallengeId(userChallengeId);
+
+        // 3. 두 종류의 데이터를 하나의 응답 DTO에 담아서 반환
+        ChallengeDetailResponseDTO responseDTO = new ChallengeDetailResponseDTO();
+        responseDTO.setChallengeInfo(challengeInfo);
+        responseDTO.setDailyLogs(dailyLogs);
+
+        return responseDTO;
     }
 }

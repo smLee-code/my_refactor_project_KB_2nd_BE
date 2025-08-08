@@ -10,13 +10,10 @@ import org.funding.financialProduct.dao.*;
 import org.funding.financialProduct.dto.*;
 import org.funding.financialProduct.vo.*;
 import org.funding.fund.dao.FundDAO;
-import org.funding.fund.dto.FundProductRequestDTO;
+import org.funding.fund.dto.*;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
-import org.funding.fund.dto.FundListResponseDTO;
-import org.funding.fund.dto.FundDetailResponseDTO;
-import org.funding.fund.dto.FundUpdateRequestDTO;
 import org.funding.fundKeyword.service.FundKeywordService;
 import org.funding.fundKeyword.dto.FundKeywordRequestDTO;
 import org.funding.keyword.vo.KeywordVO;
@@ -26,6 +23,10 @@ import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.user.vo.enumType.Role;
+import org.funding.userChallenge.dao.UserChallengeDAO;
+import org.funding.userDonation.dao.UserDonationDAO;
+import org.funding.userLoan.dao.UserLoanDAO;
+import org.funding.userSaving.dao.UserSavingDAO;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,6 +58,11 @@ public class FundService {
     private final ProjectDAO projectDAO;
     private final BadgeService badgeService;
     private final MemberDAO memberDAO;
+
+    private final UserChallengeDAO userChallengeDAO;
+    private final UserDonationDAO userDonationDAO;
+    private final UserSavingDAO userSavingDAO;
+    private final UserLoanDAO userLoanDAO;
 
     /**
      * 저축 펀딩 생성
@@ -254,6 +260,8 @@ public class FundService {
                     .verifyStandard(request.getVerifyStandard()) // 검증 기준 추가
                     .challengeStartDate(request.getChallengeStartDate())
                     .challengeEndDate(request.getChallengeEndDate())
+                    .challengeStartDate(request.getChallengeStartDate())
+                    .challengeEndDate(request.getChallengeEndDate())
                 .build();
             
             challengeDAO.insertChallenge(challenge);
@@ -433,7 +441,7 @@ public class FundService {
      * @param fundId 펀딩 ID
      * @return 펀딩 상세 정보 (fund + financial_product + 타입별 상세)
      */
-    public FundDetailResponseDTO getFundDetail(Long fundId) {
+    public FundDetailResponseDTO getFundDetail(Long fundId, Long userId) {
         FundVO fund = fundDAO.selectById(fundId);
         Long productId = fund.getProductId();
 
@@ -449,6 +457,29 @@ public class FundService {
         // 키워드 정보 추가
         List<KeywordVO> keywords = fundKeywordService.findKeywordIdsByFundId(fundId);
         fundDetail.setKeywords(keywords);
+
+        boolean isJoined = false;
+        if (userId != null) {
+            FinancialProductVO financialProduct = financialProductDAO.selectById(fund.getProductId());
+            FundType fundType = financialProduct.getFundType();
+
+            switch (fundType) {
+                case Challenge:
+                    isJoined = userChallengeDAO.existsByUserIdAndFundId(userId, fundId);
+                    break;
+                case Donation:
+                    isJoined = userDonationDAO.existsByUserIdAndFundId(userId, fundId);
+                    break;
+                case Savings:
+                    isJoined = userSavingDAO.existsByUserIdAndFundId(userId, fundId);
+                    break;
+                case Loan:
+                    isJoined = userLoanDAO.existsByUserIdAndFundId(userId, fundId);
+                    break;
+            }
+        }
+
+        fundDetail.setJoined(isJoined);
         
         return fundDetail;
     }
@@ -461,10 +492,10 @@ public class FundService {
      * @param request 수정할 펀딩 정보
      * @return 성공 메시지
      */
-    public String updateFund(Long fundId, FundUpdateRequestDTO request) {
+    public String updateFund(Long fundId, FundUpdateRequestDTO request, Long userId) {
         try {
             // 1. 펀딩 존재 여부 확인
-            FundDetailResponseDTO existingFund = getFundDetail(fundId);
+            FundDetailResponseDTO existingFund = getFundDetail(fundId, userId);
             
             // 2. Fund 테이블 업데이트
             FundVO fundVO = fundDAO.selectById(fundId);
@@ -605,7 +636,7 @@ public class FundService {
     public String deleteFund(Long fundId, Long userId) {
         try {
             // 1. 펀딩 존재 여부 확인
-            FundDetailResponseDTO existingFund = getFundDetail(fundId);
+            FundDetailResponseDTO existingFund = getFundDetail(fundId, userId);
             Long productId = existingFund.getProductId();
             FundType fundType = existingFund.getFundType();
 
@@ -658,6 +689,11 @@ public class FundService {
             log.error("Error deleting fund: ", e);
             throw new RuntimeException("펀딩 삭제 중 오류가 발생했습니다.", e);
         }
+    }
+
+    // 유저가 생성한 프로젝트 조회
+    public List<MyFundDetailDTO> findMyCreatedFunds(Long uploaderId) {
+        return fundDAO.findAllByUploaderId(uploaderId);
     }
 
 }

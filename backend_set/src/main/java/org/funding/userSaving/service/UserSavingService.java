@@ -5,6 +5,7 @@ import org.funding.badge.service.BadgeService;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userSaving.dao.UserSavingDAO;
+import org.funding.userSaving.dto.UserSavingDetailDTO;
 import org.funding.userSaving.dto.UserSavingRequestDTO;
 import org.funding.userSaving.vo.UserSavingVO;
 import org.springframework.stereotype.Service;
@@ -65,5 +66,10 @@ public class UserSavingService {
     // 유저가 가입한 저축 상품 전체 보기
     public List<UserSavingVO> getAllUserSaving(Long userId) {
         return userSavingDAO.findByUserId(userId);
+    }
+
+    // 유저가 가입한 저축 상품 모아보기(디테일)
+    public List<UserSavingDetailDTO> findMySavings(Long userId) {
+        return userSavingDAO.findAllSavingDetailsByUserId(userId);
     }
 }

@@ -1,6 +1,8 @@
 package org.funding.userLoan.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.funding.userLoan.dto.UserLoanDetailDTO;
 import org.funding.userLoan.dto.UserLoanRequestDTO;
 import org.funding.userLoan.vo.UserLoanVO;
 import org.funding.userLoan.vo.enumType.SuccessType;
@@ -26,4 +28,9 @@ public interface UserLoanDAO {
 
     // 타입 기준 대출 조회(관리자용)
     List<UserLoanVO> findByLoanAccess(SuccessType loanAccess);
+
+    // 유저 참여했는지 판별
+    boolean existsByUserIdAndFundId(@Param("userId") Long userId, @Param("fundId") Long fundId);
+
+    List<UserLoanDetailDTO> findAllLoanDetailsByUserId(@Param("userId") Long userId);
 }

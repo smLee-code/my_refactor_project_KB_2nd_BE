@@ -15,6 +15,7 @@ import org.funding.project.vo.ProjectVO;
 
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 
+import org.funding.projectKeyword.service.ProjectKeywordService;
 import org.funding.security.util.Auth;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import java.util.Map;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ProjectKeywordService projectKeywordService;
 
 //    //인기프로젝트 조회
 //    @GetMapping("/top")
@@ -55,6 +57,25 @@ public class ProjectController {
         return ResponseEntity.ok(project);
     }
 
+//    @Auth
+//    @GetMapping("/list/keyword")
+//    public ResponseEntity<List<ProjectListDTO>> getProjectsByUserKeywords(HttpServletRequest request) {
+//        // JWT 필터 또는 인터셉터에서 userId를 Attribute로 설정했다고 가정
+//        Long userId = (Long) request.getAttribute("userId");
+//
+//        List<ProjectListDTO> list = projectService.getProjectsByUserKeywords(userId);
+//        return ResponseEntity.ok(list);
+//    }
+
+    @Auth
+    @GetMapping("/list/keyword")
+    public ResponseEntity<List<ProjectListDTO>> getRecommendedProjects(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        List<ProjectListDTO> list = projectKeywordService.recommendProjectsByUserKeywords(userId);
+        return ResponseEntity.ok(list);
+    }
+
+
     /**
      * 새로 추가: [GET] /api/projects/list/detail/{id}/full
      * 프로젝트 + 타입별 상세 정보까지 조회
@@ -64,7 +85,6 @@ public class ProjectController {
         ProjectResponseDTO projectDetails = projectService.getProjectDetails(id);
         return ResponseEntity.ok(projectDetails);
     }
-
 
     @GetMapping("/distribution/type")
     public List<Map<String, Object>> getProjectTypeDistribution() {
@@ -76,24 +96,19 @@ public class ProjectController {
         return projectService.getProjectTrends();
     }
 
-
+    @Auth
     @GetMapping("/list")
     @ResponseBody
     public ResponseEntity<List<ProjectListDTO>> getProjects(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String type) {
+            @RequestParam(required = false) String type,
+            HttpServletRequest request
+    ) {
+        Long userId = (Long) request.getAttribute("userId");
 
-        List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type);
+        List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type, userId);
 
         return ResponseEntity.ok(projectWithDetailList);
-
-//        if (keyword != null && !keyword.isEmpty()) {
-//            return projectService.searchByKeyword(keyword);
-//        } else if (type != null && !type.isEmpty()) {
-//            return projectService.searchByType(type);
-//        } else {
-//            return projectService.getAllProjects();
-//        }
     }
 
     @GetMapping("/related/{id}")

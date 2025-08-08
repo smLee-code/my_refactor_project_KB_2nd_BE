@@ -18,7 +18,7 @@
     <!-- 인증 성공 시 성공 카운트 증가 -->
     <update id="updateUserChallengeSuccess">
         UPDATE user_challenge
-        SET success_count = success_count + 1
+        SET current_count = current_count + 1
         WHERE user_challenge_id = #{userChallengeId}
     </update>
 
@@ -36,12 +36,12 @@
         WHERE user_challenge_id = #{userChallengeId}
     </update>
 
-<!--    유저가 첼린지 동참여부 판단-->
+    <!--    유저가 첼린지 동참여부 판단-->
     <select id="existsByIdAndUserId" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM user_challenge
-        WHERE fund_id = #{fundId}
-          AND user_id = #{userId}
+        WHERE user_challenge_id = #{userChallengeId}  <!-- @Param으로 지정된 이름 사용 -->
+        AND user_id = #{userId}                     <!-- @Param으로 지정된 이름 사용 -->
     </select>
 
 <!--    id로 첼린지 조회-->
@@ -50,7 +50,7 @@
             user_challenge_id,
             fund_id,
             user_id,
-            success_count,
+            current_count,
             fail_count
         FROM user_challenge
         WHERE user_challenge_id = #{userChallengeId}
@@ -61,5 +61,66 @@
         DELETE FROM user_challenge
         WHERE user_challenge_id = #{userChallengeId}
     </delete>
+
+    <select id="findAllChallengesByUserId" resultType="org.funding.userChallenge.dto.UserChallengeDetailDTO">
+        SELECT
+            uc.user_challenge_id AS userChallengeId,
+            uc.current_count AS currentCount,
+            uc.fail_count AS failCount,
+            p.name AS challengeName,
+            i.image_url AS challengeImageUrl,
+            c.challenge_start_date AS challengeStartDate,
+            c.challenge_end_date AS challengeEndDate,
+            c.reward AS reward,
+            c.verify_standard AS verifyStandard
+        FROM
+            user_challenge uc
+                JOIN
+            fund f ON uc.fund_id = f.fund_id
+                JOIN
+            challenge c ON f.product_id = c.product_id
+                JOIN
+            financial_product p ON c.product_id = p.product_id
+                LEFT JOIN
+            image i ON p.product_id = i.post_id AND i.image_type = 'Funding'
+        WHERE
+            uc.user_id = #{userId}
+        ORDER BY
+            c.challenge_start_date DESC
+    </select>
+
+
+<!--    챌린지 상세보기-->
+    <select id="findChallengeDetailById" resultType="org.funding.userChallenge.dto.UserChallengeDetailDTO">
+        SELECT
+            uc.user_challenge_id AS userChallengeId,
+            uc.current_count AS currentCount,
+            uc.fail_count AS failCount,
+            p.name AS challengeName,
+            i.image_url AS challengeImageUrl,
+            c.challenge_start_date AS challengeStartDate,
+            c.challenge_end_date AS challengeEndDate,
+            c.reward AS reward,
+            c.verify_standard AS verifyStandard
+        FROM
+            user_challenge uc
+                JOIN
+            fund f ON uc.fund_id = f.fund_id
+                JOIN
+            challenge c ON f.product_id = c.product_id
+                JOIN
+            financial_product p ON c.product_id = p.product_id
+                LEFT JOIN
+            image i ON p.product_id = i.post_id AND i.image_type = 'Funding'
+        WHERE
+            uc.user_challenge_id = #{userChallengeId}
+    </select>
+
+<!--    펀딩 id로 유저가 참여했는지 판별-->
+    <select id="existsByUserIdAndFundId" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_challenge
+        WHERE user_id = #{userId} AND fund_id = #{fundId}
+    </select>
 
 </mapper>

@@ -18,4 +18,6 @@ public interface ProjectKeywordDAO {
     void insertProjectKeyword(ProjectKeywordRequestDTO requestDTO);
 
     void deleteProjectKeyword(ProjectKeywordRequestDTO requestDTO);
+
+    List<Long> selectProjectIdsByKeywordIds(List<Long> keywordIds);
 }

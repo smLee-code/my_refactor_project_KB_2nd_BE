@@ -13,6 +13,7 @@ import org.funding.user.vo.enumType.Role;
 import org.funding.userDonation.dao.UserDonationDAO;
 import org.funding.userDonation.dto.DonateRequestDTO;
 import org.funding.userDonation.dto.DonateResponseDTO;
+import org.funding.userDonation.dto.UserDonationDetailDTO;
 import org.funding.userDonation.vo.UserDonationVO;
 import org.springframework.stereotype.Service;
 
@@ -139,6 +140,10 @@ public class UserDonationService {
             throw new RuntimeException("해당 기부는 종료되었습니다.");
         }
         return fund;
+    }
+
+    public List<UserDonationDetailDTO> findMyDonations(Long userId) {
+        return userDonationDAO.findAllDonationDetailsByUserId(userId);
     }
 
 }

@@ -98,9 +98,8 @@ public class ProjectService {
         return dto;
     }
 
-    public List<ProjectListDTO> getProjectWithDetailList(String keyword, String type) {
+    public List<ProjectListDTO> getProjectWithDetailList(String keyword, String type, Long loginUserId) {
 
-        Long loginUserId = myPageService.getCurrentUserId();
         List<ProjectListDTO> projectList;
 
         // 프로젝트 기본 칼럼 및 좋아요 수 query
@@ -352,24 +351,6 @@ public class ProjectService {
     }
 
 
-//    public List<Map<String, Object>> getProjectTypeDistribution() {
-//        List<Map<String, Object>> rawData = projectDAO.getProjectTypeDistribution();
-//
-//        int total = rawData.stream()
-//                .mapToInt(row -> ((Number) row.get("count")).intValue())
-//                .sum();
-//
-//        // 퍼센트 계산
-//        return rawData.stream().map(row -> {
-//            Map<String, Object> result = new HashMap<>();
-//            result.put("label", row.get("type"));
-//            if (total == 0){
-//                result.put("value", 0);
-//            }
-//            result.put("value", Math.round(((Number) row.get("count")).doubleValue() / total * 100));
-//            return result;
-//        }).toList();
-//    }
 
     public List<Map<String, Object>> getProjectTypeDistribution() {
         List<Map<String, Object>> rawData = projectDAO.getProjectTypeDistribution();
@@ -436,4 +417,7 @@ public class ProjectService {
         return trends;
     }
 
+    public List<ProjectListDTO> getProjectsByUserKeywords(long userId) {
+        return projectDAO.getProjectsByKeyword(userId);
+    }
 }

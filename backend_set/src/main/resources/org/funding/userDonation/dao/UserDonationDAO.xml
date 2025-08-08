@@ -61,4 +61,38 @@
         WHERE user_donation_id = #{userDonationId}
     </delete>
 
+    <!--    펀딩 id로 유저가 참여했는지 판별-->
+    <select id="existsByUserIdAndFundId" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_donation
+        WHERE user_id = #{userId} AND fund_id = #{fundId}
+    </select>
+
+    <select id="findAllDonationDetailsByUserId" resultType="org.funding.userDonation.dto.UserDonationDetailDTO">
+        SELECT
+            ud.user_donation_id AS userDonationId,
+            ud.donation_amount AS donationAmount,
+            ud.anonymous AS anonymous,
+            p.name AS donationName,
+            d.recipient AS recipient,
+            d.target_amount AS targetAmount,
+            (SELECT image_url FROM image
+             WHERE post_id = p.product_id
+               AND image_type = 'Funding'
+             ORDER BY image_id ASC LIMIT 1) AS donationImageUrl
+
+        FROM
+            user_donation ud
+            JOIN
+            fund f ON ud.fund_id = f.fund_id
+            JOIN
+            donation d ON f.product_id = d.product_id
+            JOIN
+            financial_product p ON d.product_id = p.product_id
+        WHERE
+            ud.user_id = #{userId}
+        ORDER BY
+            ud.user_donation_id DESC
+    </select>
+
 </mapper>

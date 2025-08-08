@@ -17,10 +17,6 @@ public interface ProjectDAO {
     ChallengeProjectVO selectChallengeByProjectId(Long projectId);
     DonationProjectVO selectDonationByProjectId(Long projectId);
 
-
-//    private final SqlSession sqlSession;
-//    private static final String NAMESPACE = "org.funding.project.mapper.ProjectMapper.";
-
     void insertProject(ProjectVO projectVO);
 
     void insertSavingsProject(SavingsProjectVO savingProjectVO);
@@ -61,5 +57,9 @@ public interface ProjectDAO {
 
     List<Map<String, Object>> getProjectTrends();
 
+    List<ProjectListDTO> getProjectsByKeyword(Long userId);
+
     ProjectVO selectSimpleProjectById(Long projectId);
+
+    List<ProjectListDTO> selectProjectsByIds(List<Long> projectIds);
 }

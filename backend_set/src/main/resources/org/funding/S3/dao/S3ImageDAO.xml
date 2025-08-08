@@ -6,7 +6,7 @@
 
 <!--    이미지 저장-->
     <insert id="insertImage" parameterType="org.funding.S3.vo.S3ImageVO">
-        INSERT INTO image (image_type, post_id, image_url, create_at)
+        INSERT INTO s3_image (image_type, post_id, image_url, created_at)
         VALUES (#{imageType}, #{postId}, #{imageUrl}, #{createdAt})
     </insert>
 
@@ -15,7 +15,7 @@
             <arg column="image_type" javaType="String"/>
             <arg column="post_id" javaType="Long"/>
             <arg column="image_url" javaType="String"/>
-            <arg column="create_at" javaType="java.time.LocalDateTime"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime"/>
         </constructor>
     </resultMap>
 
@@ -30,10 +30,10 @@
     <!-- 썸네일 이미지 출력 -->
     <select id="findFirstImageByPost" resultMap="ImageVOMap">
         SELECT image_type, post_id, image_url, create_at
-        FROM image
+        FROM s3_image
         WHERE image_type = #{imageType}
           AND post_id = #{postId}
-        ORDER BY create_at ASC
+        ORDER BY created_at ASC
             LIMIT 1
     </select>
 

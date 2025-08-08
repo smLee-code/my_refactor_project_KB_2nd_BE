@@ -8,10 +8,10 @@
     <!-- 인증 로그 저장 -->
     <insert id="insertChallengeLog" parameterType="org.funding.challengeLog.vo.ChallengeLogVO">
         INSERT INTO challenge_log (
-            user_challenge_id, log_date, verified, image_url, verified_result
+            user_challenge_id, user_id, log_date, verified, image_url, verified_result
         )
         VALUES (
-                   #{userChallengeId}, #{logDate}, #{verified}, #{imageUrl}, #{verifiedResult}
+                   #{userChallengeId}, #{userId}, #{logDate}, #{verified}, #{imageUrl}, #{verifiedResult}
                )
     </insert>
 
