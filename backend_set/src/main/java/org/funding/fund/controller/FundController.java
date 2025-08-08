@@ -1,10 +1,7 @@
 package org.funding.fund.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.funding.fund.dto.FundProductRequestDTO;
-import org.funding.fund.dto.FundListResponseDTO;
-import org.funding.fund.dto.FundDetailResponseDTO;
-import org.funding.fund.dto.FundUpdateRequestDTO;
+import org.funding.fund.dto.*;
 import org.funding.fund.service.FundService;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
@@ -218,6 +215,19 @@ public class FundController {
         return ResponseEntity.ok(Map.of("message", result));
     }
 
+
+    // 유저가 생성한 프로젝트 조회
+    @Auth
+    @GetMapping("/my/fund/all")
+    public ResponseEntity<?> getMyAllCreatedFunds(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+        }
+        List<MyFundDetailDTO> myFunds = fundService.findMyCreatedFunds(userId);
+
+        return ResponseEntity.ok(myFunds);
+    }
 
 
 }

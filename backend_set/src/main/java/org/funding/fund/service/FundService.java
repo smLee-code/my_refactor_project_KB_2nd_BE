@@ -10,13 +10,10 @@ import org.funding.financialProduct.dao.*;
 import org.funding.financialProduct.dto.*;
 import org.funding.financialProduct.vo.*;
 import org.funding.fund.dao.FundDAO;
-import org.funding.fund.dto.FundProductRequestDTO;
+import org.funding.fund.dto.*;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
-import org.funding.fund.dto.FundListResponseDTO;
-import org.funding.fund.dto.FundDetailResponseDTO;
-import org.funding.fund.dto.FundUpdateRequestDTO;
 import org.funding.fundKeyword.service.FundKeywordService;
 import org.funding.fundKeyword.dto.FundKeywordRequestDTO;
 import org.funding.keyword.vo.KeywordVO;
@@ -692,6 +689,11 @@ public class FundService {
             log.error("Error deleting fund: ", e);
             throw new RuntimeException("펀딩 삭제 중 오류가 발생했습니다.", e);
         }
+    }
+
+    // 유저가 생성한 프로젝트 조회
+    public List<MyFundDetailDTO> findMyCreatedFunds(Long uploaderId) {
+        return fundDAO.findAllByUploaderId(uploaderId);
     }
 
 }
