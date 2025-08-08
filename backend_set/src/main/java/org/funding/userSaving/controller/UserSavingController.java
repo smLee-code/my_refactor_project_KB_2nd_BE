@@ -2,6 +2,7 @@ package org.funding.userSaving.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.security.util.Auth;
+import org.funding.userSaving.dto.UserSavingDetailDTO;
 import org.funding.userSaving.dto.UserSavingRequestDTO;
 import org.funding.userSaving.service.UserSavingService;
 import org.funding.userSaving.vo.UserSavingVO;
@@ -44,11 +45,23 @@ public class UserSavingController {
         return ResponseEntity.ok(userSavingService.findById(id));
     }
 
-    // 유저가 가입한 저축 상품 전체 조회
+    // 유저가 가입한 저축 상품 전체 조회 (디테일적이지않음 사용 x)
     @Auth
     @GetMapping("/user")
     public ResponseEntity<List<UserSavingVO>> getAllUserSaving(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         return ResponseEntity.ok(userSavingService.getAllUserSaving(userId));
+    }
+
+    // 유저가 가입한 저축 상품 모아보기
+    @Auth
+    @GetMapping
+    public ResponseEntity<?> getMyAllSavings(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+        }
+        List<UserSavingDetailDTO> mySavings = userSavingService.findMySavings(userId);
+        return ResponseEntity.ok(mySavings);
     }
 }
