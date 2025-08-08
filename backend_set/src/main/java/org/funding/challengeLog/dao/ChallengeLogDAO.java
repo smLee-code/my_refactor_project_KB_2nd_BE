@@ -21,4 +21,5 @@ public interface ChallengeLogDAO {
 
     List<ChallengeLogVO> selectAllLogsByUserChallengeId(Long userChallengeId);
 
+
 }
