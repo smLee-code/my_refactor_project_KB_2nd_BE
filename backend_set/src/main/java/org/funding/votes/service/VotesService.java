@@ -20,8 +20,8 @@ import java.util.List;
 public class VotesService {
 
     private final VotesDAO votesDAO;
-    private BadgeService badgeService;
-    private ProjectDAO projectDAO;
+    private final BadgeService badgeService;
+    private final ProjectDAO projectDAO;
 
     @Transactional
     public VotesResponseDTO toggleVote(Long projectId, Long userId) {
@@ -51,7 +51,6 @@ public class VotesService {
 
 
     public VotesResponseDTO createVotes(VotesRequestDTO requestDTO) {
-
 
         //투표는 토글 기능이라서 중복 투표 개념이 없을거같음
 //        if(votesDAO.selectVotes(requestDTO) != null) {

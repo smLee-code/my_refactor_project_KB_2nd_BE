@@ -76,8 +76,6 @@ public class ProjectController {
     }
 
 
-
-
     /**
      * 새로 추가: [GET] /api/projects/list/detail/{id}/full
      * 프로젝트 + 타입별 상세 정보까지 조회
@@ -87,7 +85,6 @@ public class ProjectController {
         ProjectResponseDTO projectDetails = projectService.getProjectDetails(id);
         return ResponseEntity.ok(projectDetails);
     }
-
 
     @GetMapping("/distribution/type")
     public List<Map<String, Object>> getProjectTypeDistribution() {
@@ -99,14 +96,17 @@ public class ProjectController {
         return projectService.getProjectTrends();
     }
 
-
+    @Auth
     @GetMapping("/list")
     @ResponseBody
     public ResponseEntity<List<ProjectListDTO>> getProjects(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String type) {
+            @RequestParam(required = false) String type,
+            HttpServletRequest request
+    ) {
+        Long userId = (Long) request.getAttribute("userId");
 
-        List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type);
+        List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type, userId);
 
         return ResponseEntity.ok(projectWithDetailList);
     }
