@@ -62,4 +62,31 @@
         WHERE user_challenge_id = #{userChallengeId}
     </delete>
 
+    <select id="findAllChallengesByUserId" resultType="org.funding.userChallenge.dto.UserChallengeDetailDTO">
+        SELECT
+            uc.user_challenge_id AS userChallengeId,
+            uc.current_count AS currentCount,
+            uc.fail_count AS failCount,
+            p.name AS challengeName,
+            i.image_url AS challengeImageUrl,
+            c.challenge_start_date AS challengeStartDate,
+            c.challenge_end_date AS challengeEndDate,
+            c.reward AS reward,
+            c.verify_standard AS verifyStandard
+        FROM
+            user_challenge uc
+                JOIN
+            fund f ON uc.fund_id = f.fund_id
+                JOIN
+            challenge c ON f.product_id = c.product_id
+                JOIN
+            financial_product p ON c.product_id = p.product_id
+                LEFT JOIN
+            image i ON p.product_id = i.post_id AND i.image_type = 'Funding'
+        WHERE
+            uc.user_id = #{userId}
+        ORDER BY
+            c.challenge_start_date DESC
+    </select>
+
 </mapper>

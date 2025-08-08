@@ -3,9 +3,11 @@ package org.funding.userChallenge.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.funding.challengeLog.vo.ChallengeLogVO;
+import org.funding.userChallenge.dto.UserChallengeDetailDTO;
 import org.funding.userChallenge.vo.UserChallengeVO;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Mapper
 public interface UserChallengeDAO {
@@ -25,5 +27,7 @@ public interface UserChallengeDAO {
 
     // 유저 챌린지 참여 취소
     void deleteUserChallenge(@Param("userChallengeId") Long id);
+
+    List<UserChallengeDetailDTO> findAllChallengesByUserId(@Param("userId") Long userId);
 
 }

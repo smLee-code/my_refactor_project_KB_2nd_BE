@@ -18,6 +18,7 @@ import org.funding.user.vo.MemberVO;
 import org.funding.userChallenge.dao.UserChallengeDAO;
 import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
 import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
+import org.funding.userChallenge.dto.UserChallengeDetailDTO;
 import org.funding.userChallenge.vo.UserChallengeVO;
 import org.springframework.stereotype.Service;
 
@@ -190,5 +191,11 @@ public class UserChallengeService {
         }
 
         userChallengeDAO.deleteUserChallenge(userChallengeId);
+    }
+
+    // 유저가 참여한 모든 챌린지 조회
+    public List<UserChallengeDetailDTO> findMyChallenges(Long userId) {
+        // 특별한 비즈니스 로직 없이 DAO를 호출하여 결과를 바로 반환
+        return userChallengeDAO.findAllChallengesByUserId(userId);
     }
 }

@@ -6,6 +6,7 @@ import org.funding.security.util.Auth;
 import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
 import org.funding.userChallenge.dto.ChallengeRequestDTO;
 import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
+import org.funding.userChallenge.dto.UserChallengeDetailDTO;
 import org.funding.userChallenge.service.UserChallengeService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/userChallenge")
@@ -57,5 +59,18 @@ public class UserChallengeController {
         String imageUrl = s3ImageService.uploadSingleImageAndGetUrl(file);
         userChallengeService.verifyDailyChallenge(id, userId, imageUrl, localDate);
         return ResponseEntity.ok("인증 완료");
+    }
+
+    // 유저가 참여한 모든 챌린지 조회
+    @Auth
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllMyChallenges(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        // userId가 없는 경우 예외 처리 (필요 시)
+        if (userId == null) {
+            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+        }
+        List<UserChallengeDetailDTO> myChallenges = userChallengeService.findMyChallenges(userId);
+        return ResponseEntity.ok(myChallenges);
     }
 }
