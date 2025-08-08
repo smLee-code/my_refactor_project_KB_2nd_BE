@@ -132,11 +132,11 @@ public class UserChallengeService {
         LocalDate today = LocalDate.now();
         LocalDate lastDate = today.isBefore(endDate) ? today : endDate;
 
-        List<LocalDate> allDates = startDate.datesUntil(lastDate.plusDays(1)).collect(Collectors.toList());
+        List<LocalDate> datesToBackfill = startDate.datesUntil(logDate).collect(Collectors.toList());
         List<LocalDate> verifyDates = challengeLogDAO.selectAllLogDatesByUserChallengeId(userChallengeId);
         Set<LocalDate> verifiedSet = new HashSet<>(verifyDates);
 
-        for (LocalDate date : allDates) {
+        for (LocalDate date : datesToBackfill) {
             if (!verifiedSet.contains(date)) {
                 boolean exists = challengeLogDAO.existsByUserChallengeIdAndLogDate(userChallengeId, date);
                 if (!exists) {
