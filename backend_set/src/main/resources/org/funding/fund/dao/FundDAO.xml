@@ -164,7 +164,7 @@
 
     <!-- 펀딩 상세 조회 (fund_id로 조회) -->
     <select id="selectDetailById" parameterType="long" resultMap="fundDetailResultMap">
-        SELECT 
+        SELECT
             f.fund_id as fundId,
             f.product_id as productId,
             f.project_id as projectId,
@@ -196,13 +196,39 @@
             c.reward as challengeReward,
             c.reward_condition as challengeRewardCondition
         FROM fund f
-        INNER JOIN financial_product fp ON f.product_id = fp.product_id
-        LEFT JOIN savings s ON fp.product_id = s.product_id AND fp.fund_type = 'SAVINGS'
-        LEFT JOIN donation d ON fp.product_id = d.product_id AND fp.fund_type = 'DONATION'
-        LEFT JOIN loan l ON fp.product_id = l.product_id AND fp.fund_type = 'LOAN'
-        LEFT JOIN challenge c ON fp.product_id = c.product_id AND fp.fund_type = 'CHALLENGE'
+                 INNER JOIN financial_product fp ON f.product_id = fp.product_id
+                 LEFT JOIN savings s ON fp.product_id = s.product_id AND fp.fund_type = 'SAVINGS'
+                 LEFT JOIN donation d ON fp.product_id = d.product_id AND fp.fund_type = 'DONATION'
+                 LEFT JOIN loan l ON fp.product_id = l.product_id AND fp.fund_type = 'LOAN'
+                 LEFT JOIN challenge c ON fp.product_id = c.product_id AND fp.fund_type = 'CHALLENGE'
         WHERE f.fund_id = #{fundId}
     </select>
+
+
+    <select id="findAllByUploaderId" resultType="org.funding.fund.dto.MyFundDetailDTO">
+        SELECT
+            f.fund_id AS fundId,
+            f.progress AS progress,
+            f.launch_at AS launchAt,
+            f.end_at AS endAt,
+            f.financial_institution AS financialInstitution,
+            p.name AS productName,
+            p.fund_type AS fundType,
+            (SELECT image_url FROM image
+             WHERE post_id = p.product_id
+               AND image_type = 'Funding'
+             ORDER BY image_id ASC
+                LIMIT 1) AS productImageUrl
+        FROM
+            fund f
+            JOIN
+            financial_product p ON f.product_id = p.product_id
+        WHERE
+            f.upload_user_id = #{uploaderId}
+        ORDER BY
+            f.fund_id DESC
+    </select>
+
 
 
 </mapper>

@@ -47,4 +47,38 @@
         WHERE loan_access = #{loanAccess}
     </select>
 
+    <!--    펀딩 id로 유저가 참여했는지 판별-->
+    <select id="existsByUserIdAndFundId" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_loan
+        WHERE user_id = #{userId} AND fund_id = #{fundId}
+    </select>
+
+    <select id="findAllLoanDetailsByUserId" resultType="org.funding.userLoan.dto.UserLoanDetailDTO">
+        SELECT
+            ul.user_loan_id AS userLoanId,
+            ul.loan_amount AS loanAmount,
+            ul.full_payment AS fullPayment,
+            ul.loan_access AS loanAccess,
+            p.name AS loanName,
+            l.loan_limit AS loanLimit,
+            l.min_interest_rate AS minInterestRate,
+            l.max_interest_rate AS maxInterestRate,
+            l.repayment_start_date AS repaymentStartDate,
+            l.repayment_end_date AS repaymentEndDate
+        FROM
+            user_loan ul
+                JOIN
+            fund f ON ul.fund_id = f.fund_id
+                JOIN
+            loan l ON f.product_id = l.product_id
+                JOIN
+            financial_product p ON l.product_id = p.product_id
+        WHERE
+            ul.user_id = #{userId}
+        ORDER BY
+            ul.user_loan_id DESC
+    </select>
+
+
 </mapper>

@@ -2,6 +2,7 @@ package org.funding.userDonation.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.funding.userDonation.dto.UserDonationDetailDTO;
 import org.funding.userDonation.vo.UserDonationVO;
 
 import java.util.List;
@@ -22,4 +23,9 @@ public interface UserDonationDAO {
 
     // 기부 내역 삭제
     void deleteUserDonation(@Param("userDonationId") Long userDonationId);
+
+    // 유저 참여했는지 판별
+    boolean existsByUserIdAndFundId(@Param("userId") Long userId, @Param("fundId") Long fundId);
+
+    List<UserDonationDetailDTO> findAllDonationDetailsByUserId(@Param("userId") Long userId);
 }
