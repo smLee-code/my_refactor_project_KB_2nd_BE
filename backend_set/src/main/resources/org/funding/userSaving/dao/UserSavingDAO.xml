@@ -40,4 +40,11 @@
         WHERE user_saving_id = #{userSavingId}
     </delete>
 
+    <!--    펀딩 id로 유저가 참여했는지 판별-->
+    <select id="existsByUserIdAndFundId" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM user_loan
+        WHERE user_id = #{userId} AND fund_id = #{fundId}
+    </select>
+
 </mapper>

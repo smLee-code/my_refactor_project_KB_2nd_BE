@@ -1,6 +1,7 @@
 package org.funding.userSaving.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.funding.userSaving.vo.UserSavingVO;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface UserSavingDAO {
 
     // 저축 가입 삭제
     void deleteUserSaving(Long userSavingId);
+
+    // 유저 참여했는지 판별
+    boolean existsByUserIdAndFundId(@Param("userId") Long userId, @Param("fundId") Long fundId);
 }

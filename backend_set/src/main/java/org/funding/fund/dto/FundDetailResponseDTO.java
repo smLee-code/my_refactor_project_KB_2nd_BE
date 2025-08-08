@@ -74,4 +74,7 @@ public class FundDetailResponseDTO {
     // Keywords 정보
     @Setter
     private List<KeywordVO> keywords;
+
+    //참여 여부 정보
+    private boolean isJoined;
 }

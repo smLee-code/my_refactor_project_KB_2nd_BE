@@ -176,9 +176,12 @@ public class FundController {
      * fund_id로 펀딩 정보와 연관된 모든 상세 정보를 조회
      * (fund + financial_product + 타입별 상세 테이블)
      */
+    @Auth
     @GetMapping("/{fundId}")
-    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId) {
-        FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId);
+    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId,
+                                                               HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId, userId);
         return ResponseEntity.ok(fundDetail);
     }
     
@@ -194,7 +197,8 @@ public class FundController {
             @PathVariable Long fundId, 
             @RequestBody FundUpdateRequestDTO request,
             HttpServletRequest servletRequest) {
-        String result = fundService.updateFund(fundId, request);
+        Long userId = (Long) servletRequest.getAttribute("userId");
+        String result = fundService.updateFund(fundId, request, userId);
         return ResponseEntity.ok(Map.of("message", result));
     }
     
