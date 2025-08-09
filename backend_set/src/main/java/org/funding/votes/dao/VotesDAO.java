@@ -1,9 +1,11 @@
 package org.funding.votes.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.funding.votes.dto.VotesRequestDTO;
 import org.funding.votes.vo.VotesVO;
 
 import java.util.List;
+import java.util.Set;
 
 public interface VotesDAO {
 
@@ -28,5 +30,7 @@ public interface VotesDAO {
     //userId, projectId 고려한 투표 삭제
     void deleteVotesByUserIdAndProjectId(Long userId, Long projectId);
 
+
+    Set<Long> findLikedProjectIdsByUserId(@Param("userId") Long userId, @Param("projectIds") List<Long> projectIds);
 
 }

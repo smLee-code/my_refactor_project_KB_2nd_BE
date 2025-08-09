@@ -1,6 +1,9 @@
 package org.funding.userLoan.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.S3.dao.S3ImageDAO;
+import org.funding.S3.vo.S3ImageVO;
+import org.funding.S3.vo.enumType.ImageType;
 import org.funding.badge.service.BadgeService;
 import org.funding.financialProduct.dao.FinancialProductDAO;
 import org.funding.financialProduct.dao.LoanDAO;
@@ -18,7 +21,10 @@ import org.funding.userLoan.vo.enumType.SuccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +34,7 @@ public class UserLoanService {
     private final UserLoanDAO userLoanDAO;
     private final LoanDAO loanDAO;
     private final BadgeService badgeService;
+    private final S3ImageDAO s3ImageDAO;
 
     // 대출 승인 신청
     public ResponseEntity<UserLoanResponseDTO> applyLoan(Long fundId, UserLoanRequestDTO loanRequestDTO, Long userId) {
@@ -159,7 +166,26 @@ public class UserLoanService {
 
     // 유저가 가입한 대출 모아보기
     public List<UserLoanDetailDTO> getAllUserLoans(Long userId) {
-        return userLoanDAO.findAllLoanDetailsByUserId(userId);
+
+        List<UserLoanDetailDTO> myLoans = userLoanDAO.findAllLoanDetailsByUserId(userId);
+
+        if (myLoans == null || myLoans.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Long> productIds = myLoans.stream()
+                .map(UserLoanDetailDTO::getProductId)
+                .collect(Collectors.toList());
+
+        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Funding, productIds);
+
+        Map<Long, List<S3ImageVO>> imagesByProductId = allImages.stream()
+                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
+        myLoans.forEach(loan ->
+                loan.setImages(imagesByProductId.getOrDefault(loan.getProductId(), Collections.emptyList()))
+        );
+
+        return myLoans;
     }
 
     // 공통 검증 메서드

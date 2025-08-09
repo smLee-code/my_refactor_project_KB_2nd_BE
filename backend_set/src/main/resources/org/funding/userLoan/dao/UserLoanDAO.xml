@@ -65,7 +65,8 @@
             l.min_interest_rate AS minInterestRate,
             l.max_interest_rate AS maxInterestRate,
             l.repayment_start_date AS repaymentStartDate,
-            l.repayment_end_date AS repaymentEndDate
+            l.repayment_end_date AS repaymentEndDate,
+            p.product_id AS productId
         FROM
             user_loan ul
                 JOIN
