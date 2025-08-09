@@ -21,7 +21,6 @@ public class VotesController {
     private final VotesService votesService;
 
 
-    @Auth
     @GetMapping("/{projectId}")
     public ResponseEntity<Boolean> hasVoted(
             @PathVariable Long projectId,
