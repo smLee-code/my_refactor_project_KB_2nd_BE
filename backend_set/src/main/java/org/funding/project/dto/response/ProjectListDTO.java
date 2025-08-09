@@ -11,6 +11,7 @@ import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,9 +26,10 @@ public class ProjectListDTO {
     private ProjectType projectType;
     private ProjectProgress progress;
     private String promotion;
-    private S3ImageVO thumbnailImage; // 썸네일 이미지
+    private List<S3ImageVO> images;
     private Long likes;
     private Boolean isLiked;
+    private S3ImageVO thumbnailImage;
 
     public static ProjectListDTO fromVO(ProjectVO vo) {
         return ProjectListDTO.builder()
