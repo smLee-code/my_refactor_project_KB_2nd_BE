@@ -1,10 +1,12 @@
 package org.funding.project.vo;
 
 import lombok.*;
+import org.funding.S3.vo.S3ImageVO;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -32,7 +34,5 @@ public class ProjectVO {
 
     private Long badgeId;
     private String badgeName;
-
-
 
 }

@@ -85,8 +85,6 @@
                  LEFT JOIN votes v
                            ON p.project_id = v.project_id
         GROUP BY p.project_id
---                  , p.title, p.deadline, p.create_at,
---                  p.user_id, p.project_type, p.progress, p.promotion
         ORDER BY vote_count DESC, p.create_at DESC
 
     </select>
@@ -225,8 +223,6 @@
             p.progress,
             p.promotion,
 
-            # 파라미터로 현재 로그인된 사용자 ID를 가져와서 써야함.
-            # 비 로그인 상태일 경우 is_liked를 항상 false로 처리해야 함
             (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.id) AS likes,
             (SELECT CASE
                 WHEN #{loginUserId} IS NOT NULL
