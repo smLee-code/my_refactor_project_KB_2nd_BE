@@ -22,9 +22,11 @@ public class VotesController {
 
 
     @Auth
-    @GetMapping("")
-    public ResponseEntity<Boolean> hasVoted(@RequestParam("projectId") Long projectId,
-                                            HttpServletRequest request) {
+    @GetMapping("/{projectId}")
+    public ResponseEntity<Boolean> hasVoted(
+            @PathVariable Long projectId,
+            HttpServletRequest request
+    ) {
 
         Long userId = (Long) request.getAttribute("userId");
         VotesRequestDTO requestDTO = new VotesRequestDTO();
