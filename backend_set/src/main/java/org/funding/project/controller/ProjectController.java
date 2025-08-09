@@ -103,6 +103,7 @@ public class ProjectController {
             @RequestParam(required = false) String type,
             HttpServletRequest request
     ) {
+
         Long userId = (Long) request.getAttribute("userId");
 
         List<ProjectListDTO> projectWithDetailList = projectService.getProjectWithDetailList(keyword, type, userId);
