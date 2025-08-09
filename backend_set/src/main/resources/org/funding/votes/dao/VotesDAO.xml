@@ -51,5 +51,15 @@
           AND project_id = #{projectId}
     </delete>
 
+    <select id="findLikedProjectIdsByUserId" resultType="long">
+        SELECT project_id
+        FROM votes
+        WHERE user_id = #{userId}
+        AND project_id IN
+        <foreach item="projectId" collection="projectIds" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
 
 </mapper>
