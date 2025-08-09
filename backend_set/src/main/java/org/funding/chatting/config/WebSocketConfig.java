@@ -23,10 +23,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat-app") // 접속 엔드포인트, ws://localhost:8080/chat-app
-                .setAllowedOriginPatterns("*");
-//                .setAllowedOrigins("*") // CORS 허용
-//                .withSockJS();
+        registry.addEndpoint("/chat-app")
+                .setAllowedOriginPatterns("https://fund-ing.store")
+                // ★ SockJS를 사용하도록 설정
+                .withSockJS();
 
     }
 }
