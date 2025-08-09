@@ -23,5 +23,7 @@ public interface S3ImageDAO {
     // 이미지 삭제
     void deleteImagesByPost(@Param("imageType") ImageType imageType, @Param("postId") Long postId);
 
+    // 포스트 id를 통한 이미지리스트 조회
+    List<S3ImageVO> findImagesForPostIds(@Param("imageType") ImageType imageType, @Param("postIds") List<Long> postIds);
 
 }

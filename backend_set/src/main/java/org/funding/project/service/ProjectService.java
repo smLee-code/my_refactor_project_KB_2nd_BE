@@ -1,6 +1,7 @@
 package org.funding.project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.S3.dao.S3ImageDAO;
 import org.funding.S3.service.S3ImageService;
 import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
@@ -38,13 +39,30 @@ public class ProjectService {
     private final ProjectDAO projectDAO;
     private final VotesDAO votesDAO;
     private final S3ImageService s3ImageService;
+    private final S3ImageDAO s3ImageDAO;
 
 
     public List<TopProjectDTO> getTopProjects() {
+        List<TopProjectDTO> topProjects = projectDAO.getTopProjects();
 
-        List<TopProjectDTO> list = projectDAO.getTopProjects();
+        if (topProjects == null || topProjects.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        return list;
+        List<Long> projectIds = topProjects.stream()
+                .map(TopProjectDTO::getProjectId)
+                .collect(Collectors.toList());
+
+        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
+
+        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
+                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
+
+        for (TopProjectDTO project : topProjects) {
+            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
+        }
+
+        return topProjects;
     }
 
     public ProjectVO selectProjectById(Long projectId) {

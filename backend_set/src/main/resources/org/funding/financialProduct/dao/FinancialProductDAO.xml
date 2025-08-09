@@ -10,7 +10,6 @@
         <result property="name" column="name" />
         <result property="detail" column="detail" />
         <result property="fundType" column="fund_type" typeHandler="org.apache.ibatis.type.EnumTypeHandler" javaType="org.funding.fund.vo.enumType.FundType" />
-        <result property="thumbnail" column="thumbnail" />
         <result property="joinCondition" column="join_condition" />
     </resultMap>
 

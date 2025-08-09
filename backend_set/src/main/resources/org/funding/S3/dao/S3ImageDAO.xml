@@ -45,6 +45,17 @@
           AND post_id = #{postId}
     </delete>
 
+<!--    포스트 id를 통한 이미지 리스트 조회-->
+    <select id="findImagesForPostIds" resultMap="ImageVOMap">
+        SELECT image_type, post_id, image_url, created_at
+        FROM s3_image
+        WHERE image_type = #{imageType}
+        AND post_id IN
+        <foreach item="postId" collection="postIds" open="(" separator="," close=")">
+            #{postId}
+        </foreach>
+    </select>
+
 
 
 </mapper>

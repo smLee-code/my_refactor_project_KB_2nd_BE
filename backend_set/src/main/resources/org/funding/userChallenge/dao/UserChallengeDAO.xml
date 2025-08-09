@@ -40,8 +40,8 @@
     <select id="existsByIdAndUserId" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM user_challenge
-        WHERE user_challenge_id = #{userChallengeId}  <!-- @Param으로 지정된 이름 사용 -->
-        AND user_id = #{userId}                     <!-- @Param으로 지정된 이름 사용 -->
+        WHERE user_challenge_id = #{userChallengeId}
+        AND user_id = #{userId}
     </select>
 
 <!--    id로 첼린지 조회-->
@@ -82,7 +82,7 @@
                 JOIN
             financial_product p ON c.product_id = p.product_id
                 LEFT JOIN
-            image i ON p.product_id = i.post_id AND i.image_type = 'Funding'
+            s3_image i ON p.product_id = i.post_id AND i.image_type = 'Funding'
         WHERE
             uc.user_id = #{userId}
         ORDER BY
@@ -111,7 +111,7 @@
                 JOIN
             financial_product p ON c.product_id = p.product_id
                 LEFT JOIN
-            image i ON p.product_id = i.post_id AND i.image_type = 'Funding'
+            s3_image i ON p.product_id = i.post_id AND i.image_type = 'Funding'
         WHERE
             uc.user_challenge_id = #{userChallengeId}
     </select>
