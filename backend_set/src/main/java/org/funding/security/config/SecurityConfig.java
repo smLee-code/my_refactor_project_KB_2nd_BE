@@ -51,8 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final LoginSuccessHandler loginSuccessHandler;
   private final LoginFailureHandler loginFailureHandler;
 
-
-  // JwtUsernamePasswordAuthenticationFilter는 아래에서 빈으로 등록한다.
   @Autowired
   private JwtUsernamePasswordAuthenticationFilter jwtUsernamePasswordAuthenticationFilter;
 
@@ -180,25 +178,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring().antMatchers(
-            "/assets/**",
-            "/api/member/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v2/api-docs",
             "/v3/api-docs",
-            "/health", // 헬스체커 api 항상 열어놓을것
-            "/api/fund/{fundId}",
-            "/api/fund/list",
-            "/api/fund/template",
-            "/api/project/list",
-            "/api/project/list/detail/{id}",
-            "/api/project/list/detail/{id}/full",
-            "/api/project/related/{id}",
-            "/api/project/top",
-            "/api/project/trend",
-            "/api/project/distribution/type",
-            "/api/mail/**",
-            "/api/category/**"
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/health"
     );
   }
 }
