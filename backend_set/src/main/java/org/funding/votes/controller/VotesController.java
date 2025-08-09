@@ -57,8 +57,8 @@ public class VotesController {
         return ResponseEntity.ok(votedProjects);
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Long> countVotes(@RequestParam("projectId") Long projectId) {
+    @GetMapping("/{projectId}/count")
+    public ResponseEntity<Long> countVotes(@PathVariable Long projectId) {
 
         Long voteCount = votesService.countVotes(projectId);
 

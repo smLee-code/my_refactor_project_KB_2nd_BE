@@ -156,6 +156,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
                     .antMatchers(HttpMethod.GET, "/api/keyword").permitAll()
                     .antMatchers("/api/keyword").authenticated()
+                    .antMatchers("/api/votes/**/count").permitAll()
             .anyRequest().authenticated();
   }
 
