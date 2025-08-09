@@ -95,7 +95,6 @@ public class ProjectController {
         return projectService.getProjectTrends();
     }
 
-    @Auth
     @GetMapping("/list")
     @ResponseBody
     public ResponseEntity<List<ProjectListDTO>> getProjects(
