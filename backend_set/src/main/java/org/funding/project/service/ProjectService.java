@@ -139,17 +139,19 @@ public class ProjectService {
         Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
                 .collect(Collectors.groupingBy(S3ImageVO::getPostId));
 
-        Set<Long> likedProjectIds = new HashSet<>();
-        if (loginUserId != null) {
-
-            likedProjectIds = votesDAO.findLikedProjectIdsByUserId(loginUserId, projectIds);
+        for (ProjectListDTO project : projectList) {
+            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
         }
 
-        for (ProjectListDTO project : projectList) {
-
-            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
-
-            project.setIsLiked(likedProjectIds.contains(project.getProjectId()));
+        if (loginUserId == null) {
+            // 비 로그인 시 -> 투표 여부 항상 false로 처리
+            projectList.forEach(project -> project.setIsLiked(false));
+        }
+        else {
+            projectList.forEach(project -> {
+                Boolean isLiked = votesService.hasVoted(new VotesRequestDTO(loginUserId, project.getProjectId()));
+                project.setIsLiked(isLiked);
+            });
         }
 
         return projectList;
