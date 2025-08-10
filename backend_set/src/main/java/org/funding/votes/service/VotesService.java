@@ -103,11 +103,6 @@ public class VotesService {
     public Boolean hasVoted(VotesRequestDTO requestDTO) {
         VotesVO votesVO = votesDAO.selectVotes(requestDTO);
 
-        if(votesVO == null) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return votesVO != null;
     }
 }
