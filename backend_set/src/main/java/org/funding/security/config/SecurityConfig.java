@@ -196,7 +196,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs",
             "/swagger-resources/**",
             "/webjars/**",
-            "/health"
+            "/health",
+            "/chat-app/**"
     );
   }
 }
