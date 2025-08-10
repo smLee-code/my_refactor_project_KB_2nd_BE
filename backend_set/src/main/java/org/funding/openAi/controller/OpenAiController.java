@@ -6,10 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.annotations.Param;
 import org.funding.fund.vo.FundVO;
 import org.funding.openAi.client.OpenAIClient;
-import org.funding.openAi.dto.ChatRequestDTO;
-import org.funding.openAi.dto.ChatResponseDTO;
-import org.funding.openAi.dto.SummaryFundRequestDTO;
-import org.funding.openAi.dto.SummaryFundResponseDTO;
+import org.funding.openAi.dto.*;
 import org.funding.openAi.service.ChatService;
 import org.funding.openAi.service.FundAIService;
 import org.funding.openAi.service.OpenVisionService;
@@ -63,11 +60,11 @@ public class OpenAiController {
     // 이미지 분석
     @Auth
     @PostMapping("/analyze-image")
-    public ResponseEntity<String> analyzeImage(@RequestParam("imageUrl") String imageUrl,
+    public ResponseEntity<VisionResponseDTO> analyzeImage(@RequestParam("imageUrl") String imageUrl,
                                                @RequestParam("prompt") String prompt,
                                                HttpServletRequest request) {
-        String result = openVisionService.analyzeImage(imageUrl, prompt);
-        return ResponseEntity.ok(result);
+        VisionResponseDTO visionResponse = openVisionService.analyzeImage(imageUrl, prompt);
+        return ResponseEntity.ok(visionResponse);
     }
 
 }
