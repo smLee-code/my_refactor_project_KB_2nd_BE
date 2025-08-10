@@ -1,7 +1,9 @@
 package org.funding.openAi.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.funding.openAi.dto.VisionResponseDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +19,9 @@ public class OpenAIVisionClient {
     @Value("${openai.api.key}")
     private String apiKey;
 
-    public String analyzeImageWithPrompt(String imageUrl, String prompt) {
+    public VisionResponseDTO analyzeImageWithPrompt(String imageUrl, String prompt) {
         OkHttpClient client = new OkHttpClient();
+        ObjectMapper mapper = new ObjectMapper();
 
         try {
             JSONArray messages = new JSONArray();
@@ -29,8 +32,12 @@ public class OpenAIVisionClient {
 
             JSONObject textObject = new JSONObject();
             textObject.put("type", "text");
-            String refinedPrompt = prompt +
-                    " 이 조건을 만족하는지 판단해줘. 만약 사진이 이 조건에 부합한다면 '확인되었습니다.'라는 문장을 마지막에 꼭 포함해서 답변해줘.";
+            String refinedPrompt = String.format(
+                    "당신은 자동 이미지 검증 시스템입니다. 주어진 이미지가 아래의 '검증 조건'을 만족하는지 판단하고, 결과를 반드시 다음 JSON 형식으로만 응답해주세요. " +
+                            "다른 설명은 절대 추가하지 마세요. JSON 객체 형식: {\"score\": [0-100 사이의 정수 점수], \"reason\": \"[판단 근거에 대한 한글 설명]\"}. " +
+                            "조건에 완벽히 부합하면 100점에 가깝게, 완전히 다르면 0점에 가깝게 점수를 부여하세요. --- 검증 조건: %s",
+                    prompt
+            );
             textObject.put("text", refinedPrompt);
             contentArray.put(textObject);
 
@@ -62,20 +69,22 @@ public class OpenAIVisionClient {
             if (!response.isSuccessful()) {
                 log.error("GPT Vision 호출 실패: HTTP {}", response.code());
                 log.error("응답 바디: {}", response.body().string());
-                return "GPT-4 Vision 호출 실패" + response.code();
+                throw new RuntimeException("이미지 검증 처리중 에러 발생");
             }
 
             String responseBody = response.body().string();
             log.info("GPT-4 Vision 응답: {}", responseBody);
 
             JSONObject json = new JSONObject(responseBody);
-            return json.getJSONArray("choices")
+            String content = json.getJSONArray("choices")
                     .getJSONObject(0)
                     .getJSONObject("message")
                     .getString("content");
+
+            return mapper.readValue(content, VisionResponseDTO.class);
         } catch (Exception e) {
             log.error("GPT-4 Vision API 요청 중 예외 발생", e);
-            return "GPT-4 Vision API 요청 중 예외 발생!";
+            throw new RuntimeException("이미지 검증 처리중 에러 발생");
         }
     }
 }
