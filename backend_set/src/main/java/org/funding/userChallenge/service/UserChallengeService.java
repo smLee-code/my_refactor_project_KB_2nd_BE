@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.badge.service.BadgeService;
 import org.funding.challengeLog.dao.ChallengeLogDAO;
 import org.funding.challengeLog.vo.ChallengeLogVO;
+import org.funding.challengeLog.vo.enumType.VerifyType;
 import org.funding.financialProduct.dao.ChallengeDAO;
 import org.funding.financialProduct.dao.FinancialProductDAO;
 import org.funding.financialProduct.vo.ChallengeVO;
@@ -13,6 +14,7 @@ import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.openAi.client.OpenAIVisionClient;
+import org.funding.openAi.dto.VisionResponseDTO;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userChallenge.dao.UserChallengeDAO;
@@ -90,8 +92,6 @@ public class UserChallengeService {
         FundVO fund = fundDAO.selectById(userChallenge.getFundId());
         ChallengeVO challenge = challengeDAO.selectByProductId(fund.getProductId());
 
-        System.out.println("sdsds" + challenge);
-
         LocalDate startDate = challenge.getChallengeStartDate();
         LocalDate endDate = challenge.getChallengeEndDate();
 
@@ -146,7 +146,7 @@ public class UserChallengeService {
                     log.setUserChallengeId(userChallengeId);
                     log.setUserId(userId);
                     log.setLogDate(date);
-                    log.setVerified(false);
+                    log.setVerified(VerifyType.UnVerified);
                     log.setVerifiedResult("미인증");
                     log.setImageUrl(null);
                     challengeLogDAO.insertChallengeLog(log);
@@ -156,11 +156,21 @@ public class UserChallengeService {
 
         // 7. 이미지 분석 및 인증 검증
         String rewardCondition = challenge.getRewardCondition();
-        String result = openAIVisionClient.analyzeImageWithPrompt(imageUrl, rewardCondition);
-        boolean isVerified = result.contains("확인되었습니다.");
+        VisionResponseDTO visionResponse = openAIVisionClient.analyzeImageWithPrompt(imageUrl, rewardCondition);
 
-        if (!isVerified) {
-            throw new RuntimeException("해당 사진이 리워드 조건을 만족하지 못했습니다.");
+        int score = visionResponse.getScore();
+        String reason = visionResponse.getReason();
+
+        VerifyType verifyType;
+        boolean isSuccess = false;
+
+        if (score > 70) {
+            verifyType = VerifyType.Verified;
+            isSuccess = true;
+        } else if (score >= 20) {
+            verifyType = VerifyType.HumanVerify;
+        } else {
+            verifyType = VerifyType.UnVerified;
         }
 
         // 8. 인증 성공 로그 저장
@@ -169,8 +179,8 @@ public class UserChallengeService {
         log.setUserId(userId);
         log.setLogDate(logDate);
         log.setImageUrl(imageUrl);
-        log.setVerified(true);
-        log.setVerifiedResult(result);
+        log.setVerified(verifyType);
+        log.setVerifiedResult(String.format("[점수: %d] %s", score, reason));
         challengeLogDAO.insertChallengeLog(log);
 
         // 9. 유저 챌린지 상태 업데이트

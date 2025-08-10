@@ -144,7 +144,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/project/distribution/type",
                             "/api/mail/**",
                             "/api/category/**"
-
                     ).permitAll()
                     .antMatchers("/api/security/all").permitAll()
                     .antMatchers("/api/security/member").hasRole("NORMAL")
