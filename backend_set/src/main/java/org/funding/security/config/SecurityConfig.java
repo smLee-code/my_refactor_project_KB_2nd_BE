@@ -149,12 +149,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/security/member").hasRole("NORMAL")
                     .antMatchers("/api/security/admin").hasRole("ADMIN")
                     .antMatchers("/api/fund/**").permitAll()  // 펀딩 API 테스트용 - 추후 인증 필요시 제거
-                    .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
                     .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
                     .antMatchers(HttpMethod.GET, "/api/keyword").permitAll()
-                    .antMatchers("/api/keyword").authenticated()
-                    .antMatchers("/api/votes/**/count").permitAll()
-            .anyRequest().authenticated();
+
+                    .antMatchers(HttpMethod.GET, "/api/votes/*/count").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/votes/*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/votes/my-votes").authenticated()
+
+                    .antMatchers(HttpMethod.GET, "/api/projects/top").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/list/detail/*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/list/detail/*/full").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/distribution/type").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/trend").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/list").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/related/*").permitAll()
+
+
+                    .anyRequest().authenticated();
   }
 
   // CORS 필터 빈 등록 (필요하면)
