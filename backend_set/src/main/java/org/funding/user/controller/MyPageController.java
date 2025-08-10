@@ -34,8 +34,11 @@ public class MyPageController {
     @Auth
     @GetMapping("")
     public ResponseEntity<?> getMyPageInfo(HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+
         try {
-            MyPageResponseDTO myPageInfo = myPageService.getMyPageInfo();
+            MyPageResponseDTO myPageInfo = myPageService.getMyPageInfo(userId);
             return ResponseEntity.ok(myPageInfo);
         } catch (IllegalStateException e) { // 인증 실패
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -108,15 +111,20 @@ public class MyPageController {
         }
     }
 
+
     @ApiOperation(value = "내 투표 조회", notes = "사용자가 투표한 프로젝트 목록을 조회합니다.")
     @ApiResponses({
         @ApiResponse(code = 200, message = "조회 성공"),
         @ApiResponse(code = 401, message = "인증 실패")
     })
+    @Auth
     @GetMapping("/votes")
-    public ResponseEntity<?> getMyVotes() {
+    public ResponseEntity<?> getMyVotes(HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+
         try {
-            List<VotesResponseDTO> votes = myPageService.getMyVotes();
+            List<VotesResponseDTO> votes = myPageService.getMyVotes(userId);
             return ResponseEntity.ok(votes);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
