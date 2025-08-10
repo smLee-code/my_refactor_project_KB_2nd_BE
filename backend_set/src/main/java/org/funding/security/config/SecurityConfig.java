@@ -164,6 +164,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.GET, "/api/projects/list").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/projects/related/*").permitAll()
 
+                    .antMatchers(HttpMethod.GET, "/api/chat/history/*").permitAll()
+
 
                     .anyRequest().authenticated();
   }
@@ -194,7 +196,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs",
             "/swagger-resources/**",
             "/webjars/**",
-            "/health"
+            "/health",
+            "/chat-app/**"
     );
   }
 }
