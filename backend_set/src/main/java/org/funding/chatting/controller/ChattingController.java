@@ -2,6 +2,7 @@ package org.funding.chatting.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.chatting.dto.ChattingMessage;
+import org.funding.chatting.dto.ChattingMessageResponseDTO;
 import org.funding.chatting.dto.GreetingMessage;
 import org.funding.chatting.service.ChattingService;
 import org.funding.security.util.Auth;
@@ -36,22 +37,6 @@ public class ChattingController {
         return new GreetingMessage("hello," + member.getUsername());
     }
 
-//    @Auth
-//    @MessageMapping("/chat/{projectId}")
-//    @SendTo("/topic/chat/{projectId}")
-//    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, HttpServletRequest request) throws Exception {
-//
-//        System.out.println("✅ chat() called!");
-//
-//        Long userId = (Long) request.getAttribute("userId");
-//        MemberVO member = memberDAO.findById(userId);
-//        message.setProjectId(projectId);
-//        message.setSender(member.getUsername());
-//        chattingService.saveMessage(message); //db 저장
-//
-//        return message;
-//    }
-
     @MessageMapping("/chat/{projectId}")
     @SendTo("/topic/chat/{projectId}")
     public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, Principal principal) {
@@ -63,9 +48,13 @@ public class ChattingController {
         return message;
     }
 
-
     @GetMapping("/chat/history/{projectId}")
-    public List<ChattingMessage> getChatHistory(@PathVariable Long projectId) throws Exception {
-        return chattingService.getMessages(projectId);
+    public List<ChattingMessageResponseDTO> getChatHistory(
+            @PathVariable Long projectId,
+            HttpServletRequest request
+    ) throws Exception {
+        Long userId = (Long) request.getAttribute("userId");
+
+        return chattingService.getMessages(projectId, userId);
     }
 }

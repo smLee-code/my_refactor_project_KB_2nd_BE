@@ -9,11 +9,12 @@
         VALUES (#{projectId}, #{userId}, #{content}, NOW())
     </insert>
 
-    <select id="findMessagesByRoomId" resultType="org.funding.chatting.dto.ChattingMessage">
-        SELECT id, user_id, content,project_id, DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') as timestamp
+    <select id="findMessagesByRoomId" resultType="org.funding.chatting.vo.ChattingMessageVO">
+        SELECT *
         FROM chat_message
         WHERE project_id = #{projectId}
         ORDER BY timestamp ASC
     </select>
+
 
 </mapper>
