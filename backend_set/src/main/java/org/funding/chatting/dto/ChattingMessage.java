@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ChattingMessage {
     private Long id;
     private Long projectId;     // 추가
-    private String sender;
+    private Long userId;
     private String content;
 
     private String timestamp;

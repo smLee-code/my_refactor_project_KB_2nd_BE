@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -35,24 +36,36 @@ public class ChattingController {
         return new GreetingMessage("hello," + member.getUsername());
     }
 
-    @Auth
+//    @Auth
+//    @MessageMapping("/chat/{projectId}")
+//    @SendTo("/topic/chat/{projectId}")
+//    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, HttpServletRequest request) throws Exception {
+//
+//        System.out.println("✅ chat() called!");
+//
+//        Long userId = (Long) request.getAttribute("userId");
+//        MemberVO member = memberDAO.findById(userId);
+//        message.setProjectId(projectId);
+//        message.setSender(member.getUsername());
+//        chattingService.saveMessage(message); //db 저장
+//
+//        return message;
+//    }
+
     @MessageMapping("/chat/{projectId}")
     @SendTo("/topic/chat/{projectId}")
-    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, HttpServletRequest request) throws Exception {
-        Long userId = (Long) request.getAttribute("userId");
+    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, Principal principal) {
+        Long userId = Long.parseLong(principal.getName());
         MemberVO member = memberDAO.findById(userId);
         message.setProjectId(projectId);
-        message.setSender(member.getUsername());
-        chattingService.saveMessage(message); //db 저장
-
+        message.setUserId(userId);
+        chattingService.saveMessage(message);
         return message;
     }
 
-    @Auth
+
     @GetMapping("/chat/history/{projectId}")
-    public List<ChattingMessage> getChatHistory(@PathVariable Long projectId,
-                                                HttpServletRequest request) throws Exception {
-        System.out.println("🔥 채팅 내역 요청 projectId = " + projectId);
+    public List<ChattingMessage> getChatHistory(@PathVariable Long projectId) throws Exception {
         return chattingService.getMessages(projectId);
     }
 }

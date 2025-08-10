@@ -164,6 +164,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.GET, "/api/projects/list").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/projects/related/*").permitAll()
 
+                    .antMatchers(HttpMethod.GET, "/api/chat/history/*").permitAll()
+
 
                     .anyRequest().authenticated();
   }

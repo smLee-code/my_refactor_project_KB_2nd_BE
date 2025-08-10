@@ -6,7 +6,7 @@
 
     <insert id="saveMessage" parameterType="org.funding.chatting.dto.ChattingMessage">
         INSERT INTO chat_message (project_id, user_id, content, timestamp)
-        VALUES (#{projectId}, #{sender}, #{content}, NOW())
+        VALUES (#{projectId}, #{userId}, #{content}, NOW())
     </insert>
 
     <select id="findMessagesByRoomId" resultType="org.funding.chatting.dto.ChattingMessage">
