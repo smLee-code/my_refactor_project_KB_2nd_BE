@@ -1,28 +1,18 @@
 package org.funding.openAi.controller;
-
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.ibatis.annotations.Param;
 import org.funding.fund.vo.FundVO;
-import org.funding.openAi.client.OpenAIClient;
 import org.funding.openAi.dto.*;
 import org.funding.openAi.service.ChatService;
 import org.funding.openAi.service.FundAIService;
 import org.funding.openAi.service.OpenVisionService;
 import org.funding.security.util.Auth;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ai")

@@ -29,4 +29,28 @@
           AND funding_id = #{fundingId}
     </delete>
 
+
+<!--    내가 투표한 펀딩 조회-->
+    <select id="findVotedFundDetailsByUserId" resultType="org.funding.retryVotes.dto.MyVotedFundDTO">
+        SELECT
+            f.fund_id AS fundId,
+            p.name AS productName,
+            f.progress AS progress,
+            f.end_at AS endAt,
+            (SELECT image_url FROM s3_image
+             WHERE post_id = p.product_id
+               AND imageType = 'Funding'
+             ORDER BY id ASC
+                LIMIT 1) AS productImageUrl
+        FROM
+            retry_votes rv
+            JOIN
+            fund f ON rv.funding_id = f.fund_id
+            JOIN
+            financial_product p ON f.product_id = p.product_id
+        WHERE
+            rv.user_id = #{userId}
+        ORDER BY
+            rv.retry_id DESC
+    </select>
 </mapper>
