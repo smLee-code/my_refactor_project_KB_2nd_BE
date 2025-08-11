@@ -2,6 +2,9 @@ package org.funding.payment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.FundException;
+import org.funding.global.error.exception.PaymentException;
 import org.funding.payment.dto.PaymentCompleteRequestDTO;
 import org.funding.payment.dto.PaymentCreateRequestDTO;
 import org.funding.payment.dto.FundingInfoDTO;
@@ -68,7 +71,7 @@ public class PaymentService {
             // 1. fund_id로 펀딩 정보 조회
             FundingInfoDTO fundingInfo = fundingInfoDAO.selectFundingInfoById(request.getFundId());
             if (fundingInfo == null) {
-                throw new RuntimeException("존재하지 않는 펀딩 ID입니다: " + request.getFundId());
+                throw new FundException(ErrorCode.FUNDING_NOT_FOUND);
             }
             
             // 2. merchant_uid 생성
@@ -102,7 +105,7 @@ public class PaymentService {
             
         } catch (Exception e) {
             log.error("결제 정보 생성 실패", e);
-            throw new RuntimeException("결제 정보 생성에 실패했습니다: " + e.getMessage());
+            throw new PaymentException(ErrorCode.FAIL_PAYMENT);
         }
     }
     
@@ -112,11 +115,11 @@ public class PaymentService {
             return 3000; // 챌린지는 3000원 고정
         } else if ("donation".equalsIgnoreCase(fundingType)) {
             if (requestAmount == null || requestAmount <= 0) {
-                throw new IllegalArgumentException("기부 금액을 입력해주세요.");
+                throw new PaymentException(ErrorCode.ENTER_DONATE_AMOUNT);
             }
             return requestAmount;
         }
-        throw new IllegalArgumentException("지원하지 않는 펀딩 타입입니다: " + fundingType);
+        throw new PaymentException(ErrorCode.NOT_FUND_TYPE);
     }
     
     // 결제 완료 처리
@@ -125,7 +128,7 @@ public class PaymentService {
             // 1. DB에서 결제 정보 조회
             PaymentVO payment = paymentDAO.selectPaymentByMerchantUid(request.getMerchantUid());
             if (payment == null) {
-                throw new RuntimeException("결제 정보를 찾을 수 없습니다.");
+                throw new PaymentException(ErrorCode.NOT_FOUND_PAYMENT);
             }
             
             // 2. 포트원 결제 검증
@@ -133,7 +136,7 @@ public class PaymentService {
             if (!isValid) {
                 payment.setStatus("FAILED");
                 paymentDAO.updatePaymentStatus(payment);
-                throw new RuntimeException("결제 검증에 실패했습니다.");
+                throw new PaymentException(ErrorCode.FAIL_VERIFY_PAYMENT);
             }
             
             // 3. 결제 정보 업데이트
@@ -155,7 +158,7 @@ public class PaymentService {
             
         } catch (Exception e) {
             log.error("결제 완료 처리 실패", e);
-            throw new RuntimeException(e.getMessage());
+            throw new PaymentException(ErrorCode.FAIL_SUCCESS_PAY);
         }
     }
     
@@ -232,10 +235,10 @@ public class PaymentService {
                 return (Map<String, Object>) body.get("response");
             }
             
-            throw new RuntimeException("결제 정보 조회 실패");
+            throw new PaymentException(ErrorCode.NOT_FOUND_PAYMENT);
         } catch (Exception e) {
             log.error("포트원 결제 정보 조회 실패", e);
-            throw new RuntimeException("결제 정보 조회 실패", e);
+            throw new PaymentException(ErrorCode.NOT_FOUND_PAYMENT);
         }
     }
     
@@ -252,14 +255,14 @@ public class PaymentService {
                     result = processChallengeJoin(payment);
                     break;
                 default:
-                    throw new IllegalArgumentException("결제가 필요한 펀딩 타입이 아닙니다: " + payment.getFundingType());
+                    throw new PaymentException(ErrorCode.NO_HAVE_PAYMENT);
             }
             
             return result;
             
         } catch (Exception e) {
             log.error("펀딩 가입 처리 실패", e);
-            throw new RuntimeException("펀딩 가입 처리 중 오류가 발생했습니다: " + e.getMessage());
+            throw new PaymentException(ErrorCode.FAIL_ENTER_FUND);
         }
     }
     
@@ -327,7 +330,7 @@ public class PaymentService {
             throw new RuntimeException("포트원 액세스 토큰 획득 실패");
         } catch (Exception e) {
             log.error("포트원 액세스 토큰 획득 실패", e);
-            throw new RuntimeException("포트원 액세스 토큰 획득 실패", e);
+            throw new PaymentException(ErrorCode.NOT_FOUND_PORT_ONE_TOKEN);
         }
     }
     

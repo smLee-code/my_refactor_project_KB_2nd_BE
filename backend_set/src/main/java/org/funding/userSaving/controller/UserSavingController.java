@@ -1,6 +1,8 @@
 package org.funding.userSaving.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserSavingException;
 import org.funding.security.util.Auth;
 import org.funding.userSaving.dto.UserSavingDetailDTO;
 import org.funding.userSaving.dto.UserSavingRequestDTO;
@@ -59,7 +61,7 @@ public class UserSavingController {
     public ResponseEntity<?> getMyAllSavings(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
-            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+            throw new UserSavingException(ErrorCode.MEMBER_NOT_FOUND);
         }
         List<UserSavingDetailDTO> mySavings = userSavingService.findMySavings(userId);
         return ResponseEntity.ok(mySavings);

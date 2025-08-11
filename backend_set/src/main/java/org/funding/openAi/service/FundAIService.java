@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.OpenAiException;
 import org.funding.openAi.client.OpenAIClient;
 import org.funding.openAi.dao.FundAIDAO;
 import org.json.JSONArray;
@@ -32,12 +34,12 @@ public class FundAIService {
     public List<FundVO> getSimilarFunds(Long fundId) {
         FundVO fund = fundAIDAO.findFundById(fundId);
         if (fund == null) {
-            throw new RuntimeException("해당 펀딩이 존재하지 않습니다");
+            throw new OpenAiException(ErrorCode.FUNDING_NOT_FOUND);
         }
 
         FundType fundType = fundAIDAO.findFundTypeByProductId(fund.getProductId());
         if (fundType == null) {
-            throw new RuntimeException("펀딩 상품의 타입 정보가 없습니다.");
+            throw new OpenAiException(ErrorCode.NOT_FUND_TYPE);
         }
 
         return fundAIDAO.findFundsByFundTypeExcludeSelf(fundType.toString(), fundId);
@@ -48,7 +50,7 @@ public class FundAIService {
         FundVO targetFund = findFundById(fundId);
 
         if (targetFund == null) {
-            throw new RuntimeException("해당 펀딩이 존재하지 않습니다.");
+            throw new OpenAiException(ErrorCode.FUNDING_NOT_FOUND);
         }
 
         List<FundVO> candidates = getSimilarFunds(fundId);

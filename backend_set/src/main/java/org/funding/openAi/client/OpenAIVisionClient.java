@@ -3,6 +3,8 @@ package org.funding.openAi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.OpenAiException;
 import org.funding.openAi.dto.VisionResponseDTO;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -84,7 +86,7 @@ public class OpenAIVisionClient {
             return mapper.readValue(content, VisionResponseDTO.class);
         } catch (Exception e) {
             log.error("GPT-4 Vision API 요청 중 예외 발생", e);
-            throw new RuntimeException("이미지 검증 처리중 에러 발생");
+            throw new OpenAiException(ErrorCode.FAIL_VISION_AI);
         }
     }
 }

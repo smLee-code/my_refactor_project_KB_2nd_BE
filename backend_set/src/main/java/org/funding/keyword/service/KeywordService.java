@@ -1,6 +1,8 @@
 package org.funding.keyword.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.KeywordException;
 import org.funding.keyword.dao.KeywordDAO;
 import org.funding.keyword.dto.KeywordRequestDTO;
 import org.funding.keyword.vo.KeywordVO;
@@ -37,10 +39,10 @@ public class KeywordService {
     public void addKeyword(KeywordRequestDTO requestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
+            throw new KeywordException(ErrorCode.MEMBER_NOT_FOUND);
         }
         if (member.getRole() != Role.ROLE_ADMIN) {
-            throw new RuntimeException("해당 멤버는 관리자가 아닙니다.");
+            throw new KeywordException(ErrorCode.MEMBER_NOT_ADMIN);
         }
         keywordDAO.insertKeyword(requestDTO);
     }
@@ -48,10 +50,10 @@ public class KeywordService {
     public void deleteKeyword(String name, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
+            throw new KeywordException(ErrorCode.MEMBER_NOT_FOUND);
         }
         if (member.getRole() != Role.ROLE_ADMIN) {
-            throw new RuntimeException("해당 멤버는 관리자가 아닙니다.");
+            throw new KeywordException(ErrorCode.MEMBER_NOT_ADMIN);
         }
         keywordDAO.deleteKeyword(name);
     }

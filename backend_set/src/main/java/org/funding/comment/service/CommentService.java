@@ -10,6 +10,8 @@ import org.funding.comment.vo.CommentVO;
 import org.funding.comment.vo.enumType.TargetType;
 import org.funding.fund.dao.FundDAO;
 import org.funding.fund.vo.FundVO;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.CommentException;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.vo.ProjectVO;
 import org.springframework.stereotype.Service;
@@ -60,8 +62,7 @@ public class CommentService {
         CommentVO commentById = commentDAO.getCommentById(commentId);
 
         if (commentById == null) {
-            // 삭제할 댓글이 없음.
-            return;
+            throw new CommentException(ErrorCode.NOT_FOUND_COMMENT);
         }
 
         commentDAO.deleteComment(commentId);

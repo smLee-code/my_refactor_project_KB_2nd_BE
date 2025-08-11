@@ -7,6 +7,8 @@ import org.funding.category.dto.CategoryRequestDTO;
 import org.funding.category.dto.CategoryWithKeywordsResponseDTO;
 import org.funding.category.vo.CategoryVO;
 import org.funding.exception.DuplicateCategoryException;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.CategoryException;
 import org.funding.keyword.dto.KeywordIdAndNameDTO;
 import org.funding.keyword.service.KeywordService;
 import org.funding.keyword.vo.KeywordVO;
@@ -50,18 +52,16 @@ public class CategoryService {
     public void addCategory(CategoryRequestDTO requestDTO) {
 
         if (categoryDAO.selectCategory(requestDTO.getName()) != null) {
-            throw new DuplicateCategoryException("이미 존재하는 이름의 카테고리입니다.");
+            throw new CategoryException(ErrorCode.SAME_CATEGORY_NAME);
         }
 
         categoryDAO.insertCategory(requestDTO);
     }
 
     public void deleteCategory(String name) {
-
         if (categoryDAO.selectCategory(name) == null) {
-            return;
+            throw new CategoryException(ErrorCode.CATEGORY_NOT_FOUND);
         }
-
         categoryDAO.deleteCategory(name);
     }
 
