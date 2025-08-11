@@ -65,4 +65,17 @@ public class BadgeController {
         return ResponseEntity.ok(badgeService.getAllBadges());
     }
 
+    // 유저가 가진 뱃지 가져오기
+    @Auth
+    @GetMapping("/user")
+    public ResponseEntity<List<BadgeResponseDTO>> getUserBadges(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+
+        if (userId == null) {
+            return ResponseEntity.status(401).body(null);
+        }
+        List<BadgeResponseDTO> userBadges = badgeService.getUserBadges(userId);
+
+        return ResponseEntity.ok(userBadges);
+    }
 }

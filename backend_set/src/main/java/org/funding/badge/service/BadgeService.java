@@ -85,4 +85,9 @@ public class BadgeService {
             }
         }
     }
+
+    // 유저가 가진 전체 뱃지 조회
+    public List<BadgeResponseDTO> getUserBadges(Long userId) {
+        return badgeDAO.findBadgesByUserId(userId);
+    }
 }
