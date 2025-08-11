@@ -11,6 +11,8 @@ import org.funding.financialProduct.vo.LoanVO;
 import org.funding.fund.dao.FundDAO;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserLoanException;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.user.vo.enumType.Role;
@@ -41,16 +43,16 @@ public class UserLoanService {
         // 멤버 예외처리
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         FundVO fund = fundDAO.selectById(fundId);
         if (fund == null) {
-            throw new RuntimeException("해당 펀딩은 존재하지 않습니다.");
+            throw new UserLoanException(ErrorCode.FUNDING_NOT_FOUND);
         }
 
         if (fund.getProgress() == ProgressType.End) {
-            throw new RuntimeException("해당 펀딩은 종료되었습니다.");
+            throw new UserLoanException(ErrorCode.END_FUND);
         }
 
         Long productId = fund.getProductId();
@@ -59,7 +61,7 @@ public class UserLoanService {
         // 대출 한도 예외처리
         Integer amount = loanRequestDTO.getLoanAmount();
         if (amount > loan.getLoanLimit()) {
-            throw new RuntimeException("대출 한도는 넘었습니다.");
+            throw new UserLoanException(ErrorCode.AMOUNT_OVER);
         }
 
         UserLoanVO userLoan = new UserLoanVO();
@@ -85,18 +87,18 @@ public class UserLoanService {
         // 회원 예외처리
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         // 신청 여부 예외처리
         UserLoanVO userLoan = userLoanDAO.findById(userLoanId);
         if (userLoan == null) {
-            throw new RuntimeException("취소하실 신청내역이 존재하지 않습니다.");
+            throw new UserLoanException(ErrorCode.NOT_FOUND_LOAN);
         }
 
         // 지급 완료 여부 예외처리
         if (userLoan.getLoanAccess() == SuccessType.DONE) {
-            throw new RuntimeException("이미 지급완료된 대출이라 취소하실 수 없습니다");
+            throw new UserLoanException(ErrorCode.ALREADY_LOAN);
         }
 
         userLoanDAO.deleteUserLoan(userLoanId);
@@ -106,7 +108,7 @@ public class UserLoanService {
     public String approveLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member.getRole() != Role.ROLE_ADMIN) {
-            throw new RuntimeException("관리자만 접근 가능합니다.");
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN);
         }
 
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
@@ -115,7 +117,7 @@ public class UserLoanService {
         UserLoanVO userLoan = validateLoan(userLoanId);
 
         if (userLoan.getLoanAccess() != SuccessType.PENDING) {
-            throw new RuntimeException("이미 처리된 신청입니다.");
+            throw new UserLoanException(ErrorCode.ALREADY_ACCEPT);
         }
 
         userLoan.setLoanAccess(SuccessType.APPROVED);
@@ -128,7 +130,7 @@ public class UserLoanService {
     public String rejectLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member.getRole() != Role.ROLE_ADMIN) {
-            throw new RuntimeException("관리자만 접근 가능합니다.");
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN);
         }
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
 
@@ -136,7 +138,7 @@ public class UserLoanService {
         UserLoanVO userLoan = validateLoan(userLoanId);
 
         if (userLoan.getLoanAccess() != SuccessType.PENDING) {
-            throw new RuntimeException("이미 처리된 신청입니다.");
+            throw new UserLoanException(ErrorCode.ALREADY_ACCEPT);
         }
 
         userLoan.setLoanAccess(SuccessType.REJECTED);
@@ -148,7 +150,7 @@ public class UserLoanService {
     public String processLoanPayment(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member.getRole() != Role.ROLE_ADMIN) {
-            throw new RuntimeException("관리자만 접근 가능합니다.");
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN);
         }
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
 
@@ -156,7 +158,7 @@ public class UserLoanService {
         UserLoanVO userLoan = validateLoan(userLoanId);
 
         if (userLoan.getLoanAccess() != SuccessType.APPROVED) {
-            throw new RuntimeException("지급은 승인된 후에만 가능합니다.");
+            throw new UserLoanException(ErrorCode.NOT_PAYMENT);
         }
 
         userLoan.setLoanAccess(SuccessType.DONE);
@@ -191,14 +193,14 @@ public class UserLoanService {
     // 공통 검증 메서드
     private void validateMember(Long userId) {
         if (memberDAO.findById(userId) == null) {
-            throw new RuntimeException("유효하지 않은 유저입니다.");
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 
     private UserLoanVO validateLoan(Long userLoanId) {
         UserLoanVO loan = userLoanDAO.findById(userLoanId);
         if (loan == null) {
-            throw new RuntimeException("신청 내역이 존재하지 않습니다.");
+            throw new UserLoanException(ErrorCode.NOT_FOUND_LOAN);
         }
         return loan;
     }

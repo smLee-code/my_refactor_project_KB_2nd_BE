@@ -5,12 +5,15 @@ import org.funding.S3.dao.S3ImageDAO;
 import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
 import org.funding.badge.service.BadgeService;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserSavingException;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userSaving.dao.UserSavingDAO;
 import org.funding.userSaving.dto.UserSavingDetailDTO;
 import org.funding.userSaving.dto.UserSavingRequestDTO;
 import org.funding.userSaving.vo.UserSavingVO;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -32,7 +35,7 @@ public class UserSavingService {
     public String applySaving(UserSavingRequestDTO userSavingRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 멤버는 존재하지 않습니다.");
+            throw new UserSavingException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         UserSavingVO userSaving = new UserSavingVO();
@@ -52,10 +55,10 @@ public class UserSavingService {
     public String cancelSaving(Long userSavingId, Long userId) {
         UserSavingVO userSaving = userSavingDAO.findById(userSavingId);
         if (userSaving == null) {
-            throw new RuntimeException("해당 저축에 신청되어있지 않습니다.");
+            throw new UserSavingException(ErrorCode.NOT_FOUND_SAVING);
         }
         if (!Objects.equals(userSaving.getUserId(), userId)) {
-            throw new RuntimeException("해지 권한이 없습니다. (본인만 가능)");
+            throw new UserSavingException(ErrorCode.NO_CANCEL_SAVING);
         }
 
         userSavingDAO.deleteUserSaving(userSavingId);
@@ -66,7 +69,7 @@ public class UserSavingService {
     public UserSavingVO findById(Long userSavingId) {
         UserSavingVO userSaving = userSavingDAO.findById(userSavingId);
         if (userSaving == null) {
-            throw new RuntimeException("해당 저축 상품이 존재하지 않습니다.");
+            throw new UserSavingException(ErrorCode.NOT_FOUND_SAVING);
         }
         return userSaving;
     }

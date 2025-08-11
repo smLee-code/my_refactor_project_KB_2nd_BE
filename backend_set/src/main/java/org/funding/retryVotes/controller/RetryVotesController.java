@@ -2,6 +2,8 @@ package org.funding.retryVotes.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.fund.vo.FundVO;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.RetryVotesException;
 import org.funding.retryVotes.dto.DoVoteRequestDTO;
 import org.funding.retryVotes.dto.MyVotedFundDTO;
 import org.funding.retryVotes.service.RetryVotesService;
@@ -45,7 +47,7 @@ public class RetryVotesController {
         Long userId = (Long) request.getAttribute("userId");
 
         if (userId == null) {
-            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+            throw new RetryVotesException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         List<MyVotedFundDTO> myVotedFunds = retryVotesService.findMyVotedFunds(userId);

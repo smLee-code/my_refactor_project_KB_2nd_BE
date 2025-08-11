@@ -38,29 +38,6 @@ public class MyPageService {
     private final UserKeywordDAO userKeywordDAO;
     private final VotesService votesService;
 
-    // 현재 로그인한 사용자의 ID를 가져옴
-    public Long getCurrentUserId() {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes != null) {
-            HttpServletRequest request = attributes.getRequest();
-            Object userIdObj = request.getAttribute("userId");
-            if (userIdObj != null) {
-                return (Long) userIdObj;
-            }
-        }
-        
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getName() != null && !"anonymousUser".equals(authentication.getName())) {
-            String username = authentication.getName();
-            MemberVO member = memberDAO.findByUsername(username);
-            if (member != null) {
-                return member.getUserId();
-            }
-        }
-        
-        throw new IllegalStateException("인증된 사용자 정보를 찾을 수 없습니다.");
-    }
-
     // 4.1 마이페이지 조회
     public MyPageResponseDTO getMyPageInfo(Long userId) {
 
@@ -104,8 +81,7 @@ public class MyPageService {
 
     // 4.2.3 키워드 수정
     @Transactional
-    public void updateMyKeywords(List<String> newKeywords) {
-        Long userId = getCurrentUserId();
+    public void updateMyKeywords(List<String> newKeywords, Long userId) {
         
         // 기존 키워드 삭제
         userKeywordDAO.deleteKeywordsByUserId(userId);
@@ -121,8 +97,7 @@ public class MyPageService {
 
     // 4.3 개인정보 수정
     @Transactional
-    public void updateAccountInfo(UpdateAccountRequestDTO request) {
-        Long userId = getCurrentUserId();
+    public void updateAccountInfo(UpdateAccountRequestDTO request, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         
         member.setUsername(request.getUsername());
@@ -150,8 +125,7 @@ public class MyPageService {
     }
 
     // 4.5.1 작성한 프로젝트 조회 - ProjectListDTO 사용
-    public List<ProjectListDTO> getMyProjects() {
-        Long userId = getCurrentUserId();
+    public List<ProjectListDTO> getMyProjects(Long userId) {
         List<ProjectVO> projects = projectDAO.findByUserId(userId);
         
         return projects.stream()

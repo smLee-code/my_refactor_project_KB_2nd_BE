@@ -79,9 +79,11 @@ public class MyPageController {
     })
     @Auth
     @PutMapping("/keywords")
-    public ResponseEntity<?> updateMyKeywords(@RequestBody List<String> keywords) {
+    public ResponseEntity<?> updateMyKeywords(@RequestBody List<String> keywords,
+                                              HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
         try {
-            myPageService.updateMyKeywords(keywords);
+            myPageService.updateMyKeywords(keywords, userId);
             return ResponseEntity.ok("키워드가 성공적으로 수정되었습니다.");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -100,9 +102,11 @@ public class MyPageController {
     })
     @Auth
     @PutMapping("/account")
-    public ResponseEntity<?> updateAccountInfo(@RequestBody UpdateAccountRequestDTO request) {
+    public ResponseEntity<?> updateAccountInfo(@RequestBody UpdateAccountRequestDTO request,
+                                               HttpServletRequest servletRequest) {
+        Long userId = (Long) servletRequest.getAttribute("userId");
         try {
-            myPageService.updateAccountInfo(request);
+            myPageService.updateAccountInfo(request, userId);
             return ResponseEntity.ok("개인정보가 성공적으로 수정되었습니다.");
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -144,9 +148,10 @@ public class MyPageController {
     })
     @Auth
     @GetMapping("/projects")
-    public ResponseEntity<?> getMyProjects() {
+    public ResponseEntity<?> getMyProjects(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
         try {
-            List<ProjectListDTO> projects = myPageService.getMyProjects();
+            List<ProjectListDTO> projects = myPageService.getMyProjects(userId);
             return ResponseEntity.ok(projects);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

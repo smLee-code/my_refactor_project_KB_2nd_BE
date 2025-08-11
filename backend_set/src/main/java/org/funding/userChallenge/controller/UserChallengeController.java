@@ -2,6 +2,8 @@ package org.funding.userChallenge.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.S3.service.S3ImageService;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserChallengeException;
 import org.funding.security.util.Auth;
 import org.funding.userChallenge.dto.*;
 import org.funding.userChallenge.service.UserChallengeService;
@@ -65,7 +67,7 @@ public class UserChallengeController {
         Long userId = (Long) request.getAttribute("userId");
         // userId가 없는 경우 예외 처리 (필요 시)
         if (userId == null) {
-            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+            throw new UserChallengeException(ErrorCode.MEMBER_NOT_FOUND);
         }
         List<UserChallengeDetailDTO> myChallenges = userChallengeService.findMyChallenges(userId);
         return ResponseEntity.ok(myChallenges);
@@ -79,7 +81,7 @@ public class UserChallengeController {
         ChallengeDetailResponseDTO responseDTO = userChallengeService.getChallengeDetails(userChallengeId);
 
         if (responseDTO == null) {
-            return ResponseEntity.status(404).body("해당 챌린지를 찾을 수 없습니다.");
+            throw new UserChallengeException(ErrorCode.NOT_FOUND_CHALLENGE);
         }
         return ResponseEntity.ok(responseDTO);
     }

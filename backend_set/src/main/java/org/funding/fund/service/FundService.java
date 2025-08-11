@@ -16,6 +16,9 @@ import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.fundKeyword.service.FundKeywordService;
 import org.funding.fundKeyword.dto.FundKeywordRequestDTO;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.FundException;
+import org.funding.global.error.exception.ProjectException;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.vo.ProjectVO;
@@ -74,7 +77,7 @@ public class FundService {
      */
     public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images, Long userId) {
         try {
-            log.info("Creating savings fund with name: {}", request.getName());
+            log.info("적금 이름: {}", request.getName());
 
             // 1. 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
@@ -118,7 +121,7 @@ public class FundService {
             // 펀딩시 프로젝트 상태 변경
             ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
             if (project == null) {
-                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+                throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
             project.setProgress(ProjectProgress.FUNDED);
 
@@ -133,14 +136,14 @@ public class FundService {
                     fundKeywordRequest.setKeywordId(keywordId);
                     fundKeywordService.mapFundKeyword(fundKeywordRequest);
                 }
-                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+                log.info("펀딩 id랑 매핑된 키워드", fund.getFundId());
             }
             
-            log.info("Savings fund and Fund created successfully with product ID: {}", product.getProductId());
-            return "Savings fund and Fund created successfully";
+            log.info("성공적으로 생성", product.getProductId());
+            return "성공되었습니다.";
         } catch (Exception e) {
-            log.error("Error creating savings fund: ", e);
-            throw new RuntimeException("Failed to create savings fund", e);
+            log.error("펀딩 생성 에러: ", e);
+            throw new FundException(ErrorCode.FAIL_FUNDING);
         }
     }
     
@@ -202,7 +205,7 @@ public class FundService {
             // 펀딩시 프로젝트 상태 변경
             ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
             if (project == null) {
-                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+                throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
             project.setProgress(ProjectProgress.FUNDED);
 
@@ -221,10 +224,10 @@ public class FundService {
             }
 
             log.info("Loan fund and Fund created successfully with product ID: {}", product.getProductId());
-            return "Loan fund and Fund created successfully";
+            return "성공적으로 생성되었습니다.";
         } catch (Exception e) {
-            log.error("Error creating loan fund: ", e);
-            throw new RuntimeException("Failed to create loan fund", e);
+            log.error("펀딩 생성 에러: ", e);
+            throw new FundException(ErrorCode.FAIL_FUNDING);
         }
     }
     
@@ -287,7 +290,7 @@ public class FundService {
             // 펀딩시 프로젝트 상태 변경
             ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
             if (project == null) {
-                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+                throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
             project.setProgress(ProjectProgress.FUNDED);
 
@@ -308,8 +311,8 @@ public class FundService {
             log.info("Challenge fund and Fund created successfully with product ID: {}", product.getProductId());
             return "Challenge fund and Fund created successfully";
         } catch (Exception e) {
-            log.error("Error creating challenge fund: ", e);
-            throw new RuntimeException("Failed to create challenge fund", e);
+            log.error("펀딩 생성 에러: ", e);
+            throw new FundException(ErrorCode.FAIL_FUNDING);
         }
     }
     
@@ -369,7 +372,7 @@ public class FundService {
             // 펀딩시 프로젝트 상태 변경
             ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
             if (project == null) {
-                throw new RuntimeException("해당 프로젝트는 존재하지 않습니다.");
+                throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
             project.setProgress(ProjectProgress.FUNDED);
 
@@ -388,10 +391,10 @@ public class FundService {
             }
             
             log.info("Donation fund and Fund created successfully with product ID: {}", product.getProductId());
-            return "Donation fund and Fund created successfully";
+            return "성공적으로 생성되었습니다.";
         } catch (Exception e) {
-            log.error("Error creating donation fund: ", e);
-            throw new RuntimeException("Failed to create donation fund", e);
+            log.error("펀딩 생성 에러: ", e);
+            throw new FundException(ErrorCode.FAIL_FUNDING);
         }
     }
 
@@ -450,7 +453,7 @@ public class FundService {
 
         FundDetailResponseDTO fundDetail = fundDAO.selectDetailById(fundId);
         if (fundDetail == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 펀딩입니다. fundId: " + fundId);
+            throw new FundException(ErrorCode.FUNDING_NOT_FOUND);
         }
         fundDetail.setImageUrls(imageUrls);
         
@@ -524,7 +527,7 @@ public class FundService {
             throw e;
         } catch (Exception e) {
             log.error("Error updating fund: ", e);
-            throw new RuntimeException("펀딩 수정 중 오류가 발생했습니다.", e);
+            throw new FundException(ErrorCode.FAIL_FUND_UPDATE);
         }
     }
     
@@ -643,11 +646,11 @@ public class FundService {
             // 유저 관리자 인지 검증
             MemberVO member = memberDAO.findById(userId);
             if (fundType == null) {
-                throw new RuntimeException("해당 유저는 존재하지 않습니다.");
+                throw new FundException(ErrorCode.MEMBER_NOT_FOUND);
             }
 
             if (member.getRole() != Role.ROLE_ADMIN) {
-                throw new RuntimeException("해당 유저는 관리자가 아닙니다.");
+                throw new FundException(ErrorCode.MEMBER_NOT_ADMIN);
             }
             
             // 2. fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
@@ -687,7 +690,7 @@ public class FundService {
             throw e;
         } catch (Exception e) {
             log.error("Error deleting fund: ", e);
-            throw new RuntimeException("펀딩 삭제 중 오류가 발생했습니다.", e);
+            throw new FundException(ErrorCode.FAIL_DELETE_FUND);
         }
     }
 

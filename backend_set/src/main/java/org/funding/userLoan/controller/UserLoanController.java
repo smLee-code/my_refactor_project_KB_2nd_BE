@@ -1,6 +1,8 @@
 package org.funding.userLoan.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserLoanException;
 import org.funding.security.util.Auth;
 import org.funding.userLoan.dto.*;
 import org.funding.userLoan.service.UserLoanService;
@@ -70,7 +72,7 @@ public class UserLoanController {
     public ResponseEntity<?> getMyAllLoans(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
-            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_FOUND);
         }
         List<UserLoanDetailDTO> myLoans = userLoanService.getAllUserLoans(userId);
         return ResponseEntity.ok(myLoans);

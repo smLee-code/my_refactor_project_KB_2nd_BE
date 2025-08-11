@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.funding.emailAuth.dao.EmailDAO;
 import org.funding.emailAuth.vo.EmailAuthVO;
 import org.funding.emailAuth.service.EmailService;
+import org.funding.global.error.ErrorCode;
 import org.funding.security.util.Auth;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class EmailAuthController {
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             Map<String, String> response = Map.of("message", "이메일 전송 실패: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(ErrorCode.ERROR_EMAIL.getStatus()).body(response);
         }
     }
 

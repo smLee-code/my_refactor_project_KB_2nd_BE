@@ -33,7 +33,7 @@ public class S3Controller {
             imageService.uploadImagesForPost(imageType, postId, files);
             return ResponseEntity.ok("성공적으로 업로드 되었습니다.");
         } catch (IOException e) {
-            return ResponseEntity.status(500).body("업로드가 실패하였습니다: " + e.getMessage());
+            return ResponseEntity.status(404).body("업로드가 실패하였습니다: " + e.getMessage());
         }
     }
 

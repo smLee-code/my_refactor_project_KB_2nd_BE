@@ -6,7 +6,13 @@ import org.funding.badge.dto.BadgeResponseDTO;
 import org.funding.badge.dto.CreateBadgeDTO;
 import org.funding.badge.dto.UpdateBadgeDTO;
 import org.funding.badge.vo.BadgeVO;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.BadgeException;
+import org.funding.global.error.exception.MemberException;
 import org.funding.mapping.UserBadgeVO;
+import org.funding.user.dao.MemberDAO;
+import org.funding.user.vo.MemberVO;
+import org.funding.user.vo.enumType.Role;
 import org.funding.votes.dao.VotesDAO;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +24,15 @@ import java.util.List;
 public class BadgeService {
 
     private final BadgeDAO badgeDAO;
+    private final MemberDAO memberDAO;
 
     // 뱃지 생성
-    public void createBadge(CreateBadgeDTO createBadgeDTO) {
+    public void createBadge(CreateBadgeDTO createBadgeDTO, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new BadgeException(ErrorCode.ACCESS_DENIED);
+        }
+
         BadgeVO badgeVO = new BadgeVO();
         badgeVO.setName(createBadgeDTO.getName());
         badgeVO.setDescription(createBadgeDTO.getDescription());
@@ -29,7 +41,12 @@ public class BadgeService {
     }
 
     // 뱃지 수정
-    public void updateBadge(UpdateBadgeDTO updateBadgeDTO, Long id) {
+    public void updateBadge(UpdateBadgeDTO updateBadgeDTO, Long id, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new BadgeException(ErrorCode.ACCESS_DENIED);
+        }
+
         BadgeVO badgeVO = new BadgeVO();
         badgeVO.setBadgeId(id);
         badgeVO.setName(updateBadgeDTO.getName());
@@ -39,7 +56,12 @@ public class BadgeService {
     }
 
     // 뱃지 삭제
-    public void deleteBadge(Long badgeId) {
+    public void deleteBadge(Long badgeId, Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new BadgeException(ErrorCode.ACCESS_DENIED);
+        }
+
         badgeDAO.deleteBadge(badgeId);
     }
 
@@ -88,6 +110,11 @@ public class BadgeService {
 
     // 유저가 가진 전체 뱃지 조회
     public List<BadgeResponseDTO> getUserBadges(Long userId) {
+        MemberVO member = memberDAO.findById(userId);
+        if (member.getRole() != Role.ROLE_ADMIN) {
+            throw new BadgeException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
         return badgeDAO.findBadgesByUserId(userId);
     }
 }

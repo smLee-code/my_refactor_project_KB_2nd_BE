@@ -13,6 +13,8 @@ import org.funding.fund.dao.FundDAO;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserChallengeException;
 import org.funding.openAi.client.OpenAIVisionClient;
 import org.funding.openAi.dto.VisionResponseDTO;
 import org.funding.user.dao.MemberDAO;
@@ -51,26 +53,26 @@ public class UserChallengeService {
 
         // 상품 예외처리
         if (fund == null) {
-            throw new RuntimeException("존재하지 않는 펀딩 입니다.");
+            throw new UserChallengeException(ErrorCode.FUNDING_NOT_FOUND);
         }
 
         // 진행중인 펀딩 예외처리
         ProgressType type = fund.getProgress();
         if (type != ProgressType.Launch) {
-            throw new RuntimeException("해당 펀딩은 종료되었습니다.");
+            throw new UserChallengeException(ErrorCode.END_FUND);
         }
 
         // 유저 예외처리
         MemberVO memberVO = memberDAO.findById(userId);
         if (memberVO == null) {
-            throw new RuntimeException("존재하지 않는 유저입니다.");
+            throw new UserChallengeException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
 
         // 중복가입 예외처리
         boolean isVerify = userChallengeDAO.existsByIdAndUserId(fundId, userId);
         if (isVerify) {
-            throw new RuntimeException("이미 첼린지에 가입된 회원입니다");
+            throw new UserChallengeException(ErrorCode.ALREADY_JOIN_CHALLENGE);
         }
 
 
@@ -97,13 +99,13 @@ public class UserChallengeService {
 
         // 2. 날짜 예외처리 (로그 날짜 기준으로)
         if (logDate.isBefore(startDate) || logDate.isAfter(endDate)) {
-            throw new RuntimeException("챌린지 참여 가능 날짜가 아닙니다.");
+            throw new UserChallengeException(ErrorCode.MISS_DATE_CHALLENGE);
         }
 
         // 3. 중복 인증 예외처리
         ChallengeLogVO existing = challengeLogDAO.selectLogByUserAndDate(userChallengeId, logDate);
         if (existing != null) {
-            throw new RuntimeException("해당 날짜는 이미 인증되었습니다.");
+            throw new UserChallengeException(ErrorCode.ALREADY_VERIFIED);
         }
 
         System.out.println("유저유저" + userId);
@@ -111,7 +113,7 @@ public class UserChallengeService {
         // 4. 챌린지 가입 여부 확인
         boolean isVerify = userChallengeDAO.existsByIdAndUserId(userChallengeId, userId);
         if (!isVerify) {
-            throw new RuntimeException("해당 유저는 첼린지에 가입되어 있지 않습니다.");
+            throw new UserChallengeException(ErrorCode.NOT_CHALLENGE_MEMBER);
         }
 
         // 5. 펀딩 상태 및 상품 유효성 체크
@@ -119,15 +121,15 @@ public class UserChallengeService {
         FinancialProductVO product = financialProductDAO.selectById(fund.getProductId());
 
         if (product == null) {
-            throw new RuntimeException("해당 상품은 존재하지 않습니다.");
+            throw new UserChallengeException(ErrorCode.NOT_FOUND_PRODUCT);
         }
 
         if (type != ProgressType.Launch) {
-            throw new RuntimeException("해당 펀딩은 종료된 상태입니다.");
+            throw new UserChallengeException(ErrorCode.END_FUND);
         }
 
         if (product.getFundType() != FundType.Challenge) {
-            throw new RuntimeException("해당 상품은 첼린지 상품이 아닙니다.");
+            throw new UserChallengeException(ErrorCode.NO_CHALLENGE);
         }
 
         // 6. 미인증 로그 자동 생성 (오늘 이전까지)
@@ -193,12 +195,12 @@ public class UserChallengeService {
     public void deleteChallenge(Long userChallengeId, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 유저는 존재하지 않는 유저입니다.");
+            throw new UserChallengeException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
         if (userChallenge == null) {
-            throw new RuntimeException("첼린지에 참여히시지 않으셨습니다.");
+            throw new UserChallengeException(ErrorCode.NOT_CHALLENGE_MEMBER);
         }
 
         userChallengeDAO.deleteUserChallenge(userChallengeId);
