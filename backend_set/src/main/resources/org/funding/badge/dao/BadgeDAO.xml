@@ -151,6 +151,23 @@
         )
     </select>
 
+<!--    유저가 가진 모든 뱃지 조회-->
+    <select id="findBadgesByUserId" resultType="org.funding.badge.dto.BadgeResponseDTO">
+        SELECT
+            b.badge_id AS badgeId,
+            b.name AS name,
+            b.description AS description,
+            b.auto_grant_condition AS autoGrantCondition
+        FROM
+            user_badge ub
+                JOIN
+            badge b ON ub.badge_id = b.badge_id
+        WHERE
+            ub.user_id = #{userId}
+        ORDER BY
+            ub.granted_at DESC
+    </select>
+
 
 
 </mapper>

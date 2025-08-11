@@ -10,5 +10,6 @@ import org.funding.user.vo.enumType.Role;
 @AllArgsConstructor
 public class MemberLoginResponseDTO {
     private String token;
+    private Long userId;
     private Role userRole;
 }
