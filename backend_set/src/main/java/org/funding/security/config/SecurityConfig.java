@@ -51,8 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final LoginSuccessHandler loginSuccessHandler;
   private final LoginFailureHandler loginFailureHandler;
 
-
-  // JwtUsernamePasswordAuthenticationFilter는 아래에서 빈으로 등록한다.
   @Autowired
   private JwtUsernamePasswordAuthenticationFilter jwtUsernamePasswordAuthenticationFilter;
 
@@ -146,17 +144,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/project/distribution/type",
                             "/api/mail/**",
                             "/api/category/**"
-
                     ).permitAll()
                     .antMatchers("/api/security/all").permitAll()
                     .antMatchers("/api/security/member").hasRole("NORMAL")
                     .antMatchers("/api/security/admin").hasRole("ADMIN")
                     .antMatchers("/api/fund/**").permitAll()  // 펀딩 API 테스트용 - 추후 인증 필요시 제거
-                    .antMatchers("/api/project/list/detail/**").permitAll()  // detail 조회는 누구나
                     .antMatchers("/api/payments/**").permitAll()  // 임시로 결제 API 인증 없이 허용
                     .antMatchers(HttpMethod.GET, "/api/keyword").permitAll()
-                    .antMatchers("/api/keyword").authenticated()
-            .anyRequest().authenticated();
+
+                    .antMatchers(HttpMethod.GET, "/api/votes/*/count").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/votes/*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/votes/my-votes").authenticated()
+
+                    .antMatchers(HttpMethod.GET, "/api/projects/top").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/list/detail/*").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/list/detail/*/full").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/distribution/type").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/trend").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/list").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/projects/related/*").permitAll()
+
+                    .antMatchers(HttpMethod.GET, "/api/chat/history/*").permitAll()
+
+
+                    .anyRequest().authenticated();
   }
 
   // CORS 필터 빈 등록 (필요하면)
@@ -179,25 +190,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public void configure(WebSecurity web) throws Exception {
     web.ignoring().antMatchers(
-            "/assets/**",
-            "/api/member/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v2/api-docs",
             "/v3/api-docs",
-            "/health", // 헬스체커 api 항상 열어놓을것
-            "/api/fund/{fundId}",
-            "/api/fund/list",
-            "/api/fund/template",
-            "/api/project/list",
-            "/api/project/list/detail/{id}",
-            "/api/project/list/detail/{id}/full",
-            "/api/project/related/{id}",
-            "/api/project/top",
-            "/api/project/trend",
-            "/api/project/distribution/type",
-            "/api/mail/**",
-            "/api/category/**"
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/health",
+            "/chat-app/**"
     );
   }
 }

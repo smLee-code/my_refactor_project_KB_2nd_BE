@@ -131,35 +131,30 @@ public class ProjectService {
             return Collections.emptyList();
         }
 
-        // 2. 프로젝트 ID 목록 추출
         List<Long> projectIds = projectList.stream()
                 .map(ProjectListDTO::getProjectId)
                 .collect(Collectors.toList());
 
-        // 3. 이미지 목록 일괄 조회 (2차 쿼리)
-        // S3ImageDAO를 직접 호출하는 것을 가정합니다.
         List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
         Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
                 .collect(Collectors.groupingBy(S3ImageVO::getPostId));
 
-        // 4. '좋아요' 여부 일괄 조회 (3차 쿼리)
-        Set<Long> likedProjectIds = new HashSet<>();
-        if (loginUserId != null) {
-            // VotesDAO를 직접 호출하는 것을 가정합니다.
-            likedProjectIds = votesDAO.findLikedProjectIdsByUserId(loginUserId, projectIds);
+        for (ProjectListDTO project : projectList) {
+            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
         }
 
-        // 5. 최종 데이터 조합 (루프는 한 번만 사용)
-        for (ProjectListDTO project : projectList) {
-            // 이미지 매핑
-            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
-
-            // '좋아요' 여부 매핑
-            project.setIsLiked(likedProjectIds.contains(project.getProjectId()));
+        if (loginUserId == null) {
+            // 비 로그인 시 -> 투표 여부 항상 false로 처리
+            projectList.forEach(project -> project.setIsLiked(false));
+        }
+        else {
+            projectList.forEach(project -> {
+                Boolean isLiked = votesService.hasVoted(new VotesRequestDTO(loginUserId, project.getProjectId()));
+                project.setIsLiked(isLiked);
+            });
         }
 
         return projectList;
-
     }
 
     public List<ProjectListDTO> searchByType(String type) {

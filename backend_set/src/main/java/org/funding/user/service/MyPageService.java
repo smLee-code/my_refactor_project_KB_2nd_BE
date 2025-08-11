@@ -62,8 +62,8 @@ public class MyPageService {
     }
 
     // 4.1 마이페이지 조회
-    public MyPageResponseDTO getMyPageInfo() {
-        Long userId = getCurrentUserId();
+    public MyPageResponseDTO getMyPageInfo(Long userId) {
+
         MemberVO member = memberDAO.findById(userId);
         
         // 키워드 조회 - KeywordDAO 사용
@@ -133,8 +133,7 @@ public class MyPageService {
     }
 
     // 4.4 내 투표 조회
-    public List<VotesResponseDTO> getMyVotes() {
-        Long userId = getCurrentUserId();
+    public List<VotesResponseDTO> getMyVotes(Long userId) {
         List<Long> votedProjectIds = votesService.findVotedProjects(userId);
         
         // 투표한 프로젝트 ID 목록을 VotesResponseDTO로 변환

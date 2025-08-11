@@ -2,6 +2,7 @@ package org.funding.chatting.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.chatting.dto.ChattingMessage;
+import org.funding.chatting.dto.ChattingMessageResponseDTO;
 import org.funding.chatting.dto.GreetingMessage;
 import org.funding.chatting.service.ChattingService;
 import org.funding.security.util.Auth;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -35,24 +37,24 @@ public class ChattingController {
         return new GreetingMessage("hello," + member.getUsername());
     }
 
-    @Auth
     @MessageMapping("/chat/{projectId}")
     @SendTo("/topic/chat/{projectId}")
-    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, HttpServletRequest request) throws Exception {
-        Long userId = (Long) request.getAttribute("userId");
+    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, Principal principal) {
+        Long userId = Long.parseLong(principal.getName());
         MemberVO member = memberDAO.findById(userId);
         message.setProjectId(projectId);
-        message.setSender(member.getUsername());
-        chattingService.saveMessage(message); //db 저장
-
+        message.setUserId(userId);
+        chattingService.saveMessage(message);
         return message;
     }
 
-    @Auth
     @GetMapping("/chat/history/{projectId}")
-    public List<ChattingMessage> getChatHistory(@PathVariable Long projectId,
-                                                HttpServletRequest request) throws Exception {
-        System.out.println("🔥 채팅 내역 요청 projectId = " + projectId);
-        return chattingService.getMessages(projectId);
+    public List<ChattingMessageResponseDTO> getChatHistory(
+            @PathVariable Long projectId,
+            HttpServletRequest request
+    ) throws Exception {
+        Long userId = (Long) request.getAttribute("userId");
+
+        return chattingService.getMessages(projectId, userId);
     }
 }
