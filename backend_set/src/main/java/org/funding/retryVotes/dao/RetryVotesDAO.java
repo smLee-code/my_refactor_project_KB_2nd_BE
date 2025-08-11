@@ -3,7 +3,10 @@ package org.funding.retryVotes.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.funding.retryVotes.dto.DoVoteRequestDTO;
+import org.funding.retryVotes.dto.MyVotedFundDTO;
 import org.funding.retryVotes.vo.RetryVotesVO;
+
+import java.util.List;
 
 @Mapper
 public interface RetryVotesDAO {
@@ -19,4 +22,7 @@ public interface RetryVotesDAO {
 
     // 투표 취소
     void deleteRetryVotes(DoVoteRequestDTO voteRequestDTO);
+
+    // 내가 투표한 펀딩 조회
+    List<MyVotedFundDTO> findVotedFundDetailsByUserId(@Param("userId") Long userId);
 }

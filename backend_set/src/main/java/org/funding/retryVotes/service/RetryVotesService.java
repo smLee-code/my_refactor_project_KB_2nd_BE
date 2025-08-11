@@ -6,8 +6,11 @@ import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.ProgressType;
 import org.funding.retryVotes.dao.RetryVotesDAO;
 import org.funding.retryVotes.dto.DoVoteRequestDTO;
+import org.funding.retryVotes.dto.MyVotedFundDTO;
 import org.funding.retryVotes.vo.RetryVotesVO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +70,11 @@ public class RetryVotesService {
             fund.setRetryVotesCount(fund.getRetryVotesCount() - 1);
         }
         return "투표가 정상적으로 취소되었습니다";
+    }
+
+    // 내가 투표한 펀딩 전체 조회
+    public List<MyVotedFundDTO> findMyVotedFunds(Long userId) {
+        return retryVotesDAO.findVotedFundDetailsByUserId(userId);
     }
 
 }
