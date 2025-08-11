@@ -3,11 +3,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.funding.chatting.dao.ChattingDAO">
-
-    <insert id="saveMessage" parameterType="org.funding.chatting.dto.ChattingMessage">
-        INSERT INTO chat_message (project_id, user_id, content, timestamp)
-        VALUES (#{projectId}, #{userId}, #{content}, NOW())
+    <insert id="saveMessage" parameterType="org.funding.chatting.dto.RealtimeChatRequestDTO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chat_message (user_id, project_id, content, timestamp)
+        VALUES (#{userId}, #{projectId}, #{content}, NOW())
     </insert>
+
+    <select id="findMessageById" resultType="org.funding.chatting.vo.ChattingMessageVO">
+        SELECT *
+        FROM chat_message
+        WHERE id = #{id}
+    </select>
 
     <select id="findMessagesByRoomId" resultType="org.funding.chatting.vo.ChattingMessageVO">
         SELECT *
@@ -15,6 +20,8 @@
         WHERE project_id = #{projectId}
         ORDER BY timestamp ASC
     </select>
+
+
 
 
 </mapper>

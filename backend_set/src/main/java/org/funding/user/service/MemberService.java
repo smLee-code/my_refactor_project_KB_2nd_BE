@@ -67,6 +67,6 @@ public class MemberService {
                 String.valueOf(member.getRole())
         );
         
-        return new MemberLoginResponseDTO(token, member.getRole());
+        return new MemberLoginResponseDTO(token, member.getUserId(), member.getRole());
     }
 }

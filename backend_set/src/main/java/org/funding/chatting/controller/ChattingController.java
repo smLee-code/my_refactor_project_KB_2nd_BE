@@ -1,9 +1,7 @@
 package org.funding.chatting.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.funding.chatting.dto.ChattingMessage;
-import org.funding.chatting.dto.ChattingMessageResponseDTO;
-import org.funding.chatting.dto.GreetingMessage;
+import org.funding.chatting.dto.*;
 import org.funding.chatting.service.ChattingService;
 import org.funding.security.util.Auth;
 import org.funding.user.dao.MemberDAO;
@@ -39,17 +37,23 @@ public class ChattingController {
 
     @MessageMapping("/chat/{projectId}")
     @SendTo("/topic/chat/{projectId}")
-    public ChattingMessage chat(@DestinationVariable Long projectId, ChattingMessage message, Principal principal) {
+    public RealtimeChatResponseDTO chat(@DestinationVariable Long projectId, String content, Principal principal) {
+
         Long userId = Long.parseLong(principal.getName());
-        MemberVO member = memberDAO.findById(userId);
-        message.setProjectId(projectId);
-        message.setUserId(userId);
-        chattingService.saveMessage(message);
-        return message;
+
+        RealtimeChatRequestDTO requestDTO =
+                RealtimeChatRequestDTO.builder()
+                        .projectId(projectId)
+                        .userId(userId)
+                        .content(content)
+                        .build();
+
+        return chattingService.saveMessage(requestDTO);
+
     }
 
     @GetMapping("/chat/history/{projectId}")
-    public List<ChattingMessageResponseDTO> getChatHistory(
+    public List<RealtimeChatResponseDTO> getChatHistory(
             @PathVariable Long projectId,
             HttpServletRequest request
     ) throws Exception {

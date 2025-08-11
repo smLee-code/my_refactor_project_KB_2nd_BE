@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.funding.chatting.dao.ChattingDAO;
 import org.funding.chatting.dto.ChattingMessage;
 import org.funding.chatting.dto.ChattingMessageResponseDTO;
+import org.funding.chatting.dto.RealtimeChatRequestDTO;
+import org.funding.chatting.dto.RealtimeChatResponseDTO;
 import org.funding.chatting.vo.ChattingMessageVO;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
@@ -21,13 +23,25 @@ public class ChattingService {
     private final MemberDAO memberDAO;
     private final ChattingDAO chattingDAO;
 
-    public void saveMessage(ChattingMessage message) {
-        log.info("메시지 저장 요청: {}", message);
-        chattingDAO.saveMessage(message);
+    public RealtimeChatResponseDTO saveMessage(RealtimeChatRequestDTO requestDTO) {
 
+        chattingDAO.saveMessage(requestDTO);
+        Long id = requestDTO.getId();
+        ChattingMessageVO chattingVO = chattingDAO.findMessageById(id);
+
+        System.out.println(chattingVO);
+
+        return RealtimeChatResponseDTO.builder()
+                .id(chattingVO.getId())
+                .projectId(chattingVO.getProjectId())
+                .userId(chattingVO.getUserId())
+                .username(memberDAO.findById(chattingVO.getUserId()).getUsername())
+                .content(chattingVO.getContent())
+                .timestamp(chattingVO.getTimestamp())
+                .build();
     }
 
-    public List<ChattingMessageResponseDTO> getMessages(Long projectId, Long userId) {
+    public List<RealtimeChatResponseDTO> getMessages(Long projectId, Long userId) {
         List<ChattingMessageVO> chattingList = chattingDAO.findMessagesByRoomId(projectId);
 
         return chattingList.stream()
@@ -35,9 +49,11 @@ public class ChattingService {
 
                     MemberVO memberVO = memberDAO.findById(chattingVO.getUserId());
 
-                    return ChattingMessageResponseDTO.builder()
-                            .sender(memberVO.getUsername())
-                            .isSelf(Objects.equals(userId, chattingVO.getUserId()))
+                    return RealtimeChatResponseDTO.builder()
+                            .id(chattingVO.getId())
+                            .projectId(chattingVO.getProjectId())
+                            .userId(chattingVO.getUserId())
+                            .username(memberVO.getUsername())
                             .content(chattingVO.getContent())
                             .timestamp(chattingVO.getTimestamp())
                             .build();
@@ -45,4 +61,6 @@ public class ChattingService {
                 .toList();
 
     }
+
+
 }
