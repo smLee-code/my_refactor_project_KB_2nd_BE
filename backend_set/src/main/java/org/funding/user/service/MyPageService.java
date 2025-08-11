@@ -34,40 +34,6 @@ public class MyPageService {
     private final UserKeywordDAO userKeywordDAO;
     private final VotesService votesService;
 
-    // 현재 로그인한 사용자의 ID를 가져옴
-    public Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
-        // 임시 테스트용: 인증이 없어도 테스트 사용자 ID 반환
-        if (authentication == null || authentication.getName() == null || "anonymousUser".equals(authentication.getName())) {
-            System.out.println("DEBUG: No authentication found, using test user ID: 1");
-//            return 1L; // 테스트용 사용자 ID // 추후 삭제
-            return null;
-        }
-
-        
-        String username = authentication.getName();
-        System.out.println("DEBUG: Authentication username = " + username);
-        
-        // username으로 먼저 시도
-        MemberVO member = memberDAO.findByUsername(username);
-        
-        // username으로 찾지 못하면 email로 시도 // 추후 삭제
-        if (member == null) {
-            member = memberDAO.findByEmail(username);
-            System.out.println("DEBUG: Trying email lookup, found member = " + (member != null ? member.getUsername() : "null"));
-        } else {
-            System.out.println("DEBUG: Found member by username = " + member.getUsername());
-        }
-        
-        if (member == null) {
-            System.out.println("DEBUG: Member not found, using test user ID: 1");
-            return 1L; // 테스트용 사용자 ID
-        }
-        
-        return member.getUserId();
-    }
-
     // 4.1 마이페이지 조회
     public MyPageResponseDTO getMyPageInfo(Long userId) {
 
@@ -111,8 +77,7 @@ public class MyPageService {
 
     // 4.2.3 키워드 수정
     @Transactional
-    public void updateMyKeywords(List<String> newKeywords) {
-        Long userId = getCurrentUserId();
+    public void updateMyKeywords(List<String> newKeywords, Long userId) {
         
         // 기존 키워드 삭제
         userKeywordDAO.deleteKeywordsByUserId(userId);
@@ -128,8 +93,7 @@ public class MyPageService {
 
     // 4.3 개인정보 수정
     @Transactional
-    public void updateAccountInfo(UpdateAccountRequestDTO request) {
-        Long userId = getCurrentUserId();
+    public void updateAccountInfo(UpdateAccountRequestDTO request, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         
         member.setUsername(request.getUsername());
@@ -157,8 +121,7 @@ public class MyPageService {
     }
 
     // 4.5.1 작성한 프로젝트 조회 - ProjectListDTO 사용
-    public List<ProjectListDTO> getMyProjects() {
-        Long userId = getCurrentUserId();
+    public List<ProjectListDTO> getMyProjects(Long userId) {
         List<ProjectVO> projects = projectDAO.findByUserId(userId);
         
         return projects.stream()

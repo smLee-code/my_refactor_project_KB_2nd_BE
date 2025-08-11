@@ -1,6 +1,8 @@
 package org.funding.userDonation.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserDonationException;
 import org.funding.security.util.Auth;
 import org.funding.userDonation.dto.DonateRequestDTO;
 import org.funding.userDonation.dto.DonateResponseDTO;
@@ -70,7 +72,7 @@ public class UserDonationController {
     public ResponseEntity<?> getMyAllDonations(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
-            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+            throw new UserDonationException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         List<UserDonationDetailDTO> myDonations = userDonationService.findMyDonations(userId);

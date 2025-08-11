@@ -26,6 +26,7 @@ public enum ErrorCode {
     FAIL_DELETE_FUND(405, "FUNDING004", "펀딩 삭제중 에러가 발생하였습니다."),
     NOT_FUND_TYPE(406, "FUNDING005", "지원하지 않는 타입 정보입니다."),
     FAIL_ENTER_FUND(404, "FUNDING006", "펀딩 가입 처리중 오류 발생"),
+    END_FUND(404, "FUNDING007", "해당 펀딩은 종료되었습니다."),
 
     // 프로젝트 에러
     PROJECT_NOT_FOUND(404, "PROJECT001", "해당 프로젝트를 찾을 수 없습니다."),
@@ -58,7 +59,41 @@ public enum ErrorCode {
     FAIL_VERIFY_PAYMENT(405, "PAYMENT004", "결제 검증에 실패하였습니다."),
     FAIL_SUCCESS_PAY(406, "PAYMENT005", "결제 완료 처리 실패"),
     NO_HAVE_PAYMENT(400, "PAYMENT006", "결제가 필요한 펀딩이 아닙니다"),
-    NOT_FOUND_PORT_ONE_TOKEN(404, "PAYMENT007", "포트원 토큰 획득 실패");
+    NOT_FOUND_PORT_ONE_TOKEN(404, "PAYMENT007", "포트원 토큰 획득 실패"),
+
+    // 투표 에러
+    ALREADY_RETRY_VOTE(400, "RETRY VOTE001", "이미 투표하신 펀딩입니다."),
+    NOT_END_FUND(401, "RETRY VOTE002", "아직 펀딩이 종료되지 않았습니다."),
+    NOT_CANCEL_RETRY_VOTE(400, "RETRY VOTE003",  "투표 미 참여시 투표를 취소할 수 없습니다."),
+
+    // 첼린지 에러
+    NOT_FOUND_CHALLENGE(404, "CHALLENGE001", "해당 챌린지를 찾을 수 없습니다."),
+    ALREADY_JOIN_CHALLENGE(400, "CHALLENGE002", "이미 챌린지에 가입한 회원입니다."),
+    MISS_DATE_CHALLENGE(401, "CHALLENGE003", "챌린지에 참여 가능한 날짜가 아닙니다."),
+    ALREADY_VERIFIED(401, "CHALLENGE004", "이미 인증된 날짜입니다."),
+    NOT_CHALLENGE_MEMBER(402, "CHALLENGE005", "챌린지에 가입되지 않은 회원입니다."),
+    NO_CHALLENGE(403, "CHALLENGE006", "해당 상품은 챌린지 상품이 아닙니다."),
+
+    // 상품 에러
+    NOT_FOUND_PRODUCT(404, "PRODUCT001", "해당 상품을 찾을 수 없습니다."),
+
+    // 기부 에러
+    OVER_DONATE_AMOUNT(400, "DONATE001", "기부 금액에서 벗어난 금액입니다."),
+    NOT_FOUND_DONATE(401,"DONATE002", "기부 내역을 찾을 수 없습니다."),
+    CAN_NOT_DELETE(404, "DONATE003", "기부 내역 삭제 권한이 없습니다."),
+    DONE_DONATE(400, "DONATE004", "해당 기부는 종료되었습니다."),
+
+    // 대출 에러
+    AMOUNT_OVER(400, "LOAN001", "대출 한도가 넘었습니다."),
+    NOT_FOUND_LOAN(401, "LOAN002", "신청 내역이 존재하지 않습니다."),
+    ALREADY_LOAN(401, "LOAN003", "이미 지급 완료된 대출이라 취소가 불가합니다."),
+    ALREADY_ACCEPT(400, "LOAN004", "이미 처리된 신청입니다."),
+    NOT_PAYMENT(401, "LOAN004", "지급은 승인 후에 가능합니다."),
+
+    // 저축 에러
+    NOT_FOUND_SAVING(400, "SAVING001", "해당 저축에 신청되어있지 않습니다."),
+    NO_CANCEL_SAVING(401, "SAVING002", "저축 해지 권한이 없습니다.")
+    ;
 
 
     private final int status;

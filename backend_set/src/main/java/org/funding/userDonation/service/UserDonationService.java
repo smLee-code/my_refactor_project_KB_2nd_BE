@@ -10,6 +10,8 @@ import org.funding.financialProduct.vo.DonationVO;
 import org.funding.fund.dao.FundDAO;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.UserDonationException;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.user.vo.enumType.Role;
@@ -51,7 +53,7 @@ public class UserDonationService {
         Integer minAmount = donation.getMinDonationAmount();
 
         if (donateRequestDTO.getDonateAmount() > maxAmount || donateRequestDTO.getDonateAmount() < minAmount) {
-            throw new RuntimeException("해당 금액은 기부 금액 범위에 벗어났습니다.");
+            throw new UserDonationException(ErrorCode.OVER_DONATE_AMOUNT);
         }
 
         UserDonationVO userDonationVO = new UserDonationVO();
@@ -73,7 +75,7 @@ public class UserDonationService {
     public UserDonationVO getDonation(Long userDonationId) {
         UserDonationVO userDonation = userDonationDAO.findById(userDonationId);
         if (userDonation == null) {
-            throw new RuntimeException("해당 기부 내역이 존재하지 않습니다.");
+            throw new UserDonationException(ErrorCode.NOT_FOUND_DONATE);
         }
 
         return userDonation;
@@ -83,7 +85,7 @@ public class UserDonationService {
     public List<UserDonationVO> getAllDonations(Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 유저는 존재하지 않습니다.");
+            throw new UserDonationException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         return userDonationDAO.findByUserId(userId);
@@ -93,12 +95,12 @@ public class UserDonationService {
     public String updateDonation(Long userDonationId, DonateRequestDTO donateRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member.getRole() != Role.ROLE_ADMIN) {
-            throw new RuntimeException("관리자만 접근 가능합니다.");
+            throw new UserDonationException(ErrorCode.MEMBER_NOT_ADMIN);
         }
 
         UserDonationVO userDonation = userDonationDAO.findById(userDonationId);
         if (userDonation == null) {
-            throw new RuntimeException("해당 기부 내역이 존재하지 않습니다.");
+            throw new UserDonationException(ErrorCode.NOT_FOUND_DONATE);
         }
 
         userDonation.setDonationAmount(donateRequestDTO.getDonateAmount());
@@ -113,16 +115,16 @@ public class UserDonationService {
     public String deleteDonation(Long userDonationId, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("해당 유저는 존재하지 않습니다.");
+            throw new UserDonationException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         UserDonationVO userDonationVO = userDonationDAO.findById(userDonationId);
         if (userDonationVO == null) {
-            throw new RuntimeException("해당 기부 내역이 존재하지 않습니다.");
+            throw new UserDonationException(ErrorCode.NOT_FOUND_DONATE);
         }
 
         if (!Objects.equals(userDonationVO.getUserId(), member.getUserId())) {
-            throw new RuntimeException("해당 유저는 삭제 권한이 없습니다. (본인만 삭제 가능)");
+            throw new UserDonationException(ErrorCode.CAN_NOT_DELETE);
         }
 
         userDonationDAO.deleteUserDonation(userDonationId);
@@ -132,7 +134,7 @@ public class UserDonationService {
     private MemberVO validateMember(Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
-            throw new RuntimeException("유효하지 않은 유저입니다.");
+            throw new UserDonationException(ErrorCode.MEMBER_NOT_FOUND);
         }
         return member;
     }
@@ -140,11 +142,11 @@ public class UserDonationService {
     private FundVO validateFund(Long fundId) {
         FundVO fund = fundDAO.selectById(fundId);
         if (fund == null) {
-            throw new RuntimeException("펀딩이 존재하지 않습니다.");
+            throw new UserDonationException(ErrorCode.FUNDING_NOT_FOUND);
         }
 
         if (fund.getProgress() == ProgressType.End) {
-            throw new RuntimeException("해당 기부는 종료되었습니다.");
+            throw new UserDonationException(ErrorCode.DONE_DONATE);
         }
         return fund;
     }
