@@ -6,6 +6,8 @@ import org.funding.fund.service.FundService;
 import org.funding.fund.vo.FundVO;
 import org.funding.fund.vo.enumType.FundType;
 import org.funding.fund.vo.enumType.ProgressType;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.FundException;
 import org.funding.security.util.Auth;
 import org.funding.user.vo.MemberVO;
 import org.springframework.http.MediaType;
@@ -35,7 +37,7 @@ public class FundController {
             HttpServletRequest servletRequest) {
         Long userId = (Long) servletRequest.getAttribute("userId");
         fundService.createSavingsFund(request, images, userId);
-        return ResponseEntity.ok("Savings fund successfully created.");
+        return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
     @Auth
@@ -46,7 +48,7 @@ public class FundController {
             HttpServletRequest servletRequest) {
         Long userId = (Long) servletRequest.getAttribute("userId");
         fundService.createLoanFund(request, images, userId);
-        return ResponseEntity.ok("Loan fund successfully created.");
+        return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
     @Auth
@@ -57,7 +59,7 @@ public class FundController {
             HttpServletRequest servletRequest) {
         Long userId = (Long) servletRequest.getAttribute("userId");
         fundService.createChallengeFund(request, images, userId);
-        return ResponseEntity.ok("Challenge fund successfully created.");
+        return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
     @Auth
@@ -68,7 +70,7 @@ public class FundController {
             HttpServletRequest servletRequest) {
         Long userId = (Long) servletRequest.getAttribute("userId");
         fundService.createDonationFund(request, images, userId);
-        return ResponseEntity.ok("Donation fund successfully created.");
+        return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
     //summary = "백엔드 개발용 펀딩 상품 입력 템플릿(프론트 연결X, 프로젝트 연결 후 삭제 예정API)",
@@ -222,7 +224,7 @@ public class FundController {
     public ResponseEntity<?> getMyAllCreatedFunds(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
-            return ResponseEntity.status(401).body("인증 정보가 유효하지 않습니다.");
+            throw new FundException(ErrorCode.MEMBER_NOT_FOUND);
         }
         List<MyFundDetailDTO> myFunds = fundService.findMyCreatedFunds(userId);
 

@@ -28,7 +28,7 @@ public class BadgeController {
     public ResponseEntity<String> createBadge(@RequestBody CreateBadgeDTO createBadgeDTO,
                                               HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        badgeService.createBadge(createBadgeDTO);
+        badgeService.createBadge(createBadgeDTO, userId);
         return ResponseEntity.ok("뱃지가 정상적으로 등록되었습니다.");
     }
 
@@ -37,7 +37,8 @@ public class BadgeController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateBadge(@PathVariable Long id, @RequestBody UpdateBadgeDTO updateBadgeDTO,
                                               HttpServletRequest request) {
-        badgeService.updateBadge(updateBadgeDTO, id);
+        Long userId = (Long) request.getAttribute("userId");
+        badgeService.updateBadge(updateBadgeDTO, id, userId);
         return ResponseEntity.ok("뱃지가 정상적으로 업데이트 되었습니다");
     }
 
@@ -46,7 +47,8 @@ public class BadgeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBadge(@PathVariable Long id,
                                               HttpServletRequest request) {
-        badgeService.deleteBadge(id);
+        Long userId = (Long) request.getAttribute("userId");
+        badgeService.deleteBadge(id, userId);
         return ResponseEntity.ok("뱃지가 정상적으로 삭제되었습니다.");
     }
 
@@ -71,9 +73,6 @@ public class BadgeController {
     public ResponseEntity<List<BadgeResponseDTO>> getUserBadges(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
 
-        if (userId == null) {
-            return ResponseEntity.status(401).body(null);
-        }
         List<BadgeResponseDTO> userBadges = badgeService.getUserBadges(userId);
 
         return ResponseEntity.ok(userBadges);

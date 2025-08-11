@@ -2,6 +2,8 @@ package org.funding.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.badge.service.BadgeService;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.MemberException;
 import org.funding.security.util.JwtProcessor;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.dto.MemberSignupDTO;
@@ -55,7 +57,7 @@ public class MemberService {
     public MemberLoginResponseDTO login(String email, String password) {
         MemberVO member = memberDAO.findByEmail(email);
         if (member == null || !passwordEncoder.matches(password, member.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다, 회원이 없습니다");
+            throw new MemberException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         // 뱃지 검증

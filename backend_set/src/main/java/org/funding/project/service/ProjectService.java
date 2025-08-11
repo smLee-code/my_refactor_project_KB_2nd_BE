@@ -6,6 +6,8 @@ import org.funding.S3.service.S3ImageService;
 import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
 import org.funding.fund.dto.FundListResponseDTO;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.ProjectException;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
@@ -68,7 +70,7 @@ public class ProjectService {
     public ProjectVO selectProjectById(Long projectId) {
         ProjectVO project = projectDAO.selectProjectById(projectId);
         if (project == null) {
-            throw new RuntimeException("해당 ID의 프로젝트가 존재하지 않습니다.");
+            throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
         }
         return project;
     }
@@ -98,7 +100,7 @@ public class ProjectService {
                 break;
 
             default:
-                throw new RuntimeException("알 수 없는 프로젝트 타입입니다: " + project.getProjectType());
+                throw new ProjectException(ErrorCode.NOT_FOUND_PROJECT_TYPE);
         }
 
 
@@ -303,7 +305,7 @@ public class ProjectService {
                 break;
 
             default:
-                throw new IllegalArgumentException("지원하지 않는 프로젝트 타입입니다: " + createRequestDTO.getProjectType());
+                throw new ProjectException(ErrorCode.NOT_PROJECT_TYPE);
         }
 
         List<ProjectKeywordRequestDTO> projectKeywordRequestList =
@@ -327,7 +329,7 @@ public class ProjectService {
     public void deleteProject(Long projectId, Long userId) {
         ProjectVO projectVO = projectDAO.selectProjectById(projectId);
         if (!Objects.equals(projectVO.getUserId(), userId)) {
-            throw new RuntimeException("해당 프로젝트의 작성자가 아닙니다.");
+            throw new ProjectException(ErrorCode.NOT_PROJECT_OWNER);
         }
         switch (projectVO.getProjectType()) {
             case Savings:
@@ -347,7 +349,7 @@ public class ProjectService {
                 break;
 
             default:
-                throw new IllegalArgumentException("지원하지 않는 프로젝트 타입입니다: " + projectVO.getProjectType());
+                throw new ProjectException(ErrorCode.NOT_PROJECT_TYPE);
         }
 
         projectDAO.deleteProjectById(projectId);
