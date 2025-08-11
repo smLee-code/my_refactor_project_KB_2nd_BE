@@ -44,4 +44,7 @@ public interface BadgeDAO {
     boolean hasProjectWithTenOrMoreComments(Long userId);
     boolean hasPostedTenComments(Long userId);
     boolean hasProjectWithTenOrMoreLikes(Long userId);
+
+    // 유저의 모든 뱃지 조회 기능
+    List<BadgeResponseDTO> findBadgesByUserId(@Param("userId") Long userId);
 }
