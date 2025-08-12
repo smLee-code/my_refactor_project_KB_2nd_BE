@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -188,6 +189,26 @@ public class UserLoanService {
         );
 
         return myLoans;
+    }
+
+
+    // 관리자용: 특정 대출 상품의 모든 신청 내역 조회
+    public List<UserLoanApplicationDTO> getApplicationsForLoan(Long fundId, String status, Long adminUserId) {
+        FundVO fund = fundDAO.selectById(fundId);
+        if (fund == null) {
+            throw new UserLoanException(ErrorCode.FUNDING_NOT_FOUND);
+        }
+        if (!fund.getUploadUserId().equals(adminUserId)) {
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN); // 또는 더 적절한 에러 코드로 변경
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("fundId", fundId);
+        if (status != null && !status.equalsIgnoreCase("ALL")) {
+            params.put("status", status);
+        }
+
+        return userLoanDAO.findApplicationsByFundId(params);
     }
 
     // 공통 검증 메서드
