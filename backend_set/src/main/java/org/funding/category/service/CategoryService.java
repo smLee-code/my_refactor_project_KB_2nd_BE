@@ -6,7 +6,6 @@ import org.funding.category.dto.CategoryIdAndNameDTO;
 import org.funding.category.dto.CategoryRequestDTO;
 import org.funding.category.dto.CategoryWithKeywordsResponseDTO;
 import org.funding.category.vo.CategoryVO;
-import org.funding.exception.DuplicateCategoryException;
 import org.funding.global.error.ErrorCode;
 import org.funding.global.error.exception.CategoryException;
 import org.funding.keyword.dto.KeywordIdAndNameDTO;
