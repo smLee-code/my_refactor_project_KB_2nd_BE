@@ -39,8 +39,8 @@
             f.end_at AS endAt,
             (SELECT image_url FROM s3_image
              WHERE post_id = p.product_id
-               AND imageType = 'Funding'
-             ORDER BY id ASC
+               AND image_type = 'Funding'
+             ORDER BY created_at ASC
                 LIMIT 1) AS productImageUrl
         FROM
             retry_votes rv

@@ -83,8 +83,8 @@ public class FundController {
 
         switch (lowerType) {
             case "savings" -> {
-                example.put("name", "청년 희망 적금");
-                example.put("detail", "청년을 위한 특별 금리 적금 상품");
+                example.put("name", "청년 희망 저축");
+                example.put("detail", "청년을 위한 특별 금리 저축 상품");
                 example.put("joinCondition", "만 19-34세, 소득 증빙 필요");
                 example.put("interestRate", 3.5);
                 example.put("periodDays", 365);
@@ -158,7 +158,7 @@ public class FundController {
      * 진행상태별 펀딩 목록 조회 (펀드타입 필터 옵션)
      * GET /api/fund/list?progress=Launch                        (진행중인 모든 펀딩)
      * GET /api/fund/list?progress=End                           (종료된 모든 펀딩)
-     * GET /api/fund/list?progress=Launch&fundType=Savings       (진행중인 적금 펀딩)
+     * GET /api/fund/list?progress=Launch&fundType=Savings       (진행중인 저축 펀딩)
      * GET /api/fund/list?progress=End&fundType=Donation         (종료된 기부 펀딩)
      */
     @GetMapping("/list")
