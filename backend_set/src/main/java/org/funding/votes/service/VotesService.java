@@ -2,7 +2,6 @@ package org.funding.votes.service;
 
 import lombok.RequiredArgsConstructor;
 import org.funding.badge.service.BadgeService;
-import org.funding.exception.DuplicateVoteException;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectResponseDTO;
 import org.funding.project.vo.ProjectVO;
