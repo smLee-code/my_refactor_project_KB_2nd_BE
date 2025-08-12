@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-donation")
+@RequestMapping("/api/user-donation")
 @RequiredArgsConstructor
 public class UserDonationController {
 

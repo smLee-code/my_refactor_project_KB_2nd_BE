@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-loan")
+@RequestMapping("/api/user-loan")
 @RequiredArgsConstructor
 public class UserLoanController {
 
