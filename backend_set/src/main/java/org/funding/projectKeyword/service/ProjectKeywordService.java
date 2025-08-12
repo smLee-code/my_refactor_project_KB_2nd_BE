@@ -1,6 +1,9 @@
 package org.funding.projectKeyword.service;
 
 import lombok.RequiredArgsConstructor;
+import org.funding.S3.dao.S3ImageDAO;
+import org.funding.S3.vo.S3ImageVO;
+import org.funding.S3.vo.enumType.ImageType;
 import org.funding.keyword.dao.KeywordDAO;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
@@ -10,7 +13,10 @@ import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.vo.ProjectKeywordVO;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +25,7 @@ public class ProjectKeywordService {
     private final ProjectKeywordDAO projectKeywordDAO;
     private final KeywordDAO keywordDAO;
     private final ProjectDAO projectDAO;
+    private final S3ImageDAO s3ImageDAO;
 
     public List<KeywordVO> findKeywordsByProjectId(Long projectId) {
         List<Long> keywordIdList = projectKeywordDAO.selectKeywordIdsByProjectId(projectId);
@@ -65,8 +72,18 @@ public class ProjectKeywordService {
             return List.of(); // 매칭되는 프로젝트 없음
         }
 
-        // 3. 프로젝트 정보 조회 및 반환
-        return projectDAO.selectProjectsByIds(projectIds); // resultType: ProjectListDTO
+        // 3. 프로젝트 정보 조회
+        List<ProjectListDTO> projectDTOList = projectDAO.selectProjectsByIds(projectIds);// resultType: ProjectListDTO
+
+        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
+        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
+                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
+
+        for (ProjectListDTO project : projectDTOList) {
+            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
+        }
+
+        return projectDTOList;
     }
 
 }
