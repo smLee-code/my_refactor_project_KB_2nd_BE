@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/s3")
+@RequestMapping("/api/s3")
 @RequiredArgsConstructor
 public class S3Controller {
 

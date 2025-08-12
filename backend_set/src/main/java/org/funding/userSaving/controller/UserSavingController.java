@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-saving")
+@RequestMapping("/api/user-saving")
 @RequiredArgsConstructor
 public class UserSavingController {
 

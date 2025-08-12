@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/badge")
+@RequestMapping("/api/badge")
 @RequiredArgsConstructor
 public class BadgeController {
 

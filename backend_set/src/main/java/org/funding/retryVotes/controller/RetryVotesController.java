@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/retryVotes")
+@RequestMapping("/api/retryVotes")
 public class RetryVotesController {
 
     private final RetryVotesService retryVotesService;

@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-challenge")
+@RequestMapping("/api/user-challenge")
 @RequiredArgsConstructor
 public class UserChallengeController {
 
