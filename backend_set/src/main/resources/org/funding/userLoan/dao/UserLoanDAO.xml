@@ -82,4 +82,26 @@
     </select>
 
 
+    <select id="findApplicationsByFundId" parameterType="map" resultType="org.funding.userLoan.dto.UserLoanApplicationDTO">
+        SELECT
+        ul.user_loan_id AS userLoanId,
+        ul.user_id AS userId,
+        m.username AS username,
+        m.nickname AS nickname,
+        ul.loan_amount AS loanAmount,
+        ul.loan_access AS status,
+        FROM
+        user_loan ul
+        JOIN
+        member m ON ul.user_id = m.user_id
+        WHERE
+        ul.fund_id = #{fundId}
+        <if test="status != null and status != ''">
+            AND ul.loan_access = #{status}
+        </if>
+        ORDER BY
+        ul.user_loan_id DESC
+    </select>
+
+
 </mapper>

@@ -2,12 +2,14 @@ package org.funding.userLoan.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.funding.userLoan.dto.UserLoanApplicationDTO;
 import org.funding.userLoan.dto.UserLoanDetailDTO;
 import org.funding.userLoan.dto.UserLoanRequestDTO;
 import org.funding.userLoan.vo.UserLoanVO;
 import org.funding.userLoan.vo.enumType.SuccessType;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserLoanDAO {
@@ -33,4 +35,6 @@ public interface UserLoanDAO {
     boolean existsByUserIdAndFundId(@Param("userId") Long userId, @Param("fundId") Long fundId);
 
     List<UserLoanDetailDTO> findAllLoanDetailsByUserId(@Param("userId") Long userId);
+
+    List<UserLoanApplicationDTO> findApplicationsByFundId(Map<String, Object> params);
 }

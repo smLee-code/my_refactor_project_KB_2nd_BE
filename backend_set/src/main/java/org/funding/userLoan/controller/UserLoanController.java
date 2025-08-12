@@ -4,6 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.funding.global.error.ErrorCode;
 import org.funding.global.error.exception.UserLoanException;
 import org.funding.security.util.Auth;
+import org.funding.user.dao.MemberDAO;
+import org.funding.user.dto.MyPageResponseDTO;
+import org.funding.user.service.MyPageService;
+import org.funding.user.vo.MemberVO;
+import org.funding.user.vo.enumType.Role;
 import org.funding.userLoan.dto.*;
 import org.funding.userLoan.service.UserLoanService;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,8 @@ import java.util.List;
 public class UserLoanController {
 
     private final UserLoanService userLoanService;
+    private final MemberDAO memberDAO;
+    private final MyPageService myPageService;
 
     // 대출 가입 (사용자용)
     @Auth
@@ -76,6 +83,37 @@ public class UserLoanController {
         }
         List<UserLoanDetailDTO> myLoans = userLoanService.getAllUserLoans(userId);
         return ResponseEntity.ok(myLoans);
+    }
+
+    // 특정 대출에 대한 신청 내역 조회
+    @Auth
+    @GetMapping("/loan/{fundId}/applications")
+    public ResponseEntity<List<UserLoanApplicationDTO>> getLoanApplications(
+            @PathVariable("fundId") Long fundId,
+            @RequestParam(value = "status", required = false) String status, // PENDING, APPROVED, REJECTED, DONE, ALL
+            HttpServletRequest request) {
+
+        Long adminUserId = (Long) request.getAttribute("userId");
+        List<UserLoanApplicationDTO> applications = userLoanService.getApplicationsForLoan(fundId, status, adminUserId);
+        return ResponseEntity.ok(applications);
+    }
+
+
+    // 대출 승인용 특정 사용자 정보 조회
+    @Auth
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<MyPageResponseDTO> getUserDetails(
+            @PathVariable("userId") Long targetUserId,
+            HttpServletRequest request) {
+
+        Long adminUserId = (Long) request.getAttribute("userId");
+        MemberVO admin = memberDAO.findById(adminUserId);
+        if (admin == null || admin.getRole() != Role.ROLE_ADMIN) {
+            throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN);
+        }
+
+        MyPageResponseDTO userInfo = myPageService.getMyPageInfo(targetUserId);
+        return ResponseEntity.ok(userInfo);
     }
 
 
