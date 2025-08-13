@@ -113,6 +113,9 @@ public class ProjectController {
 
     @GetMapping("/related/{id}")
     public ResponseEntity<List<ProjectListDTO>> getRelatedProjects(@PathVariable("id") Long projectId) {
+
+        System.out.println("Controller getRelatedProjects() called!!!");
+
         List<ProjectListDTO> projectList = projectService.getRelatedProjects(projectId);
 
         return ResponseEntity.ok(projectList);
