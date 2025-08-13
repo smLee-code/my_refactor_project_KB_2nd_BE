@@ -278,6 +278,9 @@ public class ProjectService {
                 .ofNullable(projectDAO.searchProjectsByType(typeStr))
                 .orElse(Collections.emptyList());
 
+        // ProjectListDTO에 썸네일 이미지 쿼리하여 추가
+        findImagesOfProject(sameTypeProjects);
+
         // 3) 기준 프로젝트 키워드 → Set<Long> (null 요소/ID 제거)
         final Set<Long> baseKeywordIds = Optional
                 .ofNullable(projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId()))
@@ -524,5 +527,19 @@ public class ProjectService {
 
     public List<ProjectListDTO> getProjectsByUserKeywords(long userId) {
         return projectDAO.getProjectsByKeyword(userId);
+    }
+
+    public void findImagesOfProject(List<ProjectListDTO> projectList) {
+        List<Long> projectIds = projectList.stream()
+                .map(ProjectListDTO::getProjectId)
+                .collect(Collectors.toList());
+
+        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
+        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
+                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
+
+        for (ProjectListDTO project : projectList) {
+            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
+        }
     }
 }
