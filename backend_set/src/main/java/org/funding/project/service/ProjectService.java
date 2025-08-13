@@ -198,43 +198,125 @@ public class ProjectService {
         return projectList;
     }
 
+//    public List<ProjectListDTO> getRelatedProjects(Long projectId) {
+//
+//
+//        ProjectListDTO baseProject = ProjectListDTO.fromVO(projectDAO.selectProjectById(projectId));
+//
+//        List<KeywordVO> baseKeywords = projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId());
+//
+//        List<ProjectListDTO> sameTypeProjects = projectDAO.searchProjectsByType(String.valueOf(baseProject.getProjectType()));
+//
+//        if (baseKeywords == null || baseKeywords.isEmpty()) { // baseKeywords가 null이거나 비어있으면
+//
+//            // 같은 타입의 프로젝트 중 최대 4개만 반환
+//            return sameTypeProjects.stream()
+//                    .filter(p -> !p.getProjectId().equals(projectId))
+//                    .limit(4)
+//                    .collect(Collectors.toList());
+//        }
+//
+//        // baseKeywords의 키워드 ID만 추출하여 Set으로 변환 (빠른 비교를 위함)
+//
+//        final List<Long> baseKeywordIds = Optional.ofNullable(baseKeywords)
+//                .orElse(Collections.emptyList())
+//                .stream()
+//                .filter(Objects::nonNull) // null KeywordVO 제거
+//                .map(KeywordVO::getKeywordId)
+//                .filter(Objects::nonNull) // null keywordId 제거
+//                .toList();
+//
+//        // 각 프로젝트별로 일치하는 키워드 개수를 저장할 맵
+//        Map<ProjectListDTO, Long> projectMatchCounts = new HashMap<>();
+//
+//        for (ProjectListDTO project : sameTypeProjects) {
+//            if (project.getProjectId().equals(projectId)) {
+//                continue; // 자기 자신은 관련 프로젝트에서 제외
+//            }
+//
+//            List<KeywordVO> projectKeywords = projectKeywordService.findKeywordsByProjectId(project.getProjectId());
+//            if (projectKeywords == null || projectKeywords.isEmpty()) {
+//                continue; // 키워드가 없는 프로젝트는 스킵
+//            }
+//
+//            long matchCount = projectKeywords.stream()
+//                    .filter(keyword -> baseKeywordIds.contains(keyword.getKeywordId())) // KeywordVO에 getKeywordName() 메서드가 있다고 가정
+//                    .count();
+//
+//            if (matchCount > 0) {
+//                projectMatchCounts.put(project, matchCount);
+//            }
+//        }
+//
+//        System.out.println("projectMatchCounts: " + projectMatchCounts);
+//
+//        // 일치하는 키워드 개수가 많은 순서대로 정렬하고, 최대 3개만 반환
+//        return projectMatchCounts.entrySet().stream()
+//                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 일치 개수 내림차순 정렬
+//                .map(Map.Entry::getKey)
+//                .limit(4)
+//                .collect(Collectors.toList());
+//    }
+
     public List<ProjectListDTO> getRelatedProjects(Long projectId) {
+        // 0) 입력값 방어
+        if (projectId == null) return Collections.emptyList();
 
-        ProjectListDTO baseProject = ProjectListDTO.fromVO(projectDAO.selectProjectById(projectId));
-        List<KeywordVO> baseKeywords = projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId());
+        // 1) 기준 프로젝트 조회 (null-safe)
+        var baseVo = projectDAO.selectProjectById(projectId);
+        if (baseVo == null) return Collections.emptyList();
 
-        List<ProjectListDTO> sameTypeProjects = projectDAO.searchProjectsByType(String.valueOf(baseProject.getProjectType()));
+        ProjectListDTO baseProject = ProjectListDTO.fromVO(baseVo);
+        if (baseProject == null) return Collections.emptyList();
 
-        if (baseKeywords == null || baseKeywords.isEmpty()) { // baseKeywords가 null이거나 비어있으면
+        // 2) 같은 타입 프로젝트 조회 (null-safe)
+        String typeStr = baseProject.getProjectType() == null
+                ? null
+                : String.valueOf(baseProject.getProjectType());
 
-            // 같은 타입의 프로젝트 중 최대 4개만 반환
+        List<ProjectListDTO> sameTypeProjects = Optional
+                .ofNullable(projectDAO.searchProjectsByType(typeStr))
+                .orElse(Collections.emptyList());
+
+        // ProjectListDTO에 썸네일 이미지 쿼리하여 추가
+        findImagesOfProject(sameTypeProjects);
+
+        // 3) 기준 프로젝트 키워드 → Set<Long> (null 요소/ID 제거)
+        final Set<Long> baseKeywordIds = Optional
+                .ofNullable(projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId()))
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(Objects::nonNull)                  // null KeywordVO 제거
+                .map(KeywordVO::getKeywordId)
+                .filter(Objects::nonNull)                  // null keywordId 제거
+                .collect(Collectors.toSet());
+
+        // 기준 키워드가 없으면 같은 타입에서 자기 자신 제외 후 최대 4개 반환
+        if (baseKeywordIds.isEmpty()) {
             return sameTypeProjects.stream()
-                    .filter(p -> !p.getProjectId().equals(projectId))
+                    .filter(Objects::nonNull)
+                    .filter(p -> !Objects.equals(p.getProjectId(), projectId))
                     .limit(4)
                     .collect(Collectors.toList());
         }
 
-        // baseKeywords의 키워드 ID만 추출하여 Set으로 변환 (빠른 비교를 위함)
-
-        List<Long> baseKeywordIds = baseKeywords.stream()
-                .map(KeywordVO::getKeywordId)
-                .toList();
-
-        // 각 프로젝트별로 일치하는 키워드 개수를 저장할 맵
+        // 4) 프로젝트별 일치 키워드 개수 집계
         Map<ProjectListDTO, Long> projectMatchCounts = new HashMap<>();
 
         for (ProjectListDTO project : sameTypeProjects) {
-            if (project.getProjectId().equals(projectId)) {
-                continue; // 자기 자신은 관련 프로젝트에서 제외
-            }
+            if (project == null) continue;
 
-            List<KeywordVO> projectKeywords = projectKeywordService.findKeywordsByProjectId(project.getProjectId());
-            if (projectKeywords == null || projectKeywords.isEmpty()) {
-                continue; // 키워드가 없는 프로젝트는 스킵
-            }
+            Long pid = project.getProjectId();
+            if (pid == null || Objects.equals(pid, projectId)) continue; // 자기 자신/ID 없는 프로젝트 제외
+
+            List<KeywordVO> projectKeywords = projectKeywordService.findKeywordsByProjectId(pid);
+            if (projectKeywords == null || projectKeywords.isEmpty()) continue;
 
             long matchCount = projectKeywords.stream()
-                    .filter(keyword -> baseKeywordIds.contains(keyword.getKeywordId())) // KeywordVO에 getKeywordName() 메서드가 있다고 가정
+                    .filter(Objects::nonNull)             // null KeywordVO 방어
+                    .map(KeywordVO::getKeywordId)
+                    .filter(Objects::nonNull)             // null keywordId 방어
+                    .filter(baseKeywordIds::contains)     // Set 사용으로 O(1) contains
                     .count();
 
             if (matchCount > 0) {
@@ -242,13 +324,15 @@ public class ProjectService {
             }
         }
 
-        // 일치하는 키워드 개수가 많은 순서대로 정렬하고, 최대 3개만 반환
+        // 5) 일치 개수 내림차순 정렬 후 최대 4개 반환
         return projectMatchCounts.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 일치 개수 내림차순 정렬
+                .sorted(Map.Entry.<ProjectListDTO, Long>comparingByValue(Comparator.reverseOrder()))
                 .map(Map.Entry::getKey)
                 .limit(4)
                 .collect(Collectors.toList());
     }
+
+
 
     @Transactional
 
@@ -443,5 +527,19 @@ public class ProjectService {
 
     public List<ProjectListDTO> getProjectsByUserKeywords(long userId) {
         return projectDAO.getProjectsByKeyword(userId);
+    }
+
+    public void findImagesOfProject(List<ProjectListDTO> projectList) {
+        List<Long> projectIds = projectList.stream()
+                .map(ProjectListDTO::getProjectId)
+                .collect(Collectors.toList());
+
+        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
+        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
+                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
+
+        for (ProjectListDTO project : projectList) {
+            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
+        }
     }
 }

@@ -30,6 +30,7 @@ public class ProjectListDTO {
     private Long likes;
     private Boolean isLiked;
     private S3ImageVO thumbnailImage;
+    private String thumbnailUrl;
 
     public static ProjectListDTO fromVO(ProjectVO vo) {
         return ProjectListDTO.builder()
