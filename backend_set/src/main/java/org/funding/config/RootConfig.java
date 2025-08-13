@@ -80,6 +80,7 @@ import javax.sql.DataSource;
         "org.funding.userDonation.dao",
         "org.funding.userLoan.dao",
         "org.funding.userSaving.dao",
+        "org.funding.interestingKeyword.dao",
 })
 public class RootConfig {
   @Value("${jdbc.driver}")
