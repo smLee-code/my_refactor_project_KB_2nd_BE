@@ -221,12 +221,16 @@ public class FundController {
     // 유저가 생성한 프로젝트 조회
     @Auth
     @GetMapping("/my/fund/all")
-    public ResponseEntity<?> getMyAllCreatedFunds(HttpServletRequest request) {
+    public ResponseEntity<?> getMyAllCreatedFunds(
+            @RequestParam(value = "fundType", required = false) String fundType,
+            HttpServletRequest request) {
+
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
             throw new FundException(ErrorCode.MEMBER_NOT_FOUND);
         }
-        List<MyFundDetailDTO> myFunds = fundService.findMyCreatedFunds(userId);
+        // 서비스 호출 시 fundType 전달
+        List<MyFundDetailDTO> myFunds = fundService.findMyCreatedFunds(userId, fundType);
 
         return ResponseEntity.ok(myFunds);
     }

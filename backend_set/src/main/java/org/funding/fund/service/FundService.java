@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.math.BigDecimal;
@@ -694,9 +695,19 @@ public class FundService {
         }
     }
 
+
     // 유저가 생성한 프로젝트 조회
-    public List<MyFundDetailDTO> findMyCreatedFunds(Long uploaderId) {
-        return fundDAO.findAllByUploaderId(uploaderId);
+    public List<MyFundDetailDTO> findMyCreatedFunds(Long uploaderId, String fundType) {
+        // MyBatis에 파라미터를 전달하기 위한 Map 생성
+        Map<String, Object> params = new HashMap<>();
+        params.put("uploaderId", uploaderId);
+
+        // fundType이 null이 아닐 경우에만 Map에 추가
+        if (fundType != null && !fundType.isEmpty()) {
+            params.put("fundType", fundType);
+        }
+
+        return fundDAO.findAllByUploaderId(params); // Map을 파라미터로 전달
     }
 
 }
