@@ -2,6 +2,8 @@ package org.funding.openAi.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.funding.fund.vo.FundVO;
+import org.funding.global.error.ErrorCode;
+import org.funding.global.error.exception.OpenAiException;
 import org.funding.openAi.dto.*;
 import org.funding.openAi.service.ChatService;
 import org.funding.openAi.service.FundAIService;
@@ -46,6 +48,20 @@ public class OpenAiController {
                                                   HttpServletRequest request) {
         return fundAIService.aiSimilar(fundId);
     }
+
+    // 사용자 맞춤형 펀딩 추천
+    @Auth
+    @GetMapping("/ai-recommend")
+    public ResponseEntity<List<FundVO>> recommendFundsForUser(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+        if (userId == null) {
+            throw new OpenAiException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        List<FundVO> recommendedFunds = fundAIService.recommendForUser(userId);
+        return ResponseEntity.ok(recommendedFunds);
+    }
+
+
 
     // 이미지 분석
     @Auth

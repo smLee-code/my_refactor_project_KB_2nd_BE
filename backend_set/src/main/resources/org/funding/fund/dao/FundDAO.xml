@@ -240,6 +240,32 @@
         f.fund_id DESC
     </select>
 
+    <select id="findFundsByKeywordNames" parameterType="java.util.List" resultType="org.funding.fund.vo.FundVO">
+        SELECT
+        f.fund_id,
+        f.product_id,
+        f.project_id,
+        f.progress,
+        f.launch_at,
+        f.end_at,
+        f.financial_institution,
+        f.retry_votes_count,
+        f.upload_user_id
+        FROM
+        fund f
+        WHERE
+        f.project_id IN (
+        SELECT DISTINCT pk.project_id
+        FROM project_keywords pk
+        JOIN keywords k ON pk.keyword_id = k.keyword_id
+        WHERE k.name IN
+        <foreach item="keyword" collection="list" open="(" separator="," close=")">
+            #{keyword}
+        </foreach>
+        )
+        AND f.progress = 'Launch'
+    </select>
+
 
 
 </mapper>

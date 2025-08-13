@@ -1,8 +1,7 @@
 package org.funding.user.vo;
 
 import lombok.Data;
-import lombok.Generated;
-import org.funding.InterestingKeyword.vo.InterestingKeywordVO;
+import org.funding.interestingKeyword.vo.InterestingKeywordVO;
 import org.funding.mapping.UserBadgeVO;
 import org.funding.user.vo.enumType.Role;
 

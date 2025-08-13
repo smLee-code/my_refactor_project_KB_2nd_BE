@@ -1,4 +1,4 @@
-package org.funding.InterestingKeyword.vo;
+package org.funding.interestingKeyword.vo;
 
 import lombok.Data;
 

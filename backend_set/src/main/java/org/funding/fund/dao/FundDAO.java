@@ -38,5 +38,7 @@ public interface FundDAO {
 
     // 유저가 업로드한 펀딩 보기
     List<MyFundDetailDTO> findAllByUploaderId(Map<String, Object> params);
+
+    List<FundVO> findFundsByKeywordNames(List<String> keywords);
   
 }
