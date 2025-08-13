@@ -89,7 +89,7 @@
         m.username AS username,
         m.nickname AS nickname,
         ul.loan_amount AS loanAmount,
-        ul.loan_access AS status,
+        ul.loan_access AS status
         FROM
         user_loan ul
         JOIN
