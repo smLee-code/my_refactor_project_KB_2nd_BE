@@ -213,28 +213,31 @@
     </select>
 
 
-    <select id="findAllByUploaderId" resultType="org.funding.fund.dto.MyFundDetailDTO">
+    <select id="findAllByUploaderId" parameterType="map" resultType="org.funding.fund.dto.MyFundDetailDTO">
         SELECT
-            f.fund_id AS fundId,
-            f.progress AS progress,
-            f.launch_at AS launchAt,
-            f.end_at AS endAt,
-            f.financial_institution AS financialInstitution,
-            p.name AS productName,
-            p.fund_type AS fundType,
-            (SELECT image_url FROM s3_image
-             WHERE post_id = p.product_id
-               AND image_type = 'Funding'
-             ORDER BY image_id ASC
-                LIMIT 1) AS productImageUrl
+        f.fund_id AS fundId,
+        f.progress AS progress,
+        f.launch_at AS launchAt,
+        f.end_at AS endAt,
+        f.financial_institution AS financialInstitution,
+        p.name AS productName,
+        p.fund_type AS fundType,
+        (SELECT image_url FROM s3_image
+        WHERE post_id = p.product_id
+        AND image_type = 'Funding'
+        ORDER BY id ASC
+        LIMIT 1) AS productImageUrl
         FROM
-            fund f
-            JOIN
-            financial_product p ON f.product_id = p.product_id
+        fund f
+        JOIN
+        financial_product p ON f.product_id = p.product_id
         WHERE
-            f.upload_user_id = #{uploaderId}
+        f.upload_user_id = #{uploaderId}
+        <if test="fundType != null and fundType != ''">
+            AND p.fund_type = #{fundType}
+        </if>
         ORDER BY
-            f.fund_id DESC
+        f.fund_id DESC
     </select>
 
 

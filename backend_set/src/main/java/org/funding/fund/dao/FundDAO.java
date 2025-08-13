@@ -10,6 +10,7 @@ import org.funding.fund.dto.FundListResponseDTO;
 import org.funding.fund.dto.FundDetailResponseDTO;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface FundDAO {
@@ -36,6 +37,6 @@ public interface FundDAO {
     FundDetailResponseDTO selectDetailById(Long fundId);
 
     // 유저가 업로드한 펀딩 보기
-    List<MyFundDetailDTO> findAllByUploaderId(@Param("uploaderId") Long uploaderId);
+    List<MyFundDetailDTO> findAllByUploaderId(Map<String, Object> params);
   
 }
