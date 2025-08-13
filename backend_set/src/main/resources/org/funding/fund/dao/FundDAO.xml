@@ -25,9 +25,17 @@
     </insert>
 
     <!-- 펀딩 조회 by ID -->
-    <select id="selectById" parameterType="long" resultMap="fundVOResultMap">
-        SELECT 
-            fund_id, product_id, project_id, progress, launch_at, end_at, financial_institution
+    <select id="selectById" parameterType="long" resultType="org.funding.fund.vo.FundVO">
+        SELECT
+            fund_id,
+            product_id,
+            project_id,
+            progress,
+            launch_at,
+            end_at,
+            financial_institution,
+            retry_votes_count AS retryVotesCount,
+            upload_user_id AS uploadUserId
         FROM fund
         WHERE fund_id = #{fundId}
     </select>
