@@ -108,7 +108,7 @@ public class UserLoanService {
     // 대출 승인 (관리자용)
     public String approveLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
-        if (member.getRole() != Role.ROLE_ADMIN) {
+        if (member.getRole() != Role.ROLE_FINANCE) {
             throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN);
         }
 
@@ -130,7 +130,7 @@ public class UserLoanService {
     // 대출 반려
     public String rejectLoan(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
-        if (member.getRole() != Role.ROLE_ADMIN) {
+        if (member.getRole() != Role.ROLE_FINANCE) {
             throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN);
         }
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
@@ -150,7 +150,7 @@ public class UserLoanService {
     // 대출 지급
     public String processLoanPayment(ApproveUserLoanRequestDTO approveUserLoanRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
-        if (member.getRole() != Role.ROLE_ADMIN) {
+        if (member.getRole() != Role.ROLE_FINANCE) {
             throw new UserLoanException(ErrorCode.MEMBER_NOT_ADMIN);
         }
         Long userLoanId = approveUserLoanRequestDTO.getUserLoanId();
