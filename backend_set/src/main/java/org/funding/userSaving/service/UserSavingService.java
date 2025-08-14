@@ -32,7 +32,7 @@ public class UserSavingService {
     private final S3ImageDAO s3ImageDAO;
 
     // 저축 가입
-    public String applySaving(UserSavingRequestDTO userSavingRequestDTO, Long userId) {
+    public String applySaving(Long fundId, UserSavingRequestDTO userSavingRequestDTO, Long userId) {
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
             throw new UserSavingException(ErrorCode.MEMBER_NOT_FOUND);
@@ -40,8 +40,8 @@ public class UserSavingService {
 
         UserSavingVO userSaving = new UserSavingVO();
         userSaving.setUserId(userId);
-        userSaving.setFundId(userSavingRequestDTO.getFundId());
-        userSaving.setSavingAmount(userSaving.getSavingAmount());
+        userSaving.setFundId(fundId);
+        userSaving.setSavingAmount(userSavingRequestDTO.getSavingAmount());
 
         userSavingDAO.insertUserSaving(userSaving);
 
