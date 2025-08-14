@@ -71,4 +71,26 @@ public class MemberService {
         
         return new MemberLoginResponseDTO(token, member.getUserId(), member.getRole());
     }
+
+    public Boolean checkEmailDuplicate(String email) {
+        MemberVO member = memberDAO.findByEmail(email);
+
+        System.out.println("Service member: " + member);
+
+        if (member == null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public Boolean checkNicknameDuplicate(String nickname) {
+        MemberVO member = memberDAO.findByNickname(nickname);
+
+        if (member == null) {
+            return true;
+        }
+
+        return false;
+    }
 }
