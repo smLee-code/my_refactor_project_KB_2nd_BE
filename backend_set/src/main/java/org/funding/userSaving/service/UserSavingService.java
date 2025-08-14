@@ -13,7 +13,9 @@ import org.funding.userSaving.dao.UserSavingDAO;
 import org.funding.userSaving.dto.UserSavingDetailDTO;
 import org.funding.userSaving.dto.UserSavingRequestDTO;
 import org.funding.userSaving.vo.UserSavingVO;
-import org.springframework.security.core.userdetails.User;
+import org.funding.fund.dao.FundDAO;
+import org.funding.fund.vo.FundVO;
+import org.funding.fund.vo.enumType.ProgressType;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -30,12 +32,30 @@ public class UserSavingService {
     private final UserSavingDAO userSavingDAO;
     private final BadgeService badgeService;
     private final S3ImageDAO s3ImageDAO;
+    private final FundDAO fundDAO;
 
     // 저축 가입
     public String applySaving(Long fundId, UserSavingRequestDTO userSavingRequestDTO, Long userId) {
+        // 멤버 예외처리
         MemberVO member = memberDAO.findById(userId);
         if (member == null) {
             throw new UserSavingException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        // 펀딩 존재 및 종료 여부 검증
+        FundVO fund = fundDAO.selectById(fundId);
+        if (fund == null) {
+            throw new UserSavingException(ErrorCode.FUNDING_NOT_FOUND);
+        }
+
+        if (fund.getProgress() == ProgressType.End) {
+            throw new UserSavingException(ErrorCode.END_FUND);
+        }
+
+        // 중복 가입 방지
+        boolean alreadyJoined = userSavingDAO.existsByUserIdAndFundId(userId, fundId);
+        if (alreadyJoined) {
+            throw new UserSavingException(ErrorCode.ALREADY_JOINED_SAVING);
         }
 
         UserSavingVO userSaving = new UserSavingVO();
