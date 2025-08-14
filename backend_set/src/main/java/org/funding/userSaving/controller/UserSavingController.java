@@ -23,11 +23,12 @@ public class UserSavingController {
 
     // 저축 상품 가입
     @Auth
-    @PostMapping("/apply")
-    public ResponseEntity<String> applySaving(@RequestBody UserSavingRequestDTO userSavingRequestDTO,
+    @PostMapping("/{id}")
+    public ResponseEntity<String> applySaving(@PathVariable("id") Long id,
+                                              @RequestBody UserSavingRequestDTO userSavingRequestDTO,
                                               HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        return ResponseEntity.ok(userSavingService.applySaving(userSavingRequestDTO, userId));
+        return ResponseEntity.ok(userSavingService.applySaving(id, userSavingRequestDTO, userId));
     }
 
     // 저축 상품 해지
