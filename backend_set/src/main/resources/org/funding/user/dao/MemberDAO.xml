@@ -14,47 +14,25 @@
 
 
         <select id="findByEmail" parameterType="String" resultType="org.funding.user.vo.MemberVO">
-            SELECT
-                user_id,
-                username,
-                password,
-                email,
-                nickname,
-                phone_number,
-                role,
-                create_at,
-                update_at
+            SELECT *
             FROM member
             WHERE email = #{email}
         </select>
 
         <select id="findByUsername" parameterType="String" resultType="org.funding.user.vo.MemberVO">
-            SELECT
-                user_id,
-                username,
-                password,
-                email,
-                nickname,
-                phone_number,
-                role,
-                create_at,
-                update_at
+            SELECT *
             FROM member
             WHERE username = #{username}
         </select>
 
+        <select id="findByNickname" resultType="org.funding.user.vo.MemberVO">
+            SELECT *
+            FROM member
+            WHERE nickname = #{nickname}
+        </select>
         <!-- 마이페이지 관련 쿼리들 -->
         <select id="findById" parameterType="long" resultType="org.funding.user.vo.MemberVO">
-            SELECT
-                user_id,
-                username,
-                password,
-                email,
-                nickname,
-                phone_number,
-                role,
-                create_at,
-                update_at
+            SELECT *
             FROM member
             WHERE user_id = #{userId}
         </select>
@@ -78,7 +56,8 @@
             WHERE user_id = #{userId}
         </select>
 
-        <delete id="deleteKeywordsByUserId" parameterType="Long">
+
+    <delete id="deleteKeywordsByUserId" parameterType="Long">
             DELETE FROM tbl_interesting_keyword
             WHERE user_id = #{userId}
         </delete>

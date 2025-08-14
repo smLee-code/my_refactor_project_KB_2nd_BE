@@ -7,10 +7,7 @@ import org.funding.user.dto.MemberLoginResponseDTO;
 import org.funding.user.dto.MemberSignupDTO;
 import org.funding.user.service.MemberService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/member")
@@ -42,5 +39,25 @@ public class MemberController {
         String jwt = jwtProcessor.generateTokenWithRole(testUsername, testRole);
 
         return ResponseEntity.ok(jwt);
+    }
+
+    @GetMapping(value = "/duplicated/email")
+    public ResponseEntity<Boolean> checkEmailDuplicate(@RequestParam String email) {
+
+        System.out.println("checkEmailDuplicate() called!!!!");
+
+        System.out.println("Controller email: " + email);
+
+        Boolean isDuplicated = memberService.checkEmailDuplicate(email);
+
+        return ResponseEntity.ok(isDuplicated);
+
+    }
+
+    @GetMapping(value = "/duplicated/nickname")
+    public ResponseEntity<Boolean> checkNicknameDuplicate(@RequestParam String nickname) {
+        Boolean isDuplicated = memberService.checkNicknameDuplicate(nickname);
+
+        return ResponseEntity.ok(isDuplicated);
     }
 }
