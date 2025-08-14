@@ -111,9 +111,6 @@ public class BadgeService {
     // 유저가 가진 전체 뱃지 조회
     public List<BadgeResponseDTO> getUserBadges(Long userId) {
         MemberVO member = memberDAO.findById(userId);
-        if (member.getRole() != Role.ROLE_ADMIN) {
-            throw new BadgeException(ErrorCode.MEMBER_NOT_FOUND);
-        }
 
         return badgeDAO.findBadgesByUserId(userId);
     }
