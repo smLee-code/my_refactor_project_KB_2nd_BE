@@ -43,15 +43,9 @@ public class MemberController {
 
     @GetMapping(value = "/duplicated/email")
     public ResponseEntity<Boolean> checkEmailDuplicate(@RequestParam String email) {
-
-        System.out.println("checkEmailDuplicate() called!!!!");
-
-        System.out.println("Controller email: " + email);
-
         Boolean isDuplicated = memberService.checkEmailDuplicate(email);
 
         return ResponseEntity.ok(isDuplicated);
-
     }
 
     @GetMapping(value = "/duplicated/nickname")
