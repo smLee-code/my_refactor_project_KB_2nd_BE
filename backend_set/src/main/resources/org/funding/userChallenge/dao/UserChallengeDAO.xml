@@ -123,4 +123,36 @@
         WHERE user_id = #{userId} AND fund_id = #{fundId}
     </select>
 
+    <select id="findParticipantsByFundId" parameterType="long" resultType="org.funding.userChallenge.dto.ChallengeParticipantDTO">
+        SELECT
+            uc.user_challenge_id AS userChallengeId,
+            uc.user_id AS userId,
+            m.username AS username,
+            m.nickname AS nickname,
+            uc.current_count AS currentCount,
+            uc.fail_count AS failCount,
+--             uc.create_at AS joinAt
+        FROM
+            user_challenge uc
+                JOIN
+            member m ON uc.user_id = m.user_id
+        WHERE
+            uc.fund_id = #{fundId}
+        ORDER BY
+            uc.create_at DESC
+    </select>
+
+    <update id="incrementSuccessCount" parameterType="long">
+        UPDATE user_challenge
+        SET current_count = current_count + 1
+        WHERE user_challenge_id = #{userChallengeId}
+    </update>
+
+    <update id="incrementFailCount" parameterType="long">
+        UPDATE user_challenge
+        SET fail_count = fail_count + 1
+        WHERE user_challenge_id = #{userChallengeId}
+    </update>
+
+
 </mapper>

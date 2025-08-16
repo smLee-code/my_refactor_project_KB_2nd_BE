@@ -93,7 +93,10 @@ public enum ErrorCode {
     // 저축 에러
     NOT_FOUND_SAVING(400, "SAVING001", "해당 저축에 신청되어있지 않습니다."),
     NO_CANCEL_SAVING(401, "SAVING002", "저축 해지 권한이 없습니다."),
-    ALREADY_JOINED_SAVING(400, "SAVING003", "이미 가입한 저축 상품입니다.")
+    ALREADY_JOINED_SAVING(400, "SAVING003", "이미 가입한 저축 상품입니다."),
+
+    // 휴먼 검증 챌린지 에러
+    NOT_HUMAN_VERIFY_TARGET(400, "NO_HUMAN", "휴먼 검증 대상이 아닙니다.")
     ;
 
 
