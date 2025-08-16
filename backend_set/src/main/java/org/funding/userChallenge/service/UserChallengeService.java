@@ -20,18 +20,13 @@ import org.funding.openAi.dto.VisionResponseDTO;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userChallenge.dao.UserChallengeDAO;
-import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
-import org.funding.userChallenge.dto.ChallengeDetailResponseDTO;
-import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
-import org.funding.userChallenge.dto.UserChallengeDetailDTO;
+import org.funding.userChallenge.dto.*;
 import org.funding.userChallenge.vo.UserChallengeVO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -231,5 +226,74 @@ public class UserChallengeService {
         responseDTO.setDailyLogs(dailyLogs);
 
         return responseDTO;
+    }
+
+
+    // 챌린지 참여자 조회
+    public List<ChallengeParticipantDTO> getChallengeParticipants(Long fundId, Long creatorId) {
+        verifyChallengeCreator(fundId, creatorId);
+
+        return userChallengeDAO.findParticipantsByFundId(fundId);
+    }
+
+    // (공통 로직) 챌린지 생성자가 맞는지 확인하는 헬퍼 메서드
+    private void verifyChallengeCreator(Long fundId, Long creatorId) {
+        FundVO fund = fundDAO.selectById(fundId);
+        if (fund == null) {
+            throw new UserChallengeException(ErrorCode.FUNDING_NOT_FOUND);
+        }
+        if (!fund.getUploadUserId().equals(creatorId)) {
+            throw new UserChallengeException(ErrorCode.AUTHENTICATION_FAILED);
+        }
+    }
+
+    public List<ChallengeLogVO> getParticipantLogs(Long userChallengeId, String status, Long creatorId) {
+        // 해당 로그를 볼 권한이 있는지 보안 검증
+        UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
+        if (userChallenge == null) {
+            throw new UserChallengeException(ErrorCode.NOT_CHALLENGE_MEMBER);
+        }
+        verifyChallengeCreator(userChallenge.getFundId(), creatorId);
+
+        // DAO에 파라미터를 Map으로 전달하여 로그 조회
+        Map<String, Object> params = new HashMap<>();
+        params.put("userChallengeId", userChallengeId);
+        if (status != null && !status.equalsIgnoreCase("ALL")) {
+            params.put("status", status);
+        }
+
+        return challengeLogDAO.findLogsByUserChallengeId(params);
+    }
+
+    // 수동 챌린지 검증
+    @Transactional
+    public void manuallyVerifyLog(Long logId, Long creatorId, boolean isApproved) {
+        // 로그 조회 및 상태 확인
+        ChallengeLogVO log = challengeLogDAO.selectLogById(logId);
+        if (log == null) {
+            throw new UserChallengeException(ErrorCode.NOT_FOUND_CHALLENGE);
+        }
+        if (log.getVerified() != VerifyType.HumanVerify) {
+            throw new UserChallengeException(ErrorCode.NOT_HUMAN_VERIFY_TARGET);
+        }
+
+        // 해당 로그를 수정할 권한이 있는지 보안 검증 (생성자 확인)
+        UserChallengeVO userChallenge = userChallengeDAO.findById(log.getUserChallengeId());
+        verifyChallengeCreator(userChallenge.getFundId(), creatorId);
+
+        // 로그 상태 변경
+        if (isApproved) {
+            log.setVerified(VerifyType.Verified);
+            log.setVerifiedResult("[수동인증] " + log.getVerifiedResult());
+            challengeLogDAO.updateChallengeLog(log);
+            // 성공 카운트 증가
+            userChallengeDAO.incrementSuccessCount(log.getUserChallengeId());
+        } else {
+            log.setVerified(VerifyType.UnVerified);
+            log.setVerifiedResult("[수동반려] " + log.getVerifiedResult());
+            challengeLogDAO.updateChallengeLog(log);
+            // 실패 카운트 증가
+            userChallengeDAO.incrementFailCount(log.getUserChallengeId());
+        }
     }
 }

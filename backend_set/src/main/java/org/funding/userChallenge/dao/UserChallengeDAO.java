@@ -3,6 +3,7 @@ package org.funding.userChallenge.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.funding.challengeLog.vo.ChallengeLogVO;
+import org.funding.userChallenge.dto.ChallengeParticipantDTO;
 import org.funding.userChallenge.dto.UserChallengeDetailDTO;
 import org.funding.userChallenge.vo.UserChallengeVO;
 
@@ -36,5 +37,10 @@ public interface UserChallengeDAO {
 
     // 펀딩 id로 유저 참여했는지 판별
     boolean existsByUserIdAndFundId(@Param("userId") Long userId, @Param("fundId") Long fundId);
+
+    List<ChallengeParticipantDTO> findParticipantsByFundId(Long fundId);
+
+    void incrementSuccessCount(Long userChallengeId);
+    void incrementFailCount(Long userChallengeId);
 
 }
