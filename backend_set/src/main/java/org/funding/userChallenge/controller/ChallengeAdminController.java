@@ -45,7 +45,7 @@ public class ChallengeAdminController {
     @PatchMapping("/logs/{logId}/approve")
     public ResponseEntity<String> manuallyApproveLog(@PathVariable Long logId, HttpServletRequest request) {
         Long creatorId = (Long) request.getAttribute("userId");
-        userChallengeService.manuallyVerifyLog(logId, creatorId, true); // true for approve
+        userChallengeService.manuallyVerifyLog(logId, creatorId, true);
         return ResponseEntity.ok("수동 승인 처리 완료");
     }
 
