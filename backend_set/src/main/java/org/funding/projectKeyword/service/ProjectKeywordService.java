@@ -83,6 +83,7 @@ public class ProjectKeywordService {
             project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
         }
 
+
         return projectDTOList;
     }
 
