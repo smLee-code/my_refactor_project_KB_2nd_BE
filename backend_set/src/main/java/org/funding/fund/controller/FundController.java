@@ -174,8 +174,8 @@ public class FundController {
      * GET /api/fund/{fundId}
      * fund_id로 펀딩 정보와 연관된 모든 상세 정보를 조회
      * (fund + financial_product + 타입별 상세 테이블)
+     * 로그인 시 펀딩 참여여부 정보 추가 제공
      */
-    @Auth
     @GetMapping("/{fundId}")
     public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId,
                                                                HttpServletRequest request) {
