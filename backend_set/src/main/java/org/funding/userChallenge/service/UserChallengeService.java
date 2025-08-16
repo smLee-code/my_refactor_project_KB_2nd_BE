@@ -25,10 +25,7 @@ import org.funding.userChallenge.vo.UserChallengeVO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -233,10 +230,8 @@ public class UserChallengeService {
 
     // 챌린지 참여자 조회
     public List<ChallengeParticipantDTO> getChallengeParticipants(Long fundId, Long creatorId) {
-        // 1. 챌린지 생성자가 맞는지 보안 검증
         verifyChallengeCreator(fundId, creatorId);
 
-        // 2. DAO를 통해 참여자 목록 조회
         return userChallengeDAO.findParticipantsByFundId(fundId);
     }
 
@@ -247,7 +242,25 @@ public class UserChallengeService {
             throw new UserChallengeException(ErrorCode.FUNDING_NOT_FOUND);
         }
         if (!fund.getUploadUserId().equals(creatorId)) {
-            throw new UserChallengeException(ErrorCode.AUTHENTICATION_FAILED); // 권한 없음 에러
+            throw new UserChallengeException(ErrorCode.AUTHENTICATION_FAILED);
         }
+    }
+
+    public List<ChallengeLogVO> getParticipantLogs(Long userChallengeId, String status, Long creatorId) {
+        // 해당 로그를 볼 권한이 있는지 보안 검증
+        UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
+        if (userChallenge == null) {
+            throw new UserChallengeException(ErrorCode.NOT_CHALLENGE_MEMBER);
+        }
+        verifyChallengeCreator(userChallenge.getFundId(), creatorId);
+
+        // DAO에 파라미터를 Map으로 전달하여 로그 조회
+        Map<String, Object> params = new HashMap<>();
+        params.put("userChallengeId", userChallengeId);
+        if (status != null && !status.equalsIgnoreCase("ALL")) {
+            params.put("status", status);
+        }
+
+        return challengeLogDAO.findLogsByUserChallengeId(params);
     }
 }

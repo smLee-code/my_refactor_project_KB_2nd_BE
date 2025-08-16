@@ -43,5 +43,19 @@
         )
     </select>
 
+    <select id="findLogsByUserChallengeId" parameterType="map" resultType="org.funding.challengeLog.vo.ChallengeLogVO">
+        SELECT
+        log_id, user_challenge_id, user_id, verified, image_url, verified_result, log_date, create_at
+        FROM
+        challenge_log
+        WHERE
+        user_challenge_id = #{userChallengeId}
+        <if test="status != null and status != ''">
+            AND verified = #{status}
+        </if>
+        ORDER BY
+        log_date DESC
+    </select>
+
 
 </mapper>
