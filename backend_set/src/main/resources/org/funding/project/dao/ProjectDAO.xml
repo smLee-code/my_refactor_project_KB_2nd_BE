@@ -4,6 +4,25 @@
 
 <mapper namespace="org.funding.project.dao.ProjectDAO">
 
+    <resultMap id="ProjectVOMap" type="org.funding.project.vo.ProjectVO">
+        <id property="projectId" column="project_id"/>
+        <result property="title" column="title"/>
+        <result property="promotion" column="promotion"/>
+        <result property="projectType" column="project_type"/>
+        <result property="progress" column="progress"/>
+        <result property="createAt" column="create_at"/>
+        <result property="deadline" column="deadline"/>
+        <result property="userId" column="user_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="email" column="email"/>
+
+        <!-- ✅ badge_id 컬럼들을 ProjectVO.badges(List<Long>)에 매핑 -->
+        <collection property="badges" ofType="org.funding.badge.vo.BadgeVO">
+            <result property="badgeId" column="badge_id"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
     <resultMap id="projectListResultMap" type="org.funding.project.dto.response.ProjectListDTO">
         <id property="projectId" column="project_id"/>
         <result property="title" column="title"/>
@@ -50,7 +69,30 @@
     </insert>
 
     <!--    프로젝트 공통 항목 조회 쿼리-->
-    <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">
+<!--    <select id="selectProjectById" parameterType="Long" resultType="org.funding.project.vo.ProjectVO">-->
+<!--        SELECT-->
+<!--            p.project_id,-->
+<!--            p.title,-->
+<!--            p.promotion,-->
+<!--            p.project_type,-->
+<!--            p.progress,-->
+<!--            p.create_at,-->
+<!--            p.deadline,-->
+<!--            p.user_id,-->
+
+<!--            u.nickname,-->
+<!--            u.email-->
+
+<!--#             b.badge_id,-->
+<!--#             b.name AS badgeName-->
+<!--        FROM project p-->
+<!--                 JOIN member u ON p.user_id = u.user_id-->
+<!--#                  LEFT JOIN user_badge ub ON u.user_id = ub.user_id-->
+<!--#                  LEFT JOIN badge b ON ub.badge_id = b.badge_id-->
+<!--        WHERE p.project_id = #{projectId}-->
+<!--    </select>-->
+
+    <select id="selectProjectById" parameterType="Long" resultMap="ProjectVOMap">
         SELECT
             p.project_id,
             p.title,
@@ -65,7 +107,7 @@
             u.email,
 
             b.badge_id,
-            b.name AS badgeName
+            b.name
         FROM project p
                  JOIN member u ON p.user_id = u.user_id
                  LEFT JOIN user_badge ub ON u.user_id = ub.user_id

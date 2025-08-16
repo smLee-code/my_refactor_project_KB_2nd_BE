@@ -2,6 +2,7 @@ package org.funding.project.vo;
 
 import lombok.*;
 import org.funding.S3.vo.S3ImageVO;
+import org.funding.badge.vo.BadgeVO;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.project.vo.enumType.ProjectType;
 
@@ -32,7 +33,9 @@ public class ProjectVO {
     private String nickname;
     private String email;
 
-    private Long badgeId;
-    private String badgeName;
+    private List<BadgeVO> badges;
+
+//    private List<Long> badgeIds;
+//    private List<String> badgeNames;
 
 }

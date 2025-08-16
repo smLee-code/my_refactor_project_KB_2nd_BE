@@ -75,6 +75,9 @@ public class ProjectController {
      */
     @GetMapping("/list/detail/{id}/full")
     public ResponseEntity<ProjectResponseDTO> getProjectFullDetail(@PathVariable("id") Long id) {
+
+        System.out.println("/list/detail/" + id + "/full/  called");
+
         ProjectResponseDTO projectDetails = projectService.getProjectDetails(id);
         return ResponseEntity.ok(projectDetails);
     }
