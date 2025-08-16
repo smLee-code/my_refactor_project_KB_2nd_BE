@@ -20,10 +20,7 @@ import org.funding.openAi.dto.VisionResponseDTO;
 import org.funding.user.dao.MemberDAO;
 import org.funding.user.vo.MemberVO;
 import org.funding.userChallenge.dao.UserChallengeDAO;
-import org.funding.userChallenge.dto.ApplyChallengeRequestDTO;
-import org.funding.userChallenge.dto.ChallengeDetailResponseDTO;
-import org.funding.userChallenge.dto.DeleteChallengeRequestDTO;
-import org.funding.userChallenge.dto.UserChallengeDetailDTO;
+import org.funding.userChallenge.dto.*;
 import org.funding.userChallenge.vo.UserChallengeVO;
 import org.springframework.stereotype.Service;
 
@@ -231,5 +228,26 @@ public class UserChallengeService {
         responseDTO.setDailyLogs(dailyLogs);
 
         return responseDTO;
+    }
+
+
+    // 챌린지 참여자 조회
+    public List<ChallengeParticipantDTO> getChallengeParticipants(Long fundId, Long creatorId) {
+        // 1. 챌린지 생성자가 맞는지 보안 검증
+        verifyChallengeCreator(fundId, creatorId);
+
+        // 2. DAO를 통해 참여자 목록 조회
+        return userChallengeDAO.findParticipantsByFundId(fundId);
+    }
+
+    // (공통 로직) 챌린지 생성자가 맞는지 확인하는 헬퍼 메서드
+    private void verifyChallengeCreator(Long fundId, Long creatorId) {
+        FundVO fund = fundDAO.selectById(fundId);
+        if (fund == null) {
+            throw new UserChallengeException(ErrorCode.FUNDING_NOT_FOUND);
+        }
+        if (!fund.getUploadUserId().equals(creatorId)) {
+            throw new UserChallengeException(ErrorCode.AUTHENTICATION_FAILED); // 권한 없음 에러
+        }
     }
 }
