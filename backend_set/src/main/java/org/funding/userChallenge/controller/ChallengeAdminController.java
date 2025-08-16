@@ -40,5 +40,21 @@ public class ChallengeAdminController {
         return ResponseEntity.ok(logs);
     }
 
-    //
+    // 수동 챌린지 검증 (승인)
+    @Auth
+    @PatchMapping("/logs/{logId}/approve")
+    public ResponseEntity<String> manuallyApproveLog(@PathVariable Long logId, HttpServletRequest request) {
+        Long creatorId = (Long) request.getAttribute("userId");
+        userChallengeService.manuallyVerifyLog(logId, creatorId, true); // true for approve
+        return ResponseEntity.ok("수동 승인 처리 완료");
+    }
+
+    // 수동 챌린지 검증 (반려)
+    @Auth
+    @PatchMapping("/logs/{logId}/reject")
+    public ResponseEntity<String> manuallyRejectLog(@PathVariable Long logId, HttpServletRequest request) {
+        Long creatorId = (Long) request.getAttribute("userId");
+        userChallengeService.manuallyVerifyLog(logId, creatorId, false); // false for reject
+        return ResponseEntity.ok("수동 반려 처리 완료");
+    }
 }

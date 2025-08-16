@@ -23,6 +23,7 @@ import org.funding.userChallenge.dao.UserChallengeDAO;
 import org.funding.userChallenge.dto.*;
 import org.funding.userChallenge.vo.UserChallengeVO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -262,5 +263,37 @@ public class UserChallengeService {
         }
 
         return challengeLogDAO.findLogsByUserChallengeId(params);
+    }
+
+    // 수동 챌린지 검증
+    @Transactional
+    public void manuallyVerifyLog(Long logId, Long creatorId, boolean isApproved) {
+        // 로그 조회 및 상태 확인
+        ChallengeLogVO log = challengeLogDAO.selectLogById(logId);
+        if (log == null) {
+            throw new UserChallengeException(ErrorCode.NOT_FOUND_CHALLENGE);
+        }
+        if (log.getVerified() != VerifyType.HumanVerify) {
+            throw new UserChallengeException(ErrorCode.NOT_HUMAN_VERIFY_TARGET);
+        }
+
+        // 해당 로그를 수정할 권한이 있는지 보안 검증 (생성자 확인)
+        UserChallengeVO userChallenge = userChallengeDAO.findById(log.getUserChallengeId());
+        verifyChallengeCreator(userChallenge.getFundId(), creatorId);
+
+        // 로그 상태 변경
+        if (isApproved) {
+            log.setVerified(VerifyType.Verified);
+            log.setVerifiedResult("[수동인증] " + log.getVerifiedResult());
+            challengeLogDAO.updateChallengeLog(log);
+            // 성공 카운트 증가
+            userChallengeDAO.incrementSuccessCount(log.getUserChallengeId());
+        } else {
+            log.setVerified(VerifyType.UnVerified);
+            log.setVerifiedResult("[수동반려] " + log.getVerifiedResult());
+            challengeLogDAO.updateChallengeLog(log);
+            // 실패 카운트 증가
+            userChallengeDAO.incrementFailCount(log.getUserChallengeId());
+        }
     }
 }

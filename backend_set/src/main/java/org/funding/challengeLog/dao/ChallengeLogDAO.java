@@ -26,4 +26,9 @@ public interface ChallengeLogDAO {
     // 챌린지 참여자 기록 조회
     List<ChallengeLogVO> findLogsByUserChallengeId(Map<String, Object> params);
 
+    // 수동 챌린지 인증
+    ChallengeLogVO selectLogById(Long logId);
+    void updateChallengeLog(ChallengeLogVO log);
+
+
 }

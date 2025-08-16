@@ -40,4 +40,7 @@ public interface UserChallengeDAO {
 
     List<ChallengeParticipantDTO> findParticipantsByFundId(Long fundId);
 
+    void incrementSuccessCount(Long userChallengeId);
+    void incrementFailCount(Long userChallengeId);
+
 }

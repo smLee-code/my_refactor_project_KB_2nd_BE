@@ -142,4 +142,17 @@
             uc.create_at DESC
     </select>
 
+    <update id="incrementSuccessCount" parameterType="long">
+        UPDATE user_challenge
+        SET current_count = current_count + 1
+        WHERE user_challenge_id = #{userChallengeId}
+    </update>
+
+    <update id="incrementFailCount" parameterType="long">
+        UPDATE user_challenge
+        SET fail_count = fail_count + 1
+        WHERE user_challenge_id = #{userChallengeId}
+    </update>
+
+
 </mapper>
