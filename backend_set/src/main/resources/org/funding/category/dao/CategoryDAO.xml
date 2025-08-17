@@ -11,9 +11,18 @@
         where name = #{name}
     </select>
 
+    <select id="selectCategoryById" resultType="org.funding.category.vo.CategoryVO">
+        select *
+        from categories
+        where category_id = #{categoryId}
+
+    </select>
+
     <select id="selectAllCategories" resultType="org.funding.category.vo.CategoryVO">
         select * from categories
     </select>
+
+
 
 
     <insert id="insertCategory" parameterType="org.funding.category.dto.CategoryRequestDTO">
