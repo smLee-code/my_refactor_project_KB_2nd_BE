@@ -51,7 +51,8 @@
             fund_id,
             user_id,
             current_count,
-            fail_count
+            fail_count,
+            challenge_status AS challengeStatus
         FROM user_challenge
         WHERE user_challenge_id = #{userChallengeId}
     </select>

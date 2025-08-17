@@ -261,9 +261,7 @@ public class FundService {
                 .challengePeriodDays(request.getChallengePeriodDays())
                 .reward(request.getReward())
                 .rewardCondition(request.getRewardCondition())
-                    .verifyStandard(request.getVerifyStandard()) // 검증 기준 추가
-                    .challengeStartDate(request.getChallengeStartDate())
-                    .challengeEndDate(request.getChallengeEndDate())
+                    .verifyStandard(request.getVerifyStandard())
                     .challengeStartDate(request.getChallengeStartDate())
                     .challengeEndDate(request.getChallengeEndDate())
                 .build();
