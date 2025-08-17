@@ -132,7 +132,6 @@
             m.nickname AS nickname,
             uc.current_count AS currentCount,
             uc.fail_count AS failCount
---             uc.create_at AS joinAt
         FROM
             user_challenge uc
                 JOIN
