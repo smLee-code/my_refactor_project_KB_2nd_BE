@@ -152,8 +152,8 @@ public class UserChallengeService {
         }
 
         // 7. 이미지 분석 및 인증 검증
-        String rewardCondition = challenge.getRewardCondition();
-        VisionResponseDTO visionResponse = openAIVisionClient.analyzeImageWithPrompt(imageUrl, rewardCondition);
+        String verify = challenge.getVerifyStandard();
+        VisionResponseDTO visionResponse = openAIVisionClient.analyzeImageWithPrompt(imageUrl, verify);
 
         int score = visionResponse.getScore();
         String reason = visionResponse.getReason();
