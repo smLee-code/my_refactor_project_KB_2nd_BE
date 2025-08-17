@@ -49,7 +49,6 @@ public class OpenAiController {
             @RequestBody AIExplainFundRequestDTO request,
             HttpServletRequest servletRequest) throws JsonProcessingException {
 
-        // getFundDetail에서 isJoined 여부를 확인하기 위해 userId를 전달할 수 있습니다.
         Long userId = (Long) servletRequest.getAttribute("userId");
         AIExplainFundResponseDTO response = chatService.explainFund(request.getFundId(), userId);
         return ResponseEntity.ok(response);
