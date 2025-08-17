@@ -59,6 +59,10 @@ public class ChattingController {
     ) throws Exception {
         Long userId = (Long) request.getAttribute("userId");
 
-        return chattingService.getMessages(projectId, userId);
+        List<RealtimeChatResponseDTO> messages = chattingService.getMessages(projectId, userId);
+
+        System.out.println(messages);
+
+        return messages;
     }
 }

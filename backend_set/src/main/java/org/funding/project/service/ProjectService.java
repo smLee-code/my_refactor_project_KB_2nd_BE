@@ -133,17 +133,19 @@ public class ProjectService {
             return Collections.emptyList();
         }
 
-        List<Long> projectIds = projectList.stream()
-                .map(ProjectListDTO::getProjectId)
-                .collect(Collectors.toList());
+//        List<Long> projectIds = projectList.stream()
+//                .map(ProjectListDTO::getProjectId)
+//                .collect(Collectors.toList());
+//
+//        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
+//        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
+//                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
+//
+//        for (ProjectListDTO project : projectList) {
+//            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
+//        }
 
-        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
-        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
-                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
-
-        for (ProjectListDTO project : projectList) {
-            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
-        }
+        findImagesOfProject(projectList);
 
         if (loginUserId == null) {
             // 비 로그인 시 -> 투표 여부 항상 false로 처리
@@ -169,18 +171,22 @@ public class ProjectService {
             project.setThumbnailImage(image);
         }
 
+        findImagesOfProject(projectList);
+
         return projectList;
     }
 
     public List<ProjectListDTO> searchByKeyword(String keyword) {
         List<ProjectListDTO> projectList = projectDAO.searchProjectsByKeyword(keyword);
 
-        // 프로젝트 썸네일 이미지 추출
-        for (ProjectListDTO project : projectList) {
-            Long projectId = project.getProjectId();
-            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
-            project.setThumbnailImage(image);
-        }
+//        // 프로젝트 썸네일 이미지 추출
+//        for (ProjectListDTO project : projectList) {
+//            Long projectId = project.getProjectId();
+//            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
+//            project.setThumbnailImage(image);
+//        }
+
+        findImagesOfProject(projectList);
 
         return projectList;
     }
@@ -188,75 +194,17 @@ public class ProjectService {
     public List<ProjectListDTO> getAllProjects() {
         List<ProjectListDTO> projectList = projectDAO.getAllProjects();
 
-        // 프로젝트 썸네일 이미지 추출
-        for (ProjectListDTO project : projectList) {
-            Long projectId = project.getProjectId();
-            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
-            project.setThumbnailImage(image);
-        }
+//        // 프로젝트 썸네일 이미지 추출
+//        for (ProjectListDTO project : projectList) {
+//            Long projectId = project.getProjectId();
+//            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
+//            project.setThumbnailImage(image);
+//        }
+
+        findImagesOfProject(projectList);
 
         return projectList;
     }
-
-//    public List<ProjectListDTO> getRelatedProjects(Long projectId) {
-//
-//
-//        ProjectListDTO baseProject = ProjectListDTO.fromVO(projectDAO.selectProjectById(projectId));
-//
-//        List<KeywordVO> baseKeywords = projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId());
-//
-//        List<ProjectListDTO> sameTypeProjects = projectDAO.searchProjectsByType(String.valueOf(baseProject.getProjectType()));
-//
-//        if (baseKeywords == null || baseKeywords.isEmpty()) { // baseKeywords가 null이거나 비어있으면
-//
-//            // 같은 타입의 프로젝트 중 최대 4개만 반환
-//            return sameTypeProjects.stream()
-//                    .filter(p -> !p.getProjectId().equals(projectId))
-//                    .limit(4)
-//                    .collect(Collectors.toList());
-//        }
-//
-//        // baseKeywords의 키워드 ID만 추출하여 Set으로 변환 (빠른 비교를 위함)
-//
-//        final List<Long> baseKeywordIds = Optional.ofNullable(baseKeywords)
-//                .orElse(Collections.emptyList())
-//                .stream()
-//                .filter(Objects::nonNull) // null KeywordVO 제거
-//                .map(KeywordVO::getKeywordId)
-//                .filter(Objects::nonNull) // null keywordId 제거
-//                .toList();
-//
-//        // 각 프로젝트별로 일치하는 키워드 개수를 저장할 맵
-//        Map<ProjectListDTO, Long> projectMatchCounts = new HashMap<>();
-//
-//        for (ProjectListDTO project : sameTypeProjects) {
-//            if (project.getProjectId().equals(projectId)) {
-//                continue; // 자기 자신은 관련 프로젝트에서 제외
-//            }
-//
-//            List<KeywordVO> projectKeywords = projectKeywordService.findKeywordsByProjectId(project.getProjectId());
-//            if (projectKeywords == null || projectKeywords.isEmpty()) {
-//                continue; // 키워드가 없는 프로젝트는 스킵
-//            }
-//
-//            long matchCount = projectKeywords.stream()
-//                    .filter(keyword -> baseKeywordIds.contains(keyword.getKeywordId())) // KeywordVO에 getKeywordName() 메서드가 있다고 가정
-//                    .count();
-//
-//            if (matchCount > 0) {
-//                projectMatchCounts.put(project, matchCount);
-//            }
-//        }
-//
-//        System.out.println("projectMatchCounts: " + projectMatchCounts);
-//
-//        // 일치하는 키워드 개수가 많은 순서대로 정렬하고, 최대 3개만 반환
-//        return projectMatchCounts.entrySet().stream()
-//                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 일치 개수 내림차순 정렬
-//                .map(Map.Entry::getKey)
-//                .limit(4)
-//                .collect(Collectors.toList());
-//    }
 
     public List<ProjectListDTO> getRelatedProjects(Long projectId) {
         // 0) 입력값 방어
@@ -530,16 +478,32 @@ public class ProjectService {
     }
 
     public void findImagesOfProject(List<ProjectListDTO> projectList) {
-        List<Long> projectIds = projectList.stream()
-                .map(ProjectListDTO::getProjectId)
-                .collect(Collectors.toList());
-
-        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
-        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
-                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
 
         for (ProjectListDTO project : projectList) {
-            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
+            Long projectId = project.getProjectId();
+
+            List<S3ImageVO> allImages = s3ImageService.getImagesForPost(ImageType.Project, projectId);
+
+            if (allImages == null || allImages.size() == 0) {
+                project.setImages(Collections.emptyList());
+                project.setThumbnailImage(null);
+                project.setThumbnailUrl("");
+            } else {
+                project.setImages(allImages);
+                project.setThumbnailImage(allImages.get(0));
+                project.setThumbnailUrl(allImages.get(0).getImageUrl());
+            }
+
         }
+    }
+
+    public List<ProjectListDTO> recommendProjectsByUserKeywords(Long userId) {
+
+        List<ProjectListDTO> projectList = projectKeywordService.recommendProjectsByUserKeywords(userId);
+
+        findImagesOfProject(projectList);
+
+        return projectList;
+
     }
 }

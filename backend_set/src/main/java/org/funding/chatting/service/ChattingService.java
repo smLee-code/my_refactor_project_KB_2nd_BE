@@ -54,6 +54,7 @@ public class ChattingService {
                             .projectId(chattingVO.getProjectId())
                             .userId(chattingVO.getUserId())
                             .username(memberVO.getUsername())
+                            .nickname(memberVO.getNickname())
                             .content(chattingVO.getContent())
                             .timestamp(chattingVO.getTimestamp())
                             .build();
