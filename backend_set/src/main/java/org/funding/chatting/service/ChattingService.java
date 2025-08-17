@@ -31,11 +31,14 @@ public class ChattingService {
 
         System.out.println(chattingVO);
 
+        MemberVO memberVO = memberDAO.findById(chattingVO.getUserId());
+
         return RealtimeChatResponseDTO.builder()
                 .id(chattingVO.getId())
                 .projectId(chattingVO.getProjectId())
                 .userId(chattingVO.getUserId())
-                .username(memberDAO.findById(chattingVO.getUserId()).getUsername())
+                .username(memberVO.getUsername())
+                .nickname(memberVO.getNickname())
                 .content(chattingVO.getContent())
                 .timestamp(chattingVO.getTimestamp())
                 .build();
