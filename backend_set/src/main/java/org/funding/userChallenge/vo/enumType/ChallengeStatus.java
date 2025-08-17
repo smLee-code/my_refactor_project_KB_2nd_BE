@@ -2,7 +2,7 @@ package org.funding.userChallenge.vo.enumType;
 
 public enum ChallengeStatus {
 
-    InProgress, Success, Fail;
+    ONGOING, Success, Fail;
 
     public static ChallengeStatus fromString(String value) {
         for (ChallengeStatus status : ChallengeStatus.values()) {
