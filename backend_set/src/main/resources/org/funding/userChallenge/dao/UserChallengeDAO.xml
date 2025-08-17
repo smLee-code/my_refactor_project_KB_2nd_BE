@@ -138,8 +138,6 @@
             member m ON uc.user_id = m.user_id
         WHERE
             uc.fund_id = #{fundId}
-        ORDER BY
-            uc.create_at DESC
     </select>
 
     <update id="incrementSuccessCount" parameterType="long">
