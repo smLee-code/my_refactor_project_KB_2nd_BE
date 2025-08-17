@@ -24,7 +24,6 @@ public class CategoryService {
 
     private final CategoryDAO categoryDAO;
 
-
     public List<CategoryVO> getAllCategories() {
         return categoryDAO.selectAllCategories();
     }

@@ -10,10 +10,16 @@ public interface CategoryDAO {
 
     CategoryResponseDTO selectCategory(String name);
 
+    CategoryVO selectCategoryById(Long categoryId);
+
     List<CategoryVO> selectAllCategories();
+
+
 
     void insertCategory(CategoryRequestDTO requestDTO);
 
     void deleteCategory(String name);
+
+
 
 }
