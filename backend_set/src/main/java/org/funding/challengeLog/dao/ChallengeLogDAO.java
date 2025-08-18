@@ -13,6 +13,7 @@ public interface ChallengeLogDAO {
 
     void insertChallengeLog(ChallengeLogVO log);
 
+
     ChallengeLogVO selectLogByUserAndDate(@Param("userChallengeId") Long id, @Param("logDate") LocalDate date);
 
     List<LocalDate> selectAllLogDatesByUserChallengeId(Long userChallengeId);
