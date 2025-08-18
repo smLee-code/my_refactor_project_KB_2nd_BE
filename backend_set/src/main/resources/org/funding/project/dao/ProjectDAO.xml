@@ -393,6 +393,10 @@
             WHERE project_id = #{projectId}
         </select>
 
+        <select id="getAllProjectIds" resultType="java.lang.Long">
+            SELECT project_id
+            FROM project
+        </select>
 
 
 </mapper>
