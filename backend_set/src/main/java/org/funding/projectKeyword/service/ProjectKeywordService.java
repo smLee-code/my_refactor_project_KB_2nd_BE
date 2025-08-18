@@ -10,6 +10,7 @@ import org.funding.keyword.dao.KeywordDAO;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
+import org.funding.project.vo.ProjectVO;
 import org.funding.projectKeyword.dao.ProjectKeywordDAO;
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.vo.ProjectKeywordVO;
@@ -67,65 +68,46 @@ public class ProjectKeywordService {
     }
 
     public List<ProjectListDTO> recommendProjectsByUserKeywords(Long userId) {
-        // 1. 사용자 관심 키워드 목록 조회
+        // 사용자 관심 키워드 목록 조회
         List<Long> keywordIds = keywordDAO.selectKeywordIdsByUserId(userId);
         if (keywordIds == null || keywordIds.isEmpty()) {
             return List.of(); // 관심 키워드가 없다면 빈 리스트 반환
         }
 
-        // 각 키워드를 가중치에 따라 비율 설정 (A : B : C = 2 : 1 : 1 등)
-        List<Integer> keywordWeights =
-                keywordIds.stream().map(keywordId -> {
-                    KeywordVO keywordVO = keywordDAO.selectKeywordById(keywordId);
-                    CategoryVO categoryVO = categoryDAO.selectCategoryById(keywordVO.getCategoryId());
-                    return categoryVO.getWeight();
-                }).toList();
-
-        double totalSum = keywordWeights.stream().mapToInt(Integer::intValue).sum();
-
-        List<Integer> keywordRates =
-                keywordWeights.stream()
-                        .map(weight -> (weight / totalSum) * 4)
-                        .map(Math::round)
-                        .map(Long::intValue)
-                .toList();
-
-        Map<Long, Integer> keywordRateMap = IntStream.range(0, keywordIds.size())
-                .boxed()
+        // 각 키워드 Id 및 키워드의 가중치 맵핑
+        Map<Long, Integer> keywordWeightMap = keywordIds.stream()
                 .collect(Collectors.toMap(
-                        i -> keywordIds.get(i),   // key: keywordId
-                        i -> keywordRates.get(i)  // value: keywordRate
+                        keywordId -> keywordId,
+                        keywordId -> categoryDAO.selectCategoryById(keywordDAO.selectKeywordById(keywordId).getCategoryId()).getWeight()
                 ));
 
-        // 각 키워드를 가지는 프로젝트를 해당 비율에 따라 조회 (최대 4개)
-        List<Long> projectIds = new ArrayList<>();
+        // 모든 프로젝트 id 리스트 조회
+        List<Long> projectIds = projectDAO.getAllProjectIds();
+        Map<Long, Integer> projectWeightMap = projectIds.stream()
+                .collect(Collectors.toMap(
+                        projectId -> projectId,
+                        projectId -> {
 
-        for (Map.Entry<Long, Integer> entry : keywordRateMap.entrySet()) {
-            Long keywordId = entry.getKey();
-            Integer keywordRate = entry.getValue();
+                            // 프로젝트가 가진 키워드 id를 리스트 조회
+                            List<Long> projectKeywordIds = projectKeywordDAO.selectKeywordIdsByProjectId(projectId);
 
-            List<Long> projectIdsByKeywordId = projectKeywordDAO.selectKeywordIdsByProjectId(keywordId);
+                            // 여기서 keywordWeightMap 을 통해 가중치 합 계산 & 반환
+                            return projectKeywordIds.stream()
+                                    .filter(keywordWeightMap::containsKey)
+                                    .mapToInt(keywordWeightMap::get)
+                                    .sum();
+                        }
+                ));
 
-            List<Long> limitedProjectIds = projectIdsByKeywordId.stream()
-                    .limit(keywordRate)  // rate 개수만큼 제한
-                    .toList();
-
-            projectIds.addAll(limitedProjectIds);
-        }
-
-        projectIds = projectIds.stream()
-                .limit(4)  // 혹시 넘칠까봐 4개로 컷
+        // 가중치 합이 높은 순서대로 정렬한 프로젝트 Id 리스트
+        List<Long> rankedProjectIds = projectWeightMap.entrySet().stream()
+                .sorted(Map.Entry.<Long, Integer>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .limit(4) // 최대 4개까지
                 .toList();
 
-        // 2. 관심 키워드에 연결된 프로젝트 ID 목록 조회
-//        List<Long> projectIds = projectKeywordDAO.selectProjectIdsByKeywordIds(keywordIds);
-//        if (projectIds == null || projectIds.isEmpty()) {
-//            return List.of(); // 매칭되는 프로젝트 없음
-//        }
 
-
-        // 3. 프로젝트 정보 조회
-        List<ProjectListDTO> projectDTOList = projectDAO.selectProjectsByIds(projectIds);// resultType: ProjectListDTO
+        List<ProjectListDTO> projectDTOList = projectDAO.selectProjectsByIds(rankedProjectIds);
 
         List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
         Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
@@ -134,7 +116,6 @@ public class ProjectKeywordService {
         for (ProjectListDTO project : projectDTOList) {
             project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), emptyList()));
         }
-
 
         return projectDTOList;
     }
