@@ -72,5 +72,13 @@
             updated_at = NOW()
         WHERE merchant_uid = #{merchantUid}
     </update>
+    
+    <!-- 펀딩별 총 결제 금액 조회 -->
+    <select id="getTotalAmountByFundId" parameterType="long" resultType="long">
+        SELECT COALESCE(SUM(amount), 0)
+        FROM payment
+        WHERE fund_id = #{fundId}
+          AND status = 'PAID'
+    </select>
 
 </mapper>

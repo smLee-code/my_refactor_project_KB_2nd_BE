@@ -81,4 +81,7 @@ public class FundDetailResponseDTO {
     
     //가입자 수 정보
     private int participantCount;
+    
+    //현재까지 모인 금액 (챌린지, 기부 펀딩용)
+    private Long currentAmount;
 }

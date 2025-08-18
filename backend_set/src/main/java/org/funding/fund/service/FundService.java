@@ -30,6 +30,7 @@ import org.funding.userChallenge.dao.UserChallengeDAO;
 import org.funding.userDonation.dao.UserDonationDAO;
 import org.funding.userLoan.dao.UserLoanDAO;
 import org.funding.userSaving.dao.UserSavingDAO;
+import org.funding.payment.dao.PaymentDAO;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,6 +68,7 @@ public class FundService {
     private final UserDonationDAO userDonationDAO;
     private final UserSavingDAO userSavingDAO;
     private final UserLoanDAO userLoanDAO;
+    private final PaymentDAO paymentDAO;
 
     /**
      * 저축 펀딩 생성
@@ -481,6 +483,12 @@ public class FundService {
                 break;
         }
         fundDetail.setParticipantCount(participantCount);
+
+        // 챌린지와 기부 펀딩의 경우 현재까지 모인 금액 조회
+        if (fundType == FundType.Challenge || fundType == FundType.Donation) {
+            Long currentAmount = paymentDAO.getTotalAmountByFundId(fundId);
+            fundDetail.setCurrentAmount(currentAmount);
+        }
 
         // 참여 여부 확인
         boolean isJoined = false;

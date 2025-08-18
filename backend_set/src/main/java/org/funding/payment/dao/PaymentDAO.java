@@ -19,4 +19,7 @@ public interface PaymentDAO {
     
     // 결제 완료 처리 (imp_uid, status, 결제 정보 업데이트)
     void updatePaymentComplete(PaymentVO payment);
+    
+    // 펀딩별 총 결제 금액 조회
+    Long getTotalAmountByFundId(Long fundId);
 }
