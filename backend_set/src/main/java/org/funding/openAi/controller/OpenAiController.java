@@ -1,4 +1,5 @@
 package org.funding.openAi.controller;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.funding.fund.vo.FundVO;
@@ -39,6 +40,18 @@ public class OpenAiController {
     public SummaryFundResponseDTO summaryFund(@RequestBody SummaryFundRequestDTO summaryFundRequestDTO,
                                               HttpServletRequest request) {
         return chatService.summaryFund(summaryFundRequestDTO);
+    }
+
+    // 펀딩 ai 요약하기 version 2
+    @Auth
+    @PostMapping("/fund/ai-explain")
+    public ResponseEntity<AIExplainFundResponseDTO> explainFundByAI(
+            @RequestBody AIExplainFundRequestDTO request,
+            HttpServletRequest servletRequest) throws JsonProcessingException {
+
+        Long userId = (Long) servletRequest.getAttribute("userId");
+        AIExplainFundResponseDTO response = chatService.explainFund(request.getFundId(), userId);
+        return ResponseEntity.ok(response);
     }
 
     // 현재 펀딩과 비슷한 펀딩 추천받기
