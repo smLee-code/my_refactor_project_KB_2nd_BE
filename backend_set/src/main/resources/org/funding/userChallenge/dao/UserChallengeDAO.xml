@@ -65,6 +65,7 @@
 
     <select id="findAllChallengesByUserId" resultType="org.funding.userChallenge.dto.UserChallengeDetailDTO">
         SELECT
+            uc.fund_id AS fundId,
             uc.user_challenge_id AS userChallengeId,
             uc.current_count AS currentCount,
             uc.fail_count AS failCount,

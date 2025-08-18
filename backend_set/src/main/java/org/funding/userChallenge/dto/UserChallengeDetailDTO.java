@@ -6,6 +6,7 @@ import java.time.LocalDate;
 @Data
 public class UserChallengeDetailDTO {
 
+    private Long fundId;
     private Long userChallengeId;
     private int currentCount;
     private int failCount;
