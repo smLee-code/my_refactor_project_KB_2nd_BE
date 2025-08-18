@@ -180,8 +180,14 @@ public class UserChallengeService {
         log.setVerifiedResult(String.format("[점수: %d] %s", score, reason));
         challengeLogDAO.insertChallengeLog(log);
 
-        // 9. 유저 챌린지 상태 업데이트
-        userChallengeDAO.updateUserChallengeSuccess(userChallengeId);
+        //9. 유저 챌린지 상태 업데이트
+        if (verifyType == VerifyType.Verified) {
+            // 인증 성공 시, 성공 카운트 증가
+            userChallengeDAO.updateUserChallengeSuccess(userChallengeId);
+        } else {
+            // 수동 검증 또는 미검증 시, 실패 카운트 증가
+            userChallengeDAO.updateUserChallengeFail(userChallengeId);
+        }
     }
 
 
