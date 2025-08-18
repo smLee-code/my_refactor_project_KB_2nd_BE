@@ -202,7 +202,8 @@
             l.reward_condition as loanRewardCondition,
             c.challenge_period_days as challengePeriodDays,
             c.reward as challengeReward,
-            c.reward_condition as challengeRewardCondition
+            c.reward_condition as challengeRewardCondition,
+            c.verify_standard as verifyStandard
         FROM fund f
                  INNER JOIN financial_product fp ON f.product_id = fp.product_id
                  LEFT JOIN savings s ON fp.product_id = s.product_id AND fp.fund_type = 'SAVINGS'
