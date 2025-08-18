@@ -501,6 +501,19 @@ public class ProjectService {
 
         List<ProjectListDTO> projectList = projectKeywordService.recommendProjectsByUserKeywords(userId);
 
+        if (userId == null) {
+            // 비 로그인 시 -> 투표 여부 항상 false로 처리
+            projectList.forEach(project -> project.setIsLiked(false));
+        }
+        else {
+            projectList.forEach(project -> {
+                Boolean isLiked = votesService.hasVoted(new VotesRequestDTO(userId, project.getProjectId()));
+                project.setIsLiked(isLiked);
+            });
+        }
+
+
+
         findImagesOfProject(projectList);
 
         return projectList;

@@ -14,6 +14,7 @@ import org.funding.project.vo.ProjectVO;
 import org.funding.projectKeyword.dao.ProjectKeywordDAO;
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.vo.ProjectKeywordVO;
+import org.funding.votes.dto.VotesRequestDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -108,6 +109,8 @@ public class ProjectKeywordService {
 
 
         List<ProjectListDTO> projectDTOList = projectDAO.selectProjectsByIds(rankedProjectIds);
+
+
 
         List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
         Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()

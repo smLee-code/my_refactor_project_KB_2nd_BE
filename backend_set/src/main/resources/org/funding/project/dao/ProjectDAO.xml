@@ -299,8 +299,17 @@
     </select>
 
     <select id="selectProjectsByIds" parameterType="list" resultType="org.funding.project.dto.response.ProjectListDTO">
-        SELECT project_id, title, promotion, project_type, progress, create_at, deadline, user_id
-        FROM project
+        SELECT
+            p.project_id,
+            p.title,
+            p.deadline,
+            p.create_at,
+            p.user_id,
+            p.project_type,
+            p.progress,
+            p.promotion,
+            (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.project_id) AS likes
+        FROM project p
         WHERE project_id IN
         <foreach item="id" collection="list" open="(" separator="," close=")">
             #{id}
@@ -321,6 +330,20 @@
             (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.project_id) AS likes
         FROM project p
         WHERE project_type = #{type}
+    </select>
+
+    <select id="searchProjectsByKeyword" resultType="org.funding.project.dto.response.ProjectListDTO">
+        SELECT p.project_id,
+               p.title,
+               p.deadline,
+               p.create_at,
+               p.user_id,
+               p.project_type,
+               p.progress,
+               p.promotion,
+               (SELECT COUNT(*) FROM votes pv WHERE pv.project_id = p.project_id) AS likes
+        FROM project p
+        WHERE title LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
     <delete id="deleteProjectById" parameterType="Long">
