@@ -43,4 +43,7 @@ public interface UserChallengeDAO {
     void incrementSuccessCount(Long userChallengeId);
     void incrementFailCount(Long userChallengeId);
 
+    // 펀딩별 가입자 수 조회
+    int countByFundId(@Param("fundId") Long fundId);
+
 }

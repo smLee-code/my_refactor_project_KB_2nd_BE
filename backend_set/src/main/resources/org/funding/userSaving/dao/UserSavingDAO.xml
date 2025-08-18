@@ -71,4 +71,11 @@
             us.user_saving_id DESC
     </select>
 
+    <!-- 펀딩별 가입자 수 조회 -->
+    <select id="countByFundId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM user_saving
+        WHERE fund_id = #{fundId}
+    </select>
+
 </mapper>
