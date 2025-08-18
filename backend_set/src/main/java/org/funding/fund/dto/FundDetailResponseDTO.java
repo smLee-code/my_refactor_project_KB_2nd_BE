@@ -78,4 +78,7 @@ public class FundDetailResponseDTO {
 
     //참여 여부 정보
     private boolean isJoined;
+    
+    //가입자 수 정보
+    private int participantCount;
 }

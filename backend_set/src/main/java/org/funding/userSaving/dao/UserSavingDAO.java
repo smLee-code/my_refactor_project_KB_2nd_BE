@@ -30,4 +30,7 @@ public interface UserSavingDAO {
     // 사용자가 가입한 모든 저축 목록 조회
     List<UserSavingDetailDTO> findAllSavingDetailsByUserId(@Param("userId") Long userId);
 
+    // 펀딩별 가입자 수 조회
+    int countByFundId(@Param("fundId") Long fundId);
+
 }

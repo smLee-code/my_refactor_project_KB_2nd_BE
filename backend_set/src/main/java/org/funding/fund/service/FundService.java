@@ -460,11 +460,31 @@ public class FundService {
         List<KeywordVO> keywords = fundKeywordService.findKeywordIdsByFundId(fundId);
         fundDetail.setKeywords(keywords);
 
+        // 펀딩 타입 조회
+        FinancialProductVO financialProduct = financialProductDAO.selectById(fund.getProductId());
+        FundType fundType = financialProduct.getFundType();
+
+        // 가입자 수 조회
+        int participantCount = 0;
+        switch (fundType) {
+            case Challenge:
+                participantCount = userChallengeDAO.countByFundId(fundId);
+                break;
+            case Donation:
+                participantCount = userDonationDAO.countByFundId(fundId);
+                break;
+            case Savings:
+                participantCount = userSavingDAO.countByFundId(fundId);
+                break;
+            case Loan:
+                participantCount = userLoanDAO.countByFundId(fundId);
+                break;
+        }
+        fundDetail.setParticipantCount(participantCount);
+
+        // 참여 여부 확인
         boolean isJoined = false;
         if (userId != null) {
-            FinancialProductVO financialProduct = financialProductDAO.selectById(fund.getProductId());
-            FundType fundType = financialProduct.getFundType();
-
             switch (fundType) {
                 case Challenge:
                     isJoined = userChallengeDAO.existsByUserIdAndFundId(userId, fundId);

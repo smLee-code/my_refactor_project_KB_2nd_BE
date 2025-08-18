@@ -37,4 +37,7 @@ public interface UserLoanDAO {
     List<UserLoanDetailDTO> findAllLoanDetailsByUserId(@Param("userId") Long userId);
 
     List<UserLoanApplicationDTO> findApplicationsByFundId(Map<String, Object> params);
+
+    // 펀딩별 가입자 수 조회
+    int countByFundId(@Param("fundId") Long fundId);
 }

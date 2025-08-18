@@ -28,4 +28,7 @@ public interface UserDonationDAO {
     boolean existsByUserIdAndFundId(@Param("userId") Long userId, @Param("fundId") Long fundId);
 
     List<UserDonationDetailDTO> findAllDonationDetailsByUserId(@Param("userId") Long userId);
+
+    // 펀딩별 가입자 수 조회
+    int countByFundId(@Param("fundId") Long fundId);
 }
