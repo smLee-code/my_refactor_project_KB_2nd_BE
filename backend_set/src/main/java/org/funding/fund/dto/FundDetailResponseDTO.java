@@ -70,6 +70,7 @@ public class FundDetailResponseDTO {
     private Integer challengePeriodDays;
     private String challengeReward;
     private String challengeRewardCondition;
+    private String verifyStandard;
     
     // Keywords 정보
     @Setter
