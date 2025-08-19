@@ -1,6 +1,7 @@
 package org.funding.fund.vo.enumType;
 
-public enum ProgressType {
+public enum
+ProgressType {
     Launch, End;
     public static ProgressType fromString(String value) {
         for (ProgressType type : ProgressType.values()) {

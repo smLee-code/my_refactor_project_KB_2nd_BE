@@ -42,7 +42,7 @@ public class UserChallengeService {
     private final ChallengeDAO challengeDAO;
     private final BadgeService badgeService;
 
-    // 첼린지 가입 로직 (가입 전에 결제 로직 추가해줘야함)
+    // 첼린지 가입 로직
     public void applyChallenge(Long fundId, Long userId) {
         FundVO fund = fundDAO.selectById(fundId);
 
@@ -84,7 +84,7 @@ public class UserChallengeService {
     // 첼린지 인증 로직
     public void verifyDailyChallenge(Long userChallengeId, Long userId, String imageUrl, LocalDate logDate) {
 
-        // 1. 챌린지, 펀딩, 상품 조회
+        // 챌린지, 펀딩, 상품 조회
         UserChallengeVO userChallenge = userChallengeDAO.findById(userChallengeId);
         FundVO fund = fundDAO.selectById(userChallenge.getFundId());
         ChallengeVO challenge = challengeDAO.selectByProductId(fund.getProductId());
@@ -92,12 +92,12 @@ public class UserChallengeService {
         LocalDate startDate = challenge.getChallengeStartDate();
         LocalDate endDate = challenge.getChallengeEndDate();
 
-        // 2. 날짜 예외처리 (로그 날짜 기준으로)
+        // 날짜 예외처리 (로그 날짜 기준으로)
         if (logDate.isBefore(startDate) || logDate.isAfter(endDate)) {
             throw new UserChallengeException(ErrorCode.MISS_DATE_CHALLENGE);
         }
 
-        // 3. 중복 인증 예외처리
+        // 중복 인증 예외처리
         ChallengeLogVO existing = challengeLogDAO.selectLogByUserAndDate(userChallengeId, logDate);
         if (existing != null) {
             throw new UserChallengeException(ErrorCode.ALREADY_VERIFIED);
@@ -105,13 +105,13 @@ public class UserChallengeService {
 
         System.out.println("유저유저" + userId);
         System.out.println("유저 챌린지" + userChallengeId);
-        // 4. 챌린지 가입 여부 확인
+        // 챌린지 가입 여부 확인
         boolean isVerify = userChallengeDAO.existsByIdAndUserId(userChallengeId, userId);
         if (!isVerify) {
             throw new UserChallengeException(ErrorCode.NOT_CHALLENGE_MEMBER);
         }
 
-        // 5. 펀딩 상태 및 상품 유효성 체크
+        // 펀딩 상태 및 상품 유효성 체크
         ProgressType type = fund.getProgress();
         FinancialProductVO product = financialProductDAO.selectById(fund.getProductId());
 
@@ -127,7 +127,7 @@ public class UserChallengeService {
             throw new UserChallengeException(ErrorCode.NO_CHALLENGE);
         }
 
-        // 6. 미인증 로그 자동 생성 (오늘 이전까지)
+        // 미인증 로그 자동 생성 (오늘 이전까지)
         LocalDate today = LocalDate.now();
         LocalDate lastDate = today.isBefore(endDate) ? today : endDate;
 
@@ -151,7 +151,7 @@ public class UserChallengeService {
             }
         }
 
-        // 7. 이미지 분석 및 인증 검증
+        // 이미지 분석 및 인증 검증
         String verify = challenge.getVerifyStandard();
         VisionResponseDTO visionResponse = openAIVisionClient.analyzeImageWithPrompt(imageUrl, verify);
 
@@ -170,7 +170,7 @@ public class UserChallengeService {
             verifyType = VerifyType.UnVerified;
         }
 
-        // 8. 인증 성공 로그 저장
+        // 인증 성공 로그 저장
         ChallengeLogVO log = new ChallengeLogVO();
         log.setUserChallengeId(userChallengeId);
         log.setUserId(userId);
@@ -180,7 +180,7 @@ public class UserChallengeService {
         log.setVerifiedResult(String.format("[점수: %d] %s", score, reason));
         challengeLogDAO.insertChallengeLog(log);
 
-        //9. 유저 챌린지 상태 업데이트
+        // 유저 챌린지 상태 업데이트
         if (verifyType == VerifyType.Verified) {
             // 인증 성공 시, 성공 카운트 증가
             userChallengeDAO.updateUserChallengeSuccess(userChallengeId);
@@ -215,7 +215,7 @@ public class UserChallengeService {
 
     // 챌린지 상세보기
     public ChallengeDetailResponseDTO getChallengeDetails(Long userChallengeId) {
-        // 1. 챌린지 기본 정보 조회
+        // 챌린지 기본 정보 조회
         UserChallengeDetailDTO challengeInfo = userChallengeDAO.findChallengeDetailById(userChallengeId);
 
         // 만약 존재하지 않는 챌린지라면 null 반환 (컨트롤러에서 예외 처리)
@@ -223,10 +223,10 @@ public class UserChallengeService {
             return null;
         }
 
-        // 2. 해당 챌린지의 모든 인증 기록 조회
+        // 해당 챌린지의 모든 인증 기록 조회
         List<ChallengeLogVO> dailyLogs = challengeLogDAO.selectAllLogsByUserChallengeId(userChallengeId);
 
-        // 3. 두 종류의 데이터를 하나의 응답 DTO에 담아서 반환
+        // 두 종류의 데이터를 하나의 응답 DTO에 담아서 반환
         ChallengeDetailResponseDTO responseDTO = new ChallengeDetailResponseDTO();
         responseDTO.setChallengeInfo(challengeInfo);
         responseDTO.setDailyLogs(dailyLogs);
@@ -242,7 +242,7 @@ public class UserChallengeService {
         return userChallengeDAO.findParticipantsByFundId(fundId);
     }
 
-    // (공통 로직) 챌린지 생성자가 맞는지 확인하는 헬퍼 메서드
+    // 챌린지 생성자가 맞는지 확인하는 헬퍼 메서드
     private void verifyChallengeCreator(Long fundId, Long creatorId) {
         FundVO fund = fundDAO.selectById(fundId);
         if (fund == null) {
@@ -283,7 +283,7 @@ public class UserChallengeService {
             throw new UserChallengeException(ErrorCode.NOT_HUMAN_VERIFY_TARGET);
         }
 
-        // 해당 로그를 수정할 권한이 있는지 보안 검증 (생성자 확인)
+        // 해당 로그를 수정할 권한이 있는지 보안 검증
         UserChallengeVO userChallenge = userChallengeDAO.findById(log.getUserChallengeId());
         verifyChallengeCreator(userChallenge.getFundId(), creatorId);
 

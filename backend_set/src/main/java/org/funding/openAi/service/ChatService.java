@@ -22,7 +22,7 @@ public class ChatService {
     private final OpenAIClient openAIClient;
 
     private final ChatDAO chatDAO;
-    private final FundService fundService; // Fund 상세 정보 조회를 위해 주입
+    private final FundService fundService;
 
 
     public ChatResponseDTO ask(ChatRequestDTO chatRequestDTO) {
@@ -80,9 +80,8 @@ public class ChatService {
 
     }
 
-    /**
-     * FundDetailResponseDTO 객체를 AI 프롬프트에 넣기 좋은 문자열로 변환하는 헬퍼 메서드
-     */
+
+     // FundDetailResponseDTO 객체를 AI 프롬프트에 넣기 좋은 문자열로 변환하는 헬퍼 메서드
     private String convertFundDetailsToString(FundDetailResponseDTO details) {
         StringBuilder sb = new StringBuilder();
         sb.append("상품명: ").append(details.getName()).append("\n");
@@ -112,7 +111,7 @@ public class ChatService {
     }
 
     public AIExplainFundResponseDTO explainFund(Long fundId, Long userId) throws JsonProcessingException {
-        // fundId로 모든 상세 정보 조회 (기존 로직 재활용)
+        // fundId로 모든 상세 정보 조회
         FundDetailResponseDTO fundDetails = fundService.getFundDetail(fundId, userId);
 
         // 조회된 상세 정보를 AI가 이해하기 쉬운 텍스트로 변환

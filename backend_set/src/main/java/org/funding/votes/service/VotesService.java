@@ -49,21 +49,6 @@ public class VotesService {
     }
 
 
-    public VotesResponseDTO createVotes(VotesRequestDTO requestDTO) {
-
-        //투표는 토글 기능이라서 중복 투표 개념이 없을거같음
-//        if(votesDAO.selectVotes(requestDTO) != null) {
-//            throw new DuplicateVoteException("이미 투표한 프로젝트입니다. (중복 투표 불가)");
-//        }
-
-        VotesVO votesVO = requestDTO.toVO();
-        votesDAO.insertVotes(votesVO);
-        Long voteId = votesVO.getVoteId();
-
-        VotesVO selectedVotesVO = votesDAO.selectVotesById(voteId);
-        return VotesResponseDTO.fromVO(selectedVotesVO);
-    }
-
     @Transactional
     public void deleteVotes(Long projectId, Long userId) {
         VotesRequestDTO requestDTO = new VotesRequestDTO();
@@ -92,12 +77,6 @@ public class VotesService {
 
         return voteCount;
     }
-
-    //어디에 쓰일지 잘 모르겠음
-    public void deleteVotesDirect(Long userId, Long projectId) {
-        votesDAO.deleteVotesByUserIdAndProjectId(userId, projectId);
-    }
-
 
     public Boolean hasVoted(VotesRequestDTO requestDTO) {
         VotesVO votesVO = votesDAO.selectVotes(requestDTO);

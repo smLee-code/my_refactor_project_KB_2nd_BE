@@ -22,7 +22,7 @@ public class CustomUser extends User {
   public CustomUser(MemberVO vo) {
     super(vo.getUsername(),           // 사용자 ID
             vo.getPassword(),           // 암호화된 비밀번호
-            vo.getAuthList());          // 권한 목록 (List<AuthVO>)
+            vo.getAuthList());          // 권한 목록
 
     this.member = vo;                 // 추가 사용자 정보 저장
   }

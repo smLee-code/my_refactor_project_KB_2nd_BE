@@ -46,7 +46,6 @@ public class S3ImageService {
             metadata.setContentType(file.getContentType());
 
             amazonS3.putObject(new PutObjectRequest(bucketName, key, file.getInputStream(), metadata));
-                    // .withCannedAcl(CannedAccessControlList.PublicRead));
 
             String imageUrl = amazonS3.getUrl(bucketName, key).toString();
 

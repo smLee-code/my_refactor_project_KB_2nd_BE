@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChattingMessage {
-    private Long projectId;     // 추가
+    private Long projectId;
     private Long userId;
     private String username;
     private String content;

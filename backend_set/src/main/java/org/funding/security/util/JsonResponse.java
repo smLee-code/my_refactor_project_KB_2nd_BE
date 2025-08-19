@@ -16,7 +16,6 @@ public class JsonResponse {
     response.setContentType("application/json;charset=UTF-8");
     Writer out = response.getWriter();
 
-                              // AuthResultDTO
     out.write(om.writeValueAsString(result));  // 객체를 JSON 문자열로 직렬화
     out.flush();
   }

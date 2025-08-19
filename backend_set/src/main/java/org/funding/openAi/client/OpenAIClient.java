@@ -23,7 +23,7 @@ public class OpenAIClient {
         OkHttpClient client = new OkHttpClient();
 
         try {
-            // 1. 요청 바디 구성
+            // 요청 바디 구성
             JSONObject requestBody = new JSONObject();
             requestBody.put("model", "gpt-3.5-turbo");
 
@@ -34,7 +34,7 @@ public class OpenAIClient {
             messages.put(userMessage);
             requestBody.put("messages", messages);
 
-            // 2. 요청 생성
+            // 요청 생성
             Request request = new Request.Builder()
                     .url(API_URL)
                     .addHeader("Authorization", "Bearer " + apiKey)
@@ -42,7 +42,7 @@ public class OpenAIClient {
                     .post(RequestBody.create(requestBody.toString(), MEDIA_TYPE))
                     .build();
 
-            // 3. 요청 실행
+            // 요청 실행
             Response response = client.newCall(request).execute();
 
             if (!response.isSuccessful()) {
@@ -53,7 +53,7 @@ public class OpenAIClient {
             String responseBody = response.body().string();
             log.info("OpenAI 응답: {}", responseBody);
 
-            // 4. 응답 파싱
+            // 응답 파싱
             JSONObject json = new JSONObject(responseBody);
             if (!json.has("choices")) {
                 log.error("OpenAI 응답에 'choices' 키가 없음: {}", responseBody);

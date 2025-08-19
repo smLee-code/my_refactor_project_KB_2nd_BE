@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -13,32 +15,35 @@ import java.util.Date;
 
 @Slf4j
 @Component
-public class JwtProcessor {
+public class JwtProcessor implements InitializingBean {
 
-  // 테스트용 5분 - 만료 확인용
-  static private final long TOKEN_VALID_MILLISECOND = 1000L * 60 * 50000;
+  @Value("${jwt.secret-key}")
+  private String secretKey;
 
-  // 개발용 고정 Secret Key
-  private String secretKey = "8oP5JazHXh8E7NAS48xCgHIgdwL/7BvetKx+CfGvIqk=";
-  private Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+  @Value("${jwt.token-validity-in-milliseconds}")
+  private long tokenValidMillisecond;
+  private Key key;
 
-
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+  }
 
   public String generateToken(String subject) {
     return Jwts.builder()
-            .setSubject(subject)                    // 사용자 식별자
-            .setIssuedAt(new Date())               // 발급 시간
-            .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECOND))  // 만료 시간
-            .signWith(key)                         // 서명
-            .compact();                            // 문자열 생성
+            .setSubject(subject)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + tokenValidMillisecond))
+            .signWith(key) // ✅ 안전하게 초기화된 key 사용
+            .compact();
   }
 
   public String generateTokenWithRole(String subject, String role) {
     return Jwts.builder()
             .setSubject(subject)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECOND))
-            .claim("role", role)                   // 권한 정보 추가
+            .setExpiration(new Date(System.currentTimeMillis() + tokenValidMillisecond))
+            .claim("role", role)
             .signWith(key)
             .compact();
   }
@@ -49,7 +54,7 @@ public class JwtProcessor {
             .claim("userId", userId)
             .claim("role", role)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALID_MILLISECOND))
+            .setExpiration(new Date(System.currentTimeMillis() + tokenValidMillisecond))
             .signWith(key)
             .compact();
   }
@@ -57,22 +62,21 @@ public class JwtProcessor {
 
   public String generateTokenWithUserId(String subject, Long userId) {
     return Jwts.builder()
-            .setSubject(subject)                    // 사용자 식별자 (username 등)
-            .claim("userId", userId)                // userId 클레임 추가
+            .setSubject(subject)
+            .claim("userId", userId)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECOND))
+            .setExpiration(new Date(System.currentTimeMillis() + tokenValidMillisecond))
             .signWith(key)
             .compact();
   }
 
-
   public String generateTokenWithExpiry(String subject, Long tokenValidTime) {
     return Jwts.builder()
-            .setSubject(subject)                    // 사용자 식별자
-            .setIssuedAt(new Date())               // 발급 시간
-            .setExpiration(new Date(new Date().getTime() + tokenValidTime))  // 만료 시간
-            .signWith(key)                         // 서명
-            .compact();                            // 문자열 생성
+            .setSubject(subject)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
+            .signWith(key)
+            .compact();
   }
 
   public Long getUserId(String token) {
@@ -92,9 +96,8 @@ public class JwtProcessor {
     } else if (userIdObj instanceof String) {
       return Long.parseLong((String) userIdObj);
     }
-    return null;  // 타입이 예상과 다르면 null 반환
+    return null;
   }
-
 
   public String getUsername(String token) {
     return Jwts.parserBuilder()
@@ -105,7 +108,6 @@ public class JwtProcessor {
             .getSubject();
   }
 
-
   public String getRole(String token) {
     return Jwts.parserBuilder()
             .setSigningKey(key)
@@ -114,7 +116,6 @@ public class JwtProcessor {
             .getBody()
             .get("role", String.class);
   }
-
 
   public boolean validateToken(String token) {
     try {
@@ -128,6 +129,4 @@ public class JwtProcessor {
       return false;
     }
   }
-
-
 }

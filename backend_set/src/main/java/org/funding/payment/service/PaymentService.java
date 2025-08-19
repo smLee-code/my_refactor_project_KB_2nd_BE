@@ -41,10 +41,6 @@ public class PaymentService {
     
     // 결제별 metadata 임시 저장소
     private final Map<String, Map<String, Object>> paymentMetadata = new ConcurrentHashMap<>();
-
-    // TODO: Service 의존성 문제 해결 후 사용
-    // private final UserDonationService userDonationService;
-    // private final UserChallengeService userChallengeService;
     
     private final PaymentDAO paymentDAO;
     private final MemberDAO memberDAO;

@@ -42,10 +42,6 @@ public class ProjectKeywordService {
         return keywordIdList.stream().map(keywordDAO::selectKeywordById).toList();
     }
 
-//    public List<Long> findProjectIdsByKeywordId(Long keywordId) {
-//
-//    }
-
     public void mapProjectKeyword(ProjectKeywordRequestDTO requestDTO) {
         ProjectKeywordVO projectKeywordVO = projectKeywordDAO.findProjectKeywordMapping(requestDTO);
 

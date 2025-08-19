@@ -16,5 +16,5 @@ public class MemberVO {
   private Date regDate;                 // 등록일시
   private Date updateDate;              // 수정일시
 
-  private List<AuthVO> authList;        // 권한 목록 (1:N 관계)
+  private List<AuthVO> authList;        // 권한 목록
 }
