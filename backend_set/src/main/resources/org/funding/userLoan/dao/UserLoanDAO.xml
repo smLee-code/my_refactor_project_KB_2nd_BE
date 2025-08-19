@@ -6,9 +6,13 @@
 <mapper namespace="org.funding.userLoan.dao.UserLoanDAO">
 
     <!-- 저장 -->
-    <insert id="insertUserLoan" parameterType="org.funding.userLoan.vo.UserLoanVO" useGeneratedKeys="true" keyProperty="userLoanId">
-        INSERT INTO user_loan (fund_id, user_id, loan_amount, loan_access, full_payment)
-        VALUES (#{fundId}, #{userId}, #{loanAmount}, #{loanAccess}, #{fullPayment})
+    <insert id="insertUserLoan" parameterType="org.funding.userLoan.vo.UserLoanVO">
+        INSERT INTO user_loan (
+            fund_id, user_id, loan_amount, loan_access, full_payment, create_at
+        )
+        VALUES (
+                   #{fundId}, #{userId}, #{loanAmount}, #{loanAccess}, #{fullPayment}, #{createAt}
+               )
     </insert>
 
     <!-- 단건 조회 -->
@@ -89,7 +93,8 @@
         m.username AS username,
         m.nickname AS nickname,
         ul.loan_amount AS loanAmount,
-        ul.loan_access AS status
+        ul.loan_access AS status,
+        ul.create_at AS appliedAt
         FROM
         user_loan ul
         JOIN

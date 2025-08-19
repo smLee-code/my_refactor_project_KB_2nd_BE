@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.funding.userLoan.vo.enumType.SuccessType;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,4 +20,5 @@ public class UserLoanApplicationDTO {
     private String nickname;
     private Integer loanAmount;
     private SuccessType status;
+    private LocalDateTime appliedAt; // dto에 필드 추가
 }

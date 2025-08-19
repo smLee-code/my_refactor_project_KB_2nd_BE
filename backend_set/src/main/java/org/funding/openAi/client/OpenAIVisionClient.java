@@ -83,11 +83,30 @@ public class OpenAIVisionClient {
                     .getJSONObject("message")
                     .getString("content");
 
-            return mapper.readValue(content, VisionResponseDTO.class);
+            // AI 응답에서 순수 JSON 부분만 추출
+            String jsonContent = extractJsonFromString(content);
+
+            // 가공된 jsonContent를 파싱
+            return mapper.readValue(jsonContent, VisionResponseDTO.class);
         } catch (Exception e) {
             log.error("GPT-4 Vision API 요청 중 예외 발생", e);
             throw new OpenAiException(ErrorCode.FAIL_VISION_AI);
         }
+    }
+
+
+    // AI 응답 문자열에서 JSON 부분만 추출하는 헬퍼 메서드
+
+
+    private String extractJsonFromString(String text) {
+        int startIndex = text.indexOf('{');
+        int endIndex = text.lastIndexOf('}');
+
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            return text.substring(startIndex, endIndex + 1);
+        }
+        // JSON을 찾지 못하면 원본 텍스트를 반환
+        return text;
     }
 }
 

@@ -23,6 +23,7 @@ import org.funding.userLoan.vo.enumType.SuccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,7 @@ public class UserLoanService {
         userLoan.setLoanAmount(loanRequestDTO.getLoanAmount());
         userLoan.setLoanAccess(SuccessType.PENDING);
         userLoan.setFullPayment(false);
+        userLoan.setCreateAt(LocalDateTime.now()); // 현재 시간 설정 추가
         userLoanDAO.insertUserLoan(userLoan);
 
         // 뱃지 권한 부여
