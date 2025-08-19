@@ -11,13 +11,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component      // Spring Bean으로 등록
-@RequiredArgsConstructor   // final 필드에 대한 생성자 자동 생성
+@Component
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private final UserDetailsMapper mapper;  // MyBatis 매퍼 주입
+  private final UserDetailsMapper mapper;
 
-  // loadUserByUsername() : 사용자 이름(username)을 이용해 사용자 정보를 조회하는 서비스
+  // 사용자 이름(username)을 이용해 사용자 정보를 조회하는 서비스
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     log.info("사용자 정보 조회: {}", username);
@@ -33,6 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     log.info("조회된 사용자: {}", vo);
 
     // CustomUser 객체로 변환하여 반환
-    return new CustomUser(vo); // UserDetails
+    return new CustomUser(vo);
   }
 }

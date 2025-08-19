@@ -101,16 +101,16 @@ public class RootConfig {
     HikariConfig config = new HikariConfig();
 
     // 데이터베이스 연결 정보 설정
-    config.setDriverClassName(driver);          // JDBC 드라이버 클래스
-    config.setJdbcUrl(url);                    // 데이터베이스 URL
-    config.setUsername(username);              // 사용자명
-    config.setPassword(password);              // 비밀번호
+    config.setDriverClassName(driver);
+    config.setJdbcUrl(url);
+    config.setUsername(username);
+    config.setPassword(password);
 
-    // 커넥션 풀 추가 설정 (선택사항)
-    config.setMaximumPoolSize(10);             // 최대 커넥션 수
-    config.setMinimumIdle(5);                  // 최소 유지 커넥션 수
-    config.setConnectionTimeout(30000);       // 연결 타임아웃 (30초)
-    config.setIdleTimeout(600000);            // 유휴 타임아웃 (10분)
+    // 커넥션 풀 추가 설정
+    config.setMaximumPoolSize(10);
+    config.setMinimumIdle(5);
+    config.setConnectionTimeout(30000);
+    config.setIdleTimeout(600000);
 
     // HikariDataSource 생성 및 반환
     HikariDataSource dataSource = new HikariDataSource(config);

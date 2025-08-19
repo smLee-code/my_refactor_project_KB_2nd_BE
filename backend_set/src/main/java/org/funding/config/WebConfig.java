@@ -32,12 +32,11 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
                 "/swagger-resources/**",
                 "/v2/api-docs",
                 "/webjars/**"
-        }; // 스프링의 FrontController인 DispatcherServlet이 담당할 URL 매핑 패턴
+        };
     }
 
 
     protected Filter[] getServletFilters() {
-        // UTF-8 문자 인코딩 필터 생성 및 설정
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");       // 요청 데이터 UTF-8 디코딩
         characterEncodingFilter.setForceEncoding(true);     // 응답 데이터도 UTF-8 강제 인코딩
@@ -56,15 +55,15 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
     @Override
     protected void customizeRegistration(ServletRegistration.Dynamic registration) {
-        // 📍 404 에러를 Exception으로 변환
+        //404 에러를 Exception으로 변환
         registration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
 
-        // 📍 Multipart 파일 업로드 설정
+        // Multipart 파일 업로드 설정
         MultipartConfigElement multipartConfig = new MultipartConfigElement(
                 LOCATION,           // 업로드 처리 디렉토리 경로
                 MAX_FILE_SIZE,      // 업로드 가능한 파일 하나의 최대 크기
-                MAX_REQUEST_SIZE,   // 업로드 가능한 전체 최대 크기(여러 파일 업로드)
-                FILE_SIZE_THRESHOLD // 메모리 파일의 최대 크기(임계값)
+                MAX_REQUEST_SIZE,   // 업로드 가능한 전체 최대 크기
+                FILE_SIZE_THRESHOLD // 메모리 파일의 최대 크기
         );
         registration.setMultipartConfig(multipartConfig);
     }

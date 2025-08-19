@@ -11,11 +11,13 @@ import java.util.Map;
 @Mapper
 public interface ChallengeLogDAO {
 
+    // 챌린지 로그 생성
     void insertChallengeLog(ChallengeLogVO log);
 
-
+    // id, 날짜로 로그 조회
     ChallengeLogVO selectLogByUserAndDate(@Param("userChallengeId") Long id, @Param("logDate") LocalDate date);
 
+    // 전체 로그 날짜 조회
     List<LocalDate> selectAllLogDatesByUserChallengeId(Long userChallengeId);
 
     // 중복 방지
@@ -29,6 +31,8 @@ public interface ChallengeLogDAO {
 
     // 수동 챌린지 인증
     ChallengeLogVO selectLogById(Long logId);
+
+    // 챌린지 로그 업데이트
     void updateChallengeLog(ChallengeLogVO log);
 
 

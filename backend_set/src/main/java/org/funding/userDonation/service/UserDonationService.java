@@ -62,7 +62,7 @@ public class UserDonationService {
         userDonationVO.setAnonymous(donateRequestDTO.isAnonymous());
         userDonationDAO.insertUserDonation(userDonationVO);
 
-        // 뱃지 권한 검증 (기부 참여)
+        // 뱃지 권한 검증
         badgeService.checkAndGrantBadges(userId);
 
         DonateResponseDTO donateResponseDTO = new DonateResponseDTO();

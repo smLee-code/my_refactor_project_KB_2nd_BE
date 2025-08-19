@@ -30,7 +30,7 @@ public interface FundDAO {
     // 모든 펀딩 조회
     List<FundVO> selectAll();
     
-    // 진행상태 + 펀드타입별 펀딩 목록 조회 (펀드타입은 선택사항)
+    // 진행상태 + 펀드타입별 펀딩 목록 조회
     List<FundListResponseDTO> selectByProgressAndFundType(@Param("progress") ProgressType progress, @Param("fundType") FundType fundType);
     
     // 펀딩 상세 조회 by ID

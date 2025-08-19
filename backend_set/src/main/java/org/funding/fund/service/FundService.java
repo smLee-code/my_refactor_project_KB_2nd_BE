@@ -70,19 +70,12 @@ public class FundService {
     private final UserLoanDAO userLoanDAO;
     private final PaymentDAO paymentDAO;
 
-    /**
-     * 저축 펀딩 생성
-     * 1. FinancialProduct 생성 (fund_type=Savings)
-     * 2. 생성된 product_id를 사용하여 Savings 엔티티 생성
-     * 
-     * @param request 저축 생성 요청 데이터
-     * @return 성공 메시지
-     */
+    // 저축 펀딩 생성
     public String createSavingsFund(FundProductRequestDTO.SavingsRequest request, List<MultipartFile> images, Long userId) {
         try {
             log.info("적금 이름: {}", request.getName());
 
-            // 1. 공통 금융상품 정보 생성
+            // 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -90,10 +83,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
-            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
+            // 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
-            // 3. 생성된 product_id를 외래키로 사용하여 저축 정보 생성
+            // 생성된 product_id를 외래키로 사용하여 저축 정보 생성
             SavingsVO savings = SavingsVO.builder()
                 .productId(product.getProductId())
                 .interestRate(request.getInterestRate())
@@ -103,7 +96,7 @@ public class FundService {
             
             savingsDAO.insertSavings(savings);
             
-            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            // 생성된 product_id를 외래키로 사용하여 Fund 생성
             FundVO fund = FundVO.builder()
                 .productId(product.getProductId())
                 .projectId(request.getProjectId())
@@ -131,7 +124,7 @@ public class FundService {
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
             badgeService.checkAndGrantBadges(project.getUserId());
 
-            // 5. 키워드 매핑 처리
+            // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
                     FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
@@ -150,19 +143,12 @@ public class FundService {
         }
     }
     
-    /**
-     * 대출 펀딩 생성
-     * 1. FinancialProduct 생성 (fund_type=Loan)
-     * 2. 생성된 product_id를 사용하여 Loan 엔티티 생성
-     * 
-     * @param request 대출 생성 요청 데이터
-     * @return 성공 메시지
-     */
+    // 대출 펀딩 생성
     public String createLoanFund(FundProductRequestDTO.LoanRequest request, List<MultipartFile> images, Long userId) {
         try {
-            log.info("Creating loan fund with name: {}", request.getName());
+            log.info("생성된 대출 펀딩 이름: {}", request.getName());
             
-            // 1. 공통 금융상품 정보 생성
+            // 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -170,10 +156,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
-            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
+            // 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
-            // 3. 생성된 product_id를 외래키로 사용하여 대출 정보 생성 (상환 기간 기본 1년)
+            // 생성된 product_id를 외래키로 사용하여 대출 정보 생성 (상환 기간 기본 1년)
             LoanVO loan = LoanVO.builder()
                 .productId(product.getProductId())
                 .loanLimit(request.getLoanLimit())
@@ -187,7 +173,7 @@ public class FundService {
             
             loanDAO.insertLoan(loan);
             
-            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            // 생성된 product_id를 외래키로 사용하여 Fund 생성
             FundVO fund = FundVO.builder()
                 .productId(product.getProductId())
                 .projectId(request.getProjectId())
@@ -215,7 +201,7 @@ public class FundService {
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
             badgeService.checkAndGrantBadges(project.getUserId());
 
-            // 5. 키워드 매핑 처리
+            // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
                     FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
@@ -223,10 +209,10 @@ public class FundService {
                     fundKeywordRequest.setKeywordId(keywordId);
                     fundKeywordService.mapFundKeyword(fundKeywordRequest);
                 }
-                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+                log.info("펀딩 아이디로 매핑된 키워드: {}", fund.getFundId());
             }
 
-            log.info("Loan fund and Fund created successfully with product ID: {}", product.getProductId());
+            log.info("성공적으로 생성: {}", product.getProductId());
             return "성공적으로 생성되었습니다.";
         } catch (Exception e) {
             log.error("펀딩 생성 에러: ", e);
@@ -234,19 +220,12 @@ public class FundService {
         }
     }
     
-    /**
-     * 챌린지 펀딩 생성
-     * 1. FinancialProduct 생성 (fund_type=Challenge)
-     * 2. 생성된 product_id를 사용하여 Challenge 엔티티 생성
-     * 
-     * @param request 챌린지 생성 요청 데이터
-     * @return 성공 메시지
-     */
+    // 챌린지 펀딩 생성
     public String createChallengeFund(FundProductRequestDTO.ChallengeRequest request, List<MultipartFile> images, Long userId) {
         try {
-            log.info("Creating challenge fund with name: {}", request.getName());
+            log.info("생성된 챌린지 이름: {}", request.getName());
             
-            // 1. 공통 금융상품 정보 생성
+            // 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -254,10 +233,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
-            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
+            // 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
-            // 3. 생성된 product_id를 외래키로 사용하여 챌린지 정보 생성
+            // 생성된 product_id를 외래키로 사용하여 챌린지 정보 생성
             ChallengeVO challenge = ChallengeVO.builder()
                 .productId(product.getProductId())
                 .challengePeriodDays(request.getChallengePeriodDays())
@@ -270,7 +249,7 @@ public class FundService {
             
             challengeDAO.insertChallenge(challenge);
             
-            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            // 생성된 product_id를 외래키로 사용하여 Fund 생성
             FundVO fund = FundVO.builder()
                 .productId(product.getProductId())
                 .projectId(request.getProjectId())
@@ -298,7 +277,7 @@ public class FundService {
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
             badgeService.checkAndGrantBadges(project.getUserId());
 
-            // 5. 키워드 매핑 처리
+            // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
                     FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
@@ -306,30 +285,23 @@ public class FundService {
                     fundKeywordRequest.setKeywordId(keywordId);
                     fundKeywordService.mapFundKeyword(fundKeywordRequest);
                 }
-                log.info("Keywords mapped for fund ID: {}", fund.getFundId());
+                log.info("펀딩 id: {}", fund.getFundId());
             }
 
-            log.info("Challenge fund and Fund created successfully with product ID: {}", product.getProductId());
-            return "Challenge fund and Fund created successfully";
+            log.info("성공적으로 생성된 id: {}", product.getProductId());
+            return "챌린지 펀딩이 성공적으로 생성됨";
         } catch (Exception e) {
             log.error("펀딩 생성 에러: ", e);
             throw new FundException(ErrorCode.FAIL_FUNDING);
         }
     }
     
-    /**
-     * 기부 펀딩 생성
-     * 1. FinancialProduct 생성 (fund_type=Donation)
-     * 2. 생성된 product_id를 사용하여 Donation 엔티티 생성
-     * 
-     * @param request 기부 생성 요청 데이터
-     * @return 성공 메시지
-     */
+    // 기부 펀딩 생성
     public String createDonationFund(FundProductRequestDTO.DonationRequest request, List<MultipartFile> images, Long userId) {
         try {
-            log.info("Creating donation fund with name: {}", request.getName());
+            log.info("생성된 기부 이름: {}", request.getName());
             
-            // 1. 공통 금융상품 정보 생성
+            // 공통 금융상품 정보 생성
             FinancialProductVO product = FinancialProductVO.builder()
                 .name(request.getName())
                 .detail(request.getDetail())
@@ -337,10 +309,10 @@ public class FundService {
                 .joinCondition(request.getJoinCondition())
                 .build();
             
-            // 2. 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
+            // 금융상품 DB 저장 (자동 생성된 product_id가 product 객체에 설정됨)
             financialProductDAO.insert(product);
             
-            // 3. 생성된 product_id를 외래키로 사용하여 기부 정보 생성
+            // 생성된 product_id를 외래키로 사용하여 기부 정보 생성
             DonationVO donation = DonationVO.builder()
                 .productId(product.getProductId())
                 .recipient(request.getRecipient())
@@ -352,7 +324,7 @@ public class FundService {
             
             donationDAO.insertDonation(donation);
             
-            // 4. 생성된 product_id를 외래키로 사용하여 Fund 생성
+            // 생성된 product_id를 외래키로 사용하여 Fund 생성
             FundVO fund = FundVO.builder()
                 .productId(product.getProductId())
                 .projectId(request.getProjectId())
@@ -380,7 +352,7 @@ public class FundService {
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
             badgeService.checkAndGrantBadges(project.getUserId());
 
-            // 5. 키워드 매핑 처리
+            // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
                 for (Long keywordId : request.getKeywordIds()) {
                     FundKeywordRequestDTO fundKeywordRequest = new FundKeywordRequestDTO();
@@ -391,7 +363,7 @@ public class FundService {
                 log.info("Keywords mapped for fund ID: {}", fund.getFundId());
             }
             
-            log.info("Donation fund and Fund created successfully with product ID: {}", product.getProductId());
+            log.info("기부가 성공적으로 생성되었습니다: {}", product.getProductId());
             return "성공적으로 생성되었습니다.";
         } catch (Exception e) {
             log.error("펀딩 생성 에러: ", e);
@@ -411,14 +383,9 @@ public class FundService {
             }
         }
     }
-    
-    /**
-     * 진행상태 + 펀드타입별 펀딩 목록 조회 (펀드타입은 선택사항)
-     * 
-     * @param progress 진행상태 (Launch, End)
-     * @param fundType 펀드타입 (Savings, Loan, Challenge, Donation) - null이면 모든 타입
-     * @return 조건에 맞는 펀딩 목록 (상품명과 썸네일 포함)
-     */
+
+
+     // 진행상태 + 펀드타입별 펀딩 목록 조회 (펀드타입은 선택사항)
     public List<FundListResponseDTO> getFundsByProgressAndType(ProgressType progress, FundType fundType) {
         List<FundListResponseDTO> funds = fundDAO.selectByProgressAndFundType(progress, fundType);
 
@@ -438,13 +405,7 @@ public class FundService {
         return funds;
     }
     
-    /**
-     * 펀딩 상세 조회
-     * fund_id로 펀딩 정보와 연관된 금융상품, 그리고 상품 타입별 상세 정보를 조회
-     * 
-     * @param fundId 펀딩 ID
-     * @return 펀딩 상세 정보 (fund + financial_product + 타입별 상세)
-     */
+    // 펀딩 상세 조회
     public FundDetailResponseDTO getFundDetail(Long fundId, Long userId) {
         FundVO fund = fundDAO.selectById(fundId);
         Long productId = fund.getProductId();
@@ -514,20 +475,13 @@ public class FundService {
         return fundDetail;
     }
     
-    /**
-     * 펀딩 수정
-     * fund_id로 펀딩과 연관된 모든 정보를 수정
-     * 
-     * @param fundId 펀딩 ID
-     * @param request 수정할 펀딩 정보
-     * @return 성공 메시지
-     */
+    // 펀딩 수정
     public String updateFund(Long fundId, FundUpdateRequestDTO request, Long userId) {
         try {
-            // 1. 펀딩 존재 여부 확인
+            // 펀딩 존재 여부 확인
             FundDetailResponseDTO existingFund = getFundDetail(fundId, userId);
             
-            // 2. Fund 테이블 업데이트
+            // Fund 테이블 업데이트
             FundVO fundVO = fundDAO.selectById(fundId);
             if (request.getProgress() != null) fundVO.setProgress(request.getProgress());
             if (request.getLaunchAt() != null) fundVO.setLaunchAt(request.getLaunchAt());
@@ -535,32 +489,32 @@ public class FundService {
             if (request.getFinancialInstitution() != null) fundVO.setFinancialInstitution(request.getFinancialInstitution());
             fundDAO.update(fundVO);
             
-            // 3. Financial Product 테이블 업데이트
+            // Financial Product 테이블 업데이트
             FinancialProductVO productVO = financialProductDAO.selectById(existingFund.getProductId());
             if (request.getName() != null) productVO.setName(request.getName());
             if (request.getDetail() != null) productVO.setDetail(request.getDetail());
             if (request.getProductCondition() != null) productVO.setJoinCondition(request.getProductCondition());
             financialProductDAO.update(productVO);
             
-            // 4. 타입별 상세 테이블 업데이트
+            // 타입별 상세 테이블 업데이트
             if (request.getProductDetails() != null) {
                 updateProductDetails(existingFund.getFundType(), existingFund.getProductId(), request.getProductDetails());
             }
             
-            log.info("Fund updated successfully with id: {}", fundId);
+            log.info("성공적으로 업데이트 됨: {}", fundId);
             return "펀딩이 성공적으로 수정되었습니다.";
             
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Error updating fund: ", e);
+            log.error("업데이트중 에러 발생: ", e);
             throw new FundException(ErrorCode.FAIL_FUND_UPDATE);
         }
     }
-    
-    /**
-     * 타입별 상세 정보 업데이트 헬퍼 메서드
-     */
+
+
+
+     // 타입별 상세 정보 업데이트 헬퍼 메서드
     @SuppressWarnings("unchecked")
     private void updateProductDetails(FundType fundType, Long productId, Object details) {
         // Object를 Map으로 캐스팅 (Jackson이 JSON을 LinkedHashMap으로 변환)
@@ -652,20 +606,10 @@ public class FundService {
         }
     }
     
-    /**
-     * 펀딩 삭제
-     * fund_id로 펀딩과 관련된 모든 데이터를 삭제
-     * 외래키 제약 조건 때문에 삭제 순서 중요:
-     * 1. fund 테이블 삭제
-     * 2. 타입별 상세 테이블 삭제 (savings/donation/loan/challenge)
-     * 3. financial_product 테이블 삭제
-     * 
-     * @param fundId 삭제할 펀딩 ID
-     * @return 성공 메시지
-     */
+    // 펀딩 삭제
     public String deleteFund(Long fundId, Long userId) {
         try {
-            // 1. 펀딩 존재 여부 확인
+            // 펀딩 존재 여부 확인
             FundDetailResponseDTO existingFund = getFundDetail(fundId, userId);
             Long productId = existingFund.getProductId();
             FundType fundType = existingFund.getFundType();
@@ -680,11 +624,11 @@ public class FundService {
                 throw new FundException(ErrorCode.MEMBER_NOT_ADMIN);
             }
             
-            // 2. fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
+            // fund 테이블에서 삭제 (외래키 제약 때문에 가장 먼저)
             fundDAO.delete(fundId);
             log.info("Fund deleted with id: {}", fundId);
 
-            // 3. 타입별 상세 테이블에서 삭제
+            // 타입별 상세 테이블에서 삭제
             switch (fundType) {
                 case Savings:
                     savingsDAO.deleteByProductId(productId);
@@ -704,7 +648,7 @@ public class FundService {
                     break;
             }
             
-            // 4. financial_product 테이블에서 삭제 (외래키 참조가 없어진 후)
+            // financial_product 테이블에서 삭제 (외래키 참조가 없어진 후)
             financialProductDAO.delete(productId);
             log.info("Financial product deleted with id: {}", productId);
 
@@ -716,7 +660,7 @@ public class FundService {
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Error deleting fund: ", e);
+            log.error("펀딩 삭제중 에러 발생: ", e);
             throw new FundException(ErrorCode.FAIL_DELETE_FUND);
         }
     }

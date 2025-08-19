@@ -96,8 +96,6 @@ public class OpenAIVisionClient {
 
 
     // AI 응답 문자열에서 JSON 부분만 추출하는 헬퍼 메서드
-
-
     private String extractJsonFromString(String text) {
         int startIndex = text.indexOf('{');
         int endIndex = text.lastIndexOf('}');

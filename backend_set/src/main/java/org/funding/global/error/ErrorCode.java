@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorCode {
 
-    // Common
+    // 기본적인 에러
     INVALID_INPUT_VALUE(400, "COMMON001", "입력값이 올바르지 않습니다."),
     METHOD_NOT_ALLOWED(405, "COMMON002", "지원하지 않는 HTTP 메소드입니다."),
     INTERNAL_SERVER_ERROR(500, "COMMON003", "서버 내부 오류가 발생했습니다."),

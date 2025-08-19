@@ -12,5 +12,4 @@ public class ChallengeParticipantDTO {
     private String nickname;
     private int currentCount;
     private int failCount;
-//    private LocalDateTime joinAt; // 챌린지 참여 시작일
 }

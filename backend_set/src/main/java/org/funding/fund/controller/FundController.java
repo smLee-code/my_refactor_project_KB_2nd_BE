@@ -1,5 +1,8 @@
 package org.funding.fund.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.funding.fund.dto.*;
 import org.funding.fund.service.FundService;
@@ -20,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Api(tags = "펀딩 API")
 @RestController
 @RequestMapping("/api/fund")
 @RequiredArgsConstructor
@@ -27,8 +31,7 @@ public class FundController {
 
     private final FundService fundService;
 
-    //summary = "펀딩 상품 개설",
-    //description = "요청된 정보를 기반으로 새로운 펀딩 상품을 생성합니다."
+    @ApiOperation(value = "저축(Savings) 펀딩 생성", notes = "새로운 저축 타입의 펀딩을 생성합니다. 펀딩 정보(savingInfo)와 이미지 파일(images)을 multipart/form-data 형식으로 전송해야 합니다.")
     @Auth
     @PostMapping(value = "/create/savings", consumes = "multipart/form-data")
     public ResponseEntity<?> createSavingsFund(
@@ -40,6 +43,7 @@ public class FundController {
         return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
+    @ApiOperation(value = "대출(Loan) 펀딩 생성", notes = "새로운 대출 타입의 펀딩을 생성합니다. 펀딩 정보(loanInfo)와 이미지 파일(images)을 multipart/form-data 형식으로 전송해야 합니다.")
     @Auth
     @PostMapping(value = "/create/loan", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createLoanFund(
@@ -51,6 +55,7 @@ public class FundController {
         return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
+    @ApiOperation(value = "챌린지(Challenge) 펀딩 생성", notes = "새로운 챌린지 타입의 펀딩을 생성합니다. 펀딩 정보(challengeInfo)와 이미지 파일(images)을 multipart/form-data 형식으로 전송해야 합니다.")
     @Auth
     @PostMapping(value = "/create/challenge", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createChallengeFund(
@@ -62,6 +67,7 @@ public class FundController {
         return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
+    @ApiOperation(value = "기부(Donation) 펀딩 생성", notes = "새로운 기부 타입의 펀딩을 생성합니다. 펀딩 정보(donationInfo)와 이미지 파일(images)을 multipart/form-data 형식으로 전송해야 합니다.")
     @Auth
     @PostMapping(value = "/create/donation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createDonationFund(
@@ -73,88 +79,59 @@ public class FundController {
         return ResponseEntity.ok("펀딩이 성공적으로 생성되었습니다.");
     }
 
-    // 펀딩 목록 조회 API
-    
-    /**
-     * 진행상태별 펀딩 목록 조회 (펀드타입 필터 옵션)
-     * GET /api/fund/list?progress=Launch                        (진행중인 모든 펀딩)
-     * GET /api/fund/list?progress=End                           (종료된 모든 펀딩)
-     * GET /api/fund/list?progress=Launch&fundType=Savings       (진행중인 저축 펀딩)
-     * GET /api/fund/list?progress=End&fundType=Donation         (종료된 기부 펀딩)
-     */
+    @ApiOperation(value = "펀딩 목록 조회", notes = "진행 상태(progress)와 펀딩 타입(fundType)을 기준으로 펀딩 목록을 필터링하여 조회합니다.")
     @GetMapping("/list")
     public ResponseEntity<List<FundListResponseDTO>> getFundsList(
-            @RequestParam ProgressType progress,
-            @RequestParam(required = false) FundType fundType) {
+            @ApiParam(value = "펀딩 진행 상태", required = true, example = "Launch") @RequestParam ProgressType progress,
+            @ApiParam(value = "펀딩 타입 (선택)", example = "Challenge") @RequestParam(required = false) FundType fundType) {
         List<FundListResponseDTO> funds = fundService.getFundsByProgressAndType(progress, fundType);
         return ResponseEntity.ok(funds);
     }
-    
-    /**
-     * 펀딩 상세 조회
-     * GET /api/fund/{fundId}
-     * fund_id로 펀딩 정보와 연관된 모든 상세 정보를 조회
-     * (fund + financial_product + 타입별 상세 테이블)
-     * 로그인 시 펀딩 참여여부 정보 추가 제공
-     */
+
+    @ApiOperation(value = "펀딩 상세 조회", notes = "특정 펀딩(fundId)의 모든 상세 정보를 조회합니다.")
     @GetMapping("/{fundId}")
-    public ResponseEntity<FundDetailResponseDTO> getFundDetail(@PathVariable Long fundId,
-                                                               HttpServletRequest request) {
+    public ResponseEntity<FundDetailResponseDTO> getFundDetail(
+            @ApiParam(value = "조회할 펀딩 ID", required = true, example = "1") @PathVariable Long fundId,
+            HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         FundDetailResponseDTO fundDetail = fundService.getFundDetail(fundId, userId);
         return ResponseEntity.ok(fundDetail);
     }
-    
-    /**
-     * 펀딩 수정
-     * PUT /api/fund/{fundId}
-     * fund_id로 펀딩과 연관된 모든 정보를 수정
-     * 요청 바디에 수정하고자 하는 필드만 포함시키면 해당 필드만 업데이트됨
-     */
+
+    @ApiOperation(value = "펀딩 수정 (생성자용)", notes = "특정 펀딩의 정보를 수정합니다. 펀딩 생성자만 수정할 수 있습니다.")
     @Auth
     @PutMapping("/{fundId}")
     public ResponseEntity<?> updateFund(
-            @PathVariable Long fundId, 
+            @ApiParam(value = "수정할 펀딩 ID", required = true, example = "1") @PathVariable Long fundId,
             @RequestBody FundUpdateRequestDTO request,
             HttpServletRequest servletRequest) {
         Long userId = (Long) servletRequest.getAttribute("userId");
         String result = fundService.updateFund(fundId, request, userId);
         return ResponseEntity.ok(Map.of("message", result));
     }
-    
-    /**
-     *
-     * 펀딩 삭제
-     * DELETE /api/fund/{fundId}
-     * fund_id로 펀딩과 관련된 모든 데이터를 삭제
-     * (fund -> 타입별 테이블 -> financial_product 순서로 삭제)
-     */
+
+    @ApiOperation(value = "펀딩 삭제 (생성자용)", notes = "특정 펀딩을 삭제합니다. 펀딩 생성자만 삭제할 수 있습니다.")
     @Auth
     @DeleteMapping("/{fundId}")
-    public ResponseEntity<?> deleteFund(@PathVariable Long fundId,
-                                        HttpServletRequest request) {
+    public ResponseEntity<?> deleteFund(
+            @ApiParam(value = "삭제할 펀딩 ID", required = true, example = "1") @PathVariable Long fundId,
+            HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
         String result = fundService.deleteFund(fundId, userId);
         return ResponseEntity.ok(Map.of("message", result));
     }
 
-
-    // 유저가 생성한 프로젝트 조회
+    @ApiOperation(value = "내가 생성한 펀딩 목록 조회", notes = "현재 로그인한 사용자가 생성한 모든 펀딩 목록을 조회합니다. 펀딩 타입으로 필터링할 수 있습니다.")
     @Auth
     @GetMapping("/my/fund/all")
     public ResponseEntity<?> getMyAllCreatedFunds(
-            @RequestParam(value = "fundType", required = false) String fundType,
+            @ApiParam(value = "조회할 펀딩 타입 (선택)", example = "Loan") @RequestParam(value = "fundType", required = false) String fundType,
             HttpServletRequest request) {
-
         Long userId = (Long) request.getAttribute("userId");
         if (userId == null) {
             throw new FundException(ErrorCode.MEMBER_NOT_FOUND);
         }
-        // 서비스 호출 시 fundType 전달
         List<MyFundDetailDTO> myFunds = fundService.findMyCreatedFunds(userId, fundType);
-
         return ResponseEntity.ok(myFunds);
     }
-
-
 }

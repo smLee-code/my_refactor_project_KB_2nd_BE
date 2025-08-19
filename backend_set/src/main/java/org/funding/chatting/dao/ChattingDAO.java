@@ -12,10 +12,13 @@ import java.util.List;
 @Mapper
 public interface ChattingDAO {
 
+    // 메세지 저장
     void saveMessage(RealtimeChatRequestDTO message);
 
+    // id로 메세지 조회
     ChattingMessageVO findMessageById(@Param("id") long id);
 
+    // 방 id로 전체 메세지 조회
     List<ChattingMessageVO> findMessagesByRoomId(@Param("projectId") Long projectId);
 
 }

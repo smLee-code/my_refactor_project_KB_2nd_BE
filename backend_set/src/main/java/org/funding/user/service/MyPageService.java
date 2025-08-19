@@ -38,12 +38,12 @@ public class MyPageService {
     private final UserKeywordDAO userKeywordDAO;
     private final VotesService votesService;
 
-    // 4.1 마이페이지 조회
+    // 마이페이지 조회
     public MyPageResponseDTO getMyPageInfo(Long userId) {
 
         MemberVO member = memberDAO.findById(userId);
         
-        // 키워드 조회 - KeywordDAO 사용
+        // 키워드 조회
         List<Long> keywordIds = userKeywordDAO.selectKeywordIdsByUserId(userId);
         List<String> keywordList = keywordIds.stream()
                 .map(keywordDAO::selectKeywordById)
@@ -68,7 +68,7 @@ public class MyPageService {
                 .build();
     }
 
-    // 4.2.2 키워드 조회
+    // 키워드 조회
     public List<KeywordResponseDTO> getMyKeywords(Long userId) {
 
         List<Long> keywordIds = userKeywordDAO.selectKeywordIdsByUserId(userId);
@@ -79,7 +79,7 @@ public class MyPageService {
                 .collect(Collectors.toList());
     }
 
-    // 4.2.3 키워드 수정
+    // 키워드 수정
     @Transactional
     public void updateMyKeywords(List<String> newKeywords, Long userId) {
         
@@ -95,7 +95,7 @@ public class MyPageService {
         }
     }
 
-    // 4.3 개인정보 수정
+    // 개인정보 수정
     @Transactional
     public void updateAccountInfo(UpdateAccountRequestDTO request, Long userId) {
         MemberVO member = memberDAO.findById(userId);
@@ -107,7 +107,7 @@ public class MyPageService {
         memberDAO.updateMember(member);
     }
 
-    // 4.4 내 투표 조회
+    // 내 투표 조회
     public List<VotesResponseDTO> getMyVotes(Long userId) {
         List<Long> votedProjectIds = votesService.findVotedProjects(userId);
         
@@ -124,7 +124,7 @@ public class MyPageService {
                 .collect(Collectors.toList());
     }
 
-    // 4.5.1 작성한 프로젝트 조회 - ProjectListDTO 사용
+    // 작성한 프로젝트 조회 - ProjectListDTO 사용
     public List<ProjectListDTO> getMyProjects(Long userId) {
         List<ProjectVO> projects = projectDAO.findByUserId(userId);
         

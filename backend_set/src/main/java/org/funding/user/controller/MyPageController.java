@@ -18,6 +18,7 @@ import org.funding.votes.dto.VotesResponseDTO;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Api(tags = "마이페이지 API")
 @RestController
 @RequestMapping("/api/mypage")
 @RequiredArgsConstructor

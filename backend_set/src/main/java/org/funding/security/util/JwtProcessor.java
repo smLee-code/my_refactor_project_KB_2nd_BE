@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -15,11 +16,13 @@ import java.util.Date;
 @Component
 public class JwtProcessor {
 
-  // 테스트용 5분 - 만료 확인용
-  static private final long TOKEN_VALID_MILLISECOND = 1000L * 60 * 50000;
+  @Value("${jwt.secret-key}")
+  private String secretKey;
 
-  // 개발용 고정 Secret Key
-  private String secretKey = "8oP5JazHXh8E7NAS48xCgHIgdwL/7BvetKx+CfGvIqk=";
+  @Value("${jwt.token-validity-in-milliseconds}")
+  private long tokenValidMillisecond;
+
+
   private Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
 
@@ -28,7 +31,7 @@ public class JwtProcessor {
     return Jwts.builder()
             .setSubject(subject)                    // 사용자 식별자
             .setIssuedAt(new Date())               // 발급 시간
-            .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECOND))  // 만료 시간
+            .setExpiration(new Date(new Date().getTime() + tokenValidMillisecond))  // 만료 시간
             .signWith(key)                         // 서명
             .compact();                            // 문자열 생성
   }
@@ -37,7 +40,7 @@ public class JwtProcessor {
     return Jwts.builder()
             .setSubject(subject)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECOND))
+            .setExpiration(new Date(new Date().getTime() + tokenValidMillisecond))
             .claim("role", role)                   // 권한 정보 추가
             .signWith(key)
             .compact();
@@ -49,7 +52,7 @@ public class JwtProcessor {
             .claim("userId", userId)
             .claim("role", role)
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALID_MILLISECOND))
+            .setExpiration(new Date(System.currentTimeMillis() + tokenValidMillisecond))
             .signWith(key)
             .compact();
   }
@@ -60,7 +63,7 @@ public class JwtProcessor {
             .setSubject(subject)                    // 사용자 식별자 (username 등)
             .claim("userId", userId)                // userId 클레임 추가
             .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECOND))
+            .setExpiration(new Date(new Date().getTime() + tokenValidMillisecond))
             .signWith(key)
             .compact();
   }

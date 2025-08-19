@@ -133,18 +133,6 @@ public class ProjectService {
             return Collections.emptyList();
         }
 
-//        List<Long> projectIds = projectList.stream()
-//                .map(ProjectListDTO::getProjectId)
-//                .collect(Collectors.toList());
-//
-//        List<S3ImageVO> allImages = s3ImageDAO.findImagesForPostIds(ImageType.Project, projectIds);
-//        Map<Long, List<S3ImageVO>> imagesByProjectId = allImages.stream()
-//                .collect(Collectors.groupingBy(S3ImageVO::getPostId));
-//
-//        for (ProjectListDTO project : projectList) {
-//            project.setImages(imagesByProjectId.getOrDefault(project.getProjectId(), Collections.emptyList()));
-//        }
-
         findImagesOfProject(projectList);
 
         if (loginUserId == null) {
@@ -161,63 +149,19 @@ public class ProjectService {
         return projectList;
     }
 
-    public List<ProjectListDTO> searchByType(String type) {
-        List<ProjectListDTO> projectList = projectDAO.searchProjectsByType(type);
-
-        // 프로젝트 썸네일 이미지 추출
-        for (ProjectListDTO project : projectList) {
-            Long projectId = project.getProjectId();
-            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
-            project.setThumbnailImage(image);
-        }
-
-        findImagesOfProject(projectList);
-
-        return projectList;
-    }
-
-    public List<ProjectListDTO> searchByKeyword(String keyword) {
-        List<ProjectListDTO> projectList = projectDAO.searchProjectsByKeyword(keyword);
-
-//        // 프로젝트 썸네일 이미지 추출
-//        for (ProjectListDTO project : projectList) {
-//            Long projectId = project.getProjectId();
-//            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
-//            project.setThumbnailImage(image);
-//        }
-
-        findImagesOfProject(projectList);
-
-        return projectList;
-    }
-
-    public List<ProjectListDTO> getAllProjects() {
-        List<ProjectListDTO> projectList = projectDAO.getAllProjects();
-
-//        // 프로젝트 썸네일 이미지 추출
-//        for (ProjectListDTO project : projectList) {
-//            Long projectId = project.getProjectId();
-//            S3ImageVO image = s3ImageService.getFirstImageForPost(ImageType.Project, projectId);
-//            project.setThumbnailImage(image);
-//        }
-
-        findImagesOfProject(projectList);
-
-        return projectList;
-    }
 
     public List<ProjectListDTO> getRelatedProjects(Long projectId) {
         // 0) 입력값 방어
         if (projectId == null) return Collections.emptyList();
 
-        // 1) 기준 프로젝트 조회 (null-safe)
+        // 기준 프로젝트 조회
         var baseVo = projectDAO.selectProjectById(projectId);
         if (baseVo == null) return Collections.emptyList();
 
         ProjectListDTO baseProject = ProjectListDTO.fromVO(baseVo);
         if (baseProject == null) return Collections.emptyList();
 
-        // 2) 같은 타입 프로젝트 조회 (null-safe)
+        // 같은 타입 프로젝트 조회
         String typeStr = baseProject.getProjectType() == null
                 ? null
                 : String.valueOf(baseProject.getProjectType());
@@ -229,7 +173,7 @@ public class ProjectService {
         // ProjectListDTO에 썸네일 이미지 쿼리하여 추가
         findImagesOfProject(sameTypeProjects);
 
-        // 3) 기준 프로젝트 키워드 → Set<Long> (null 요소/ID 제거)
+        // 기준 프로젝트 키워드 → Set<Long> (null 요소/ID 제거)
         final Set<Long> baseKeywordIds = Optional
                 .ofNullable(projectKeywordService.findKeywordsByProjectId(baseProject.getProjectId()))
                 .orElse(Collections.emptyList())
@@ -272,7 +216,7 @@ public class ProjectService {
             }
         }
 
-        // 5) 일치 개수 내림차순 정렬 후 최대 4개 반환
+        // 일치 개수 내림차순 정렬 후 최대 4개 반환
         return projectMatchCounts.entrySet().stream()
                 .sorted(Map.Entry.<ProjectListDTO, Long>comparingByValue(Comparator.reverseOrder()))
                 .map(Map.Entry::getKey)
@@ -285,7 +229,7 @@ public class ProjectService {
     @Transactional
 
     public ProjectResponseDTO createProject(CreateProjectRequestDTO createRequestDTO, List<MultipartFile> images, Long userId) throws IOException {
-        // 1. 공통 프로젝트 정보 매핑 및 삽입
+        // 공통 프로젝트 정보 매핑 및 삽입
 
         ProjectVO projectVO = createRequestDTO.toCommonVO();
         projectVO.setUserId(userId);
@@ -298,7 +242,7 @@ public class ProjectService {
             s3ImageService.uploadImagesForPost(ImageType.Project, projectId, images);
         }
 
-        // 2. 리턴할 응답 객체 생성, 공통 정보 매핑 및 삽입
+        // 리턴할 응답 객체 생성, 공통 정보 매핑 및 삽입
 
         ProjectResponseDTO responseDTO = new ProjectResponseDTO();
         responseDTO.setBasicInfo(projectVO);
