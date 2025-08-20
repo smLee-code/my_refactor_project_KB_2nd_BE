@@ -2,6 +2,15 @@ plugins {
     id 'java'  // Java 컴파일 및 빌드 기능 제공
     id 'war'   // WAR 파일 생성을 위한 웹 애플리케이션 플러그인
 }
+// 컴파일 시 모든 자바 파일은 UTF-8로 읽도록 설정
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// 테스트를 실행하는 JVM 자체에 인코딩 설정을 전달
+tasks.withType(Test) {
+    systemProperty 'file.encoding', 'UTF-8'
+}
 
 // 프로젝트 기본 정보 설정
 group 'org.scoula'        // 프로젝트 그룹 ID

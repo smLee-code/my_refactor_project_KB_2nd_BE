@@ -1,5 +1,6 @@
 package org.funding.userLoan.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import org.funding.S3.vo.S3ImageVO;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
 public class UserLoanDetailDTO {
     // 내 대출 정보 (from user_loan)
     private Long userLoanId;
