@@ -185,6 +185,8 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.687'
     implementation 'com.amazonaws:aws-java-sdk-core:1.12.687'
 
+    // test용
+    testImplementation 'com.jayway.jsonpath:json-path:2.9.0'
 
 }
 // 테스트 실행 설정
