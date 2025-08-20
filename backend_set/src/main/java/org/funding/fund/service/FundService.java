@@ -42,11 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.math.BigDecimal;
 
-/**
- * 펀딩 생성 서비스
- * 각 펀딩 타입별로 FinancialProduct를 먼저 생성하고,
- * 해당 product_id를 외래키로 사용하여 타입별 엔티티에 데이터를 저장한다.
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
