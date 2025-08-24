@@ -1,7 +1,7 @@
 ---
-name: "\U0001F41B Bugfix :"
+name: "\U0001F41B bugfix"
 about: 버그 수정
-title: ''
+title: "\U0001F41B Bugfix : 제목"
 labels: ''
 assignees: smLee-code
 

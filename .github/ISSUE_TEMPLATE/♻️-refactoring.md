@@ -1,7 +1,7 @@
 ---
-name: "♻️ Refactor : "
+name: "♻️ refactoring"
 about: 리팩토링
-title: ''
+title: "♻️ Refactor : 제목"
 labels: ''
 assignees: smLee-code
 

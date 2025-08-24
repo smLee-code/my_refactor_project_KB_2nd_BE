@@ -1,7 +1,7 @@
 ---
-name: "✨ Feat : "
+name: "✨ feature"
 about: 새로운 기능 추가
-title: ''
+title: "✨ Feat : 제목"
 labels: ''
 assignees: smLee-code
 
