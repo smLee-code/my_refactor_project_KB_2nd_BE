@@ -9,6 +9,7 @@ import org.funding.keyword.dto.KeywordRequestDTO;
 import org.funding.keyword.dto.KeywordResponseDTO;
 
 import org.funding.keyword.vo.KeywordVO;
+import org.funding.project.dto.response.ProjectDetailDTO;
 import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.request.CreateProjectRequestDTO;
 import org.funding.project.dto.response.ProjectResponseDTO;
@@ -47,9 +48,9 @@ public class ProjectController {
 
     @ApiOperation(value = "프로젝트 기본 정보 조회", notes = "특정 프로젝트의 기본 정보를 조회합니다.")
     @GetMapping("/list/detail/{id}")
-    public ResponseEntity<ProjectVO> getProjectDetail(
+    public ResponseEntity<ProjectDetailDTO> getProjectDetail(
             @ApiParam(value = "조회할 프로젝트 ID", required = true, example = "1") @PathVariable("id") Long id) {
-        ProjectVO project = projectService.selectProjectById(id);
+        ProjectDetailDTO project = projectService.selectProjectDetailById(id);
         return ResponseEntity.ok(project);
     }
 

@@ -1,5 +1,6 @@
 package org.funding.project.dao;
 
+import org.funding.project.dto.response.ProjectDetailDTO;
 import org.funding.project.dto.response.ProjectListDTO;
 import org.funding.project.dto.response.TopProjectDTO;
 import org.funding.project.vo.*;
@@ -64,4 +65,6 @@ public interface ProjectDAO {
     ProjectVO selectSimpleProjectById(Long projectId);
 
     List<ProjectListDTO> selectProjectsByIds(List<Long> projectIds);
+
+    ProjectDetailDTO selectProjectDetailById(Long projectId);
 }

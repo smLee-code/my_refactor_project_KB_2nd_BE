@@ -156,7 +156,6 @@
     </select>
 
 
-
     <!--    <select id="getProjectTrends" resultType="map">-->
 <!--        SELECT-->
 <!--            project_type,-->
@@ -173,7 +172,6 @@
 <!--        GROUP BY week_group, project_type-->
 <!--        ORDER BY week_group ASC-->
 <!--    </select>-->
-
 
 
     <select id="getProjectTrends" resultType="map">
@@ -197,12 +195,6 @@
         GROUP BY week_group, project_type
         ORDER BY week_group ASC
     </select>
-
-
-
-
-
-
 
     <select id="getTopProjects222" resultType="org.funding.project.dto.response.TopProjectDTO">
         select *
@@ -402,24 +394,47 @@
         WHERE project_id = #{projectId}
     </select>
 
-        <select id="selectSimpleProjectById" parameterType="long" resultType="org.funding.project.vo.ProjectVO">
-            SELECT
-                project_id,
-                user_id,
-                project_type,
-                title,
-                promotion,
-                progress,
-                deadline,
-                create_at
-            FROM project
-            WHERE project_id = #{projectId}
-        </select>
+    <select id="selectSimpleProjectById" parameterType="long" resultType="org.funding.project.vo.ProjectVO">
+        SELECT
+            project_id,
+            user_id,
+            project_type,
+            title,
+            promotion,
+            progress,
+            deadline,
+            create_at
+        FROM project
+        WHERE project_id = #{projectId}
+    </select>
 
-        <select id="getAllProjectIds" resultType="java.lang.Long">
-            SELECT project_id
-            FROM project
-        </select>
+    <select id="getAllProjectIds" resultType="java.lang.Long">
+        SELECT project_id
+        FROM project
+    </select>
+
+    <select id="selectProjectDetailById" parameterType="Long" resultMap="ProjectVOMap">
+        SELECT
+            p.project_id,
+            p.title,
+            p.promotion,
+            p.project_type,
+            p.progress,
+            p.create_at,
+            p.deadline,
+            p.user_id,
+
+            u.nickname,
+            u.email,
+
+            b.badge_id,
+            b.name
+        FROM project p
+             JOIN member u ON p.user_id = u.user_id
+             LEFT JOIN user_badge ub ON u.user_id = ub.user_id
+             LEFT JOIN badge b ON ub.badge_id = b.badge_id
+        WHERE p.project_id = #{projectId}
+    </select>
 
 
 </mapper>

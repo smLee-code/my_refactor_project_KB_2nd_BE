@@ -67,6 +67,17 @@ public class ProjectService {
         return topProjects;
     }
 
+
+    public ProjectDetailDTO selectProjectDetailById(Long id) {
+        ProjectDetailDTO projectDetailDTO = projectDAO.selectProjectDetailById(id);
+
+        if (projectDetailDTO == null) {
+            throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
+        }
+
+        return projectDetailDTO;
+    }
+
     public ProjectVO selectProjectById(Long projectId) {
         ProjectVO project = projectDAO.selectProjectById(projectId);
         if (project == null) {
@@ -463,4 +474,5 @@ public class ProjectService {
         return projectList;
 
     }
+
 }
