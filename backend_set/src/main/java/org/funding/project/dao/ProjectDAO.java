@@ -12,11 +12,15 @@ import java.util.Map;
 @Repository
 public interface ProjectDAO {
 
-    ProjectVO selectProjectById(Long projectId);
-    SavingsProjectVO selectSavingByProjectId(Long projectId);
-    LoanProjectVO selectLoanByProjectId(Long projectId);
-    ChallengeProjectVO selectChallengeByProjectId(Long projectId);
-    DonationProjectVO selectDonationByProjectId(Long projectId);
+    ProjectVO findProjectById(Long projectId);
+
+    SavingsProjectVO findSavingsProjectById(Long projectId);
+
+    LoanProjectVO findLoanProjectById(Long projectId);
+
+    ChallengeProjectVO findChallengeProjectById(Long projectId);
+
+    DonationProjectVO findDonationProjectById(Long projectId);
 
     void insertProject(ProjectVO projectVO);
 
@@ -28,9 +32,9 @@ public interface ProjectDAO {
 
     void insertChallengeProject(ChallengeProjectVO challengeProjectVO);
 
-    List<Long> getAllProjectIds();
+    List<Long> findAllIds();
 
-    List<ProjectListDTO> getAllProjects();
+    List<ProjectListDTO> findAll();
 
     List<ProjectListDTO> getAllProjectsWithDetails(Long loginUserId);
 
@@ -56,13 +60,9 @@ public interface ProjectDAO {
 
     int countByUserId(Long userId); // 유저 프로젝트 개수 조회
 
-    ProjectVO findById(Long projectId); // 프로젝트 조회
-
     List<Map<String, Object>> getProjectTrends();
 
     List<ProjectListDTO> getProjectsByKeyword(Long userId);
-
-    ProjectVO selectSimpleProjectById(Long projectId);
 
     List<ProjectListDTO> selectProjectsByIds(List<Long> projectIds);
 

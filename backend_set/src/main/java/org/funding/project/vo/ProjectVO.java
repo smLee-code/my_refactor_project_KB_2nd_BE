@@ -30,10 +30,10 @@ public class ProjectVO {
     // 연관 관계
     private Long userId; // 제안자 id
 
-    private String nickname;
-    private String email;
-
-    private List<BadgeVO> badges;
+//    private String nickname;
+//    private String email;
+//
+//    private List<BadgeVO> badges;
 
 //    private List<Long> badgeIds;
 //    private List<String> badgeNames;

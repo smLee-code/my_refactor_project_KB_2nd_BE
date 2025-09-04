@@ -144,7 +144,7 @@ public class FundAIService {
 
 
     private String describeFund_ai(FundVO fund) {
-        ProjectVO project = projectDAO.findById(fund.getProjectId()); // 프로젝트 정보 조회
+        ProjectVO project = projectDAO.findProjectById(fund.getProjectId()); // 프로젝트 정보 조회
         if (project == null) {
             return String.format("펀딩명: %s, 금융사: %s", "알 수 없는 펀딩", fund.getFinancialInstitution());
         }

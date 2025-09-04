@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.funding.badge.service.BadgeService;
 import org.funding.comment.dao.CommentDAO;
 import org.funding.comment.dto.CommentResponseDTO;
-import org.funding.comment.dto.DeleteCommentRequestDTO;
 import org.funding.comment.dto.InsertCommentRequestDTO;
 import org.funding.comment.vo.CommentVO;
 import org.funding.comment.vo.enumType.TargetType;
@@ -43,13 +42,13 @@ public class CommentService {
         if (requestDTO.getTargetType() == TargetType.Funding) {
             FundVO fund = fundDAO.selectById(requestDTO.getTargetId());
             Long projectId = fund.getProjectId();
-            ProjectVO project = projectDAO.selectProjectById(projectId);
+            ProjectVO project = projectDAO.findProjectById(projectId);
             Long projectUserId = project.getUserId();
             badgeService.checkAndGrantBadges(projectUserId);
         }
 
         if (requestDTO.getTargetType() == TargetType.Project) {
-            ProjectVO project = projectDAO.selectProjectById(requestDTO.getTargetId());
+            ProjectVO project = projectDAO.findProjectById(requestDTO.getTargetId());
             Long projectUserId = project.getUserId();
             badgeService.checkAndGrantBadges(projectUserId);
         }

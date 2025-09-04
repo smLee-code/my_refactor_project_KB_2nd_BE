@@ -3,7 +3,6 @@ package org.funding.votes.service;
 import lombok.RequiredArgsConstructor;
 import org.funding.badge.service.BadgeService;
 import org.funding.project.dao.ProjectDAO;
-import org.funding.project.dto.response.ProjectResponseDTO;
 import org.funding.project.vo.ProjectVO;
 import org.funding.votes.dao.VotesDAO;
 import org.funding.votes.dto.VotesRequestDTO;
@@ -40,7 +39,7 @@ public class VotesService {
         votesDAO.insertVotes(votesVO);
 
         // 뱃지 권한 부여
-        ProjectVO project = projectDAO.selectProjectById(projectId);
+        ProjectVO project = projectDAO.findProjectById(projectId);
         Long projectUserId = project.getUserId();
         badgeService.checkAndGrantBadges(projectUserId);
 

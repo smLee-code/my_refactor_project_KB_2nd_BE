@@ -5,24 +5,18 @@ import org.funding.S3.dao.S3ImageDAO;
 import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
 import org.funding.category.dao.CategoryDAO;
-import org.funding.category.vo.CategoryVO;
 import org.funding.keyword.dao.KeywordDAO;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
 import org.funding.project.dto.response.ProjectListDTO;
-import org.funding.project.vo.ProjectVO;
 import org.funding.projectKeyword.dao.ProjectKeywordDAO;
 import org.funding.projectKeyword.dto.ProjectKeywordRequestDTO;
 import org.funding.projectKeyword.vo.ProjectKeywordVO;
-import org.funding.votes.dto.VotesRequestDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.util.Collections.emptyList;
 
@@ -79,7 +73,7 @@ public class ProjectKeywordService {
                 ));
 
         // 모든 프로젝트 id 리스트 조회
-        List<Long> projectIds = projectDAO.getAllProjectIds();
+        List<Long> projectIds = projectDAO.findAllIds();
         Map<Long, Integer> projectWeightMap = projectIds.stream()
                 .collect(Collectors.toMap(
                         projectId -> projectId,

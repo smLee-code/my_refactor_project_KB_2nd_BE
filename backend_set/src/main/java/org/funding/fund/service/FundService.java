@@ -21,6 +21,7 @@ import org.funding.global.error.exception.FundException;
 import org.funding.global.error.exception.ProjectException;
 import org.funding.keyword.vo.KeywordVO;
 import org.funding.project.dao.ProjectDAO;
+import org.funding.project.dto.response.ProjectDetailDTO;
 import org.funding.project.vo.ProjectVO;
 import org.funding.project.vo.enumType.ProjectProgress;
 import org.funding.user.dao.MemberDAO;
@@ -111,14 +112,14 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
-            if (project == null) {
+            ProjectDetailDTO projectDetail = projectDAO.selectProjectDetailById(request.getProjectId());
+            if (projectDetail == null) {
                 throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
-            project.setProgress(ProjectProgress.FUNDED);
+            projectDetail.setProgress(ProjectProgress.FUNDED);
 
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
-            badgeService.checkAndGrantBadges(project.getUserId());
+            badgeService.checkAndGrantBadges(projectDetail.getUserId());
 
             // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -188,14 +189,14 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
-            if (project == null) {
+            ProjectDetailDTO projectDetail = projectDAO.selectProjectDetailById(request.getProjectId());
+            if (projectDetail == null) {
                 throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
-            project.setProgress(ProjectProgress.FUNDED);
+            projectDetail.setProgress(ProjectProgress.FUNDED);
 
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
-            badgeService.checkAndGrantBadges(project.getUserId());
+            badgeService.checkAndGrantBadges(projectDetail.getUserId());
 
             // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -264,14 +265,14 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
-            if (project == null) {
+            ProjectDetailDTO projectDetail = projectDAO.selectProjectDetailById(request.getProjectId());
+            if (projectDetail == null) {
                 throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
-            project.setProgress(ProjectProgress.FUNDED);
+            projectDetail.setProgress(ProjectProgress.FUNDED);
 
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
-            badgeService.checkAndGrantBadges(project.getUserId());
+            badgeService.checkAndGrantBadges(projectDetail.getUserId());
 
             // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {
@@ -339,14 +340,14 @@ public class FundService {
             }
 
             // 펀딩시 프로젝트 상태 변경
-            ProjectVO project = projectDAO.selectSimpleProjectById(request.getProjectId());
-            if (project == null) {
+            ProjectDetailDTO projectDetail = projectDAO.selectProjectDetailById(request.getProjectId());
+            if (projectDetail == null) {
                 throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
             }
-            project.setProgress(ProjectProgress.FUNDED);
+            projectDetail.setProgress(ProjectProgress.FUNDED);
 
             // 뱃지 권한 검증 (펀딩이된 프로젝트의 인원 권한 부여)
-            badgeService.checkAndGrantBadges(project.getUserId());
+            badgeService.checkAndGrantBadges(projectDetail.getUserId());
 
             // 키워드 매핑 처리
             if (request.getKeywordIds() != null && !request.getKeywordIds().isEmpty()) {

@@ -5,7 +5,6 @@ import org.funding.S3.dao.S3ImageDAO;
 import org.funding.S3.service.S3ImageService;
 import org.funding.S3.vo.S3ImageVO;
 import org.funding.S3.vo.enumType.ImageType;
-import org.funding.fund.dto.FundListResponseDTO;
 import org.funding.global.error.ErrorCode;
 import org.funding.global.error.exception.ProjectException;
 import org.funding.keyword.vo.KeywordVO;
@@ -79,7 +78,7 @@ public class ProjectService {
     }
 
     public ProjectVO selectProjectById(Long projectId) {
-        ProjectVO project = projectDAO.selectProjectById(projectId);
+        ProjectVO project = projectDAO.findProjectById(projectId);
         if (project == null) {
             throw new ProjectException(ErrorCode.PROJECT_NOT_FOUND);
         }
@@ -95,19 +94,19 @@ public class ProjectService {
 
         switch (project.getProjectType()) {
             case Loan:
-                detailInfo = projectDAO.selectLoanByProjectId(projectId);
+                detailInfo = projectDAO.findLoanProjectById(projectId);
                 break;
 
             case Savings:
-                detailInfo = projectDAO.selectSavingByProjectId(projectId);
+                detailInfo = projectDAO.findSavingsProjectById(projectId);
                 break;
 
             case Challenge:
-                detailInfo = projectDAO.selectChallengeByProjectId(projectId);
+                detailInfo = projectDAO.findChallengeProjectById(projectId);
                 break;
 
             case Donation:
-                detailInfo = projectDAO.selectDonationByProjectId(projectId);
+                detailInfo = projectDAO.findDonationProjectById(projectId);
                 break;
 
             default:
@@ -137,7 +136,7 @@ public class ProjectService {
         } else if (keyword != null && !keyword.isEmpty()) {
             projectList = projectDAO.searchProjectsByKeyword(keyword);
         } else {
-            projectList = projectDAO.getAllProjects();
+            projectList = projectDAO.findAll();
         }
 
         if (projectList == null || projectList.isEmpty()) {
@@ -166,7 +165,7 @@ public class ProjectService {
         if (projectId == null) return Collections.emptyList();
 
         // 기준 프로젝트 조회
-        var baseVo = projectDAO.selectProjectById(projectId);
+        var baseVo = projectDAO.findProjectById(projectId);
         if (baseVo == null) return Collections.emptyList();
 
         ProjectListDTO baseProject = ProjectListDTO.fromVO(baseVo);
@@ -314,7 +313,7 @@ public class ProjectService {
     }
 
     public void deleteProject(Long projectId, Long userId) {
-        ProjectVO projectVO = projectDAO.selectProjectById(projectId);
+        ProjectVO projectVO = projectDAO.findProjectById(projectId);
         if (!Objects.equals(projectVO.getUserId(), userId)) {
             throw new ProjectException(ErrorCode.NOT_PROJECT_OWNER);
         }
